@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
 import tw from 'twin.macro';
 import styled from '@emotion/styled';
@@ -33,19 +33,19 @@ function Navigator() {
   const [navbarOpen, setNavbarOpen] = React.useState(false);
   return (
     <>
-        <NavigatorWrapper>
-          <div class="flex">
-            <NavigatorLogo src={Logo}></NavigatorLogo>
-            <NavigatorText>Capture Your Picture</NavigatorText>
-          </div>
-          <div> 
-            <NavigatorLink> 신청하기 </NavigatorLink>
-            <NavigatorLink> 예습하기 </NavigatorLink>
-            <NavigatorLink> 피드백 </NavigatorLink>
-          </div>
-        </NavigatorWrapper>
+      <NavigatorWrapper>
+        <div class="flex">
+          <NavigatorLogo src={Logo}></NavigatorLogo>
+          <NavigatorText>Capture Your Picture</NavigatorText>
+        </div>
+        <div>
+          <NavigatorLink> 신청하기 </NavigatorLink>
+          <NavigatorLink> 예습하기 </NavigatorLink>
+          <NavigatorLink> 피드백 </NavigatorLink>
+        </div>
+      </NavigatorWrapper>
 
     </>
   );
-  }
-  export default Navigator;
+}
+export default Navigator;
