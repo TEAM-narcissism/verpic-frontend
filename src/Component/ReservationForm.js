@@ -16,10 +16,10 @@ function ReservationForm() {
     ${tw`max-w-full bg-white rounded-lg shadow-lg`}
   `;
 
-    const [Mothertongue, SetMothertongue] = useState("");
-    const [Studylanguage, SetStudylanguage] = useState("");
-    const [Proficiency, SetProficiency] = useState("");
-    const [Studytime, SetStudytime] = useState("");
+    const [Mothertongue, SetMothertongue] = useState("KOR");
+    const [Studylanguage, SetStudylanguage] = useState("ENG");
+    const [Proficiency, SetProficiency] = useState("INTERMEDIATE");
+    const [Studytime, SetStudytime] = useState("17");
 
     const mothertongueHandler = (e) => {
         e.preventDefault();
@@ -44,19 +44,25 @@ function ReservationForm() {
     const submitHandler = (e) => {
         e.preventDefault();
         // state에 저장한 값을 가져옵니다.
+
+        if (Mothertongue === Studylanguage) {
+            alert("Choose again");
+            return;
+        }
+
         console.log(Mothertongue);
         console.log(Studylanguage);
         console.log(Proficiency);
         console.log(Studytime);
 
         let body = {
-            userId: 3,
+            userId: 4,
             familiarLanguage: Mothertongue,
             unfamiliarLanguage: Studylanguage,
             userLevel: Proficiency,
-            topicId: 1,
+            topicId: 2,
             startTime: Studytime,
-            isSoldOut: true
+            isSoldOut: false
         };
 
         axios
@@ -71,23 +77,30 @@ function ReservationForm() {
                     method="post" style={{ display: "flex", flexDirection: "Column" }}
                     onSubmit={submitHandler}>
                     <label>Mother Tongue</label>
-                    <select name="mothertongue" value={Mothertongue} onChange={mothertongueHandler}>
+                    <select name="mothertongue" value={Mothertongue}
+                        onChange={mothertongueHandler}>
                         <option value="KOR">korean</option>
                         <option value="ENG">english</option>
                     </select>
+
                     <label>Study Language</label>
-                    <select name="studylanguage" value={Studylanguage} onChange={studylanguageHandler}>
+                    <select name="studylanguage" value={Studylanguage}
+                        onChange={studylanguageHandler}>
                         <option value="KOR">korean</option>
                         <option value="ENG">english</option>
                     </select>
+
                     <label>Your Level</label>
-                    <select name="proficiency" value={Proficiency} onChange={proficiencyHandler}>
+                    <select name="proficiency" value={Proficiency}
+                        onChange={proficiencyHandler}>
                         <option value="BEGINNER">beginner</option>
                         <option value="INTERMEDIATE">intermediate</option>
                         <option value="ADVANCED">advanced</option>
                     </select>
+
                     <label>Study Start Time</label>
-                    <select name="studytime" value={Studytime} onChange={studytimeHandler}>
+                    <select name="studytime" value={Studytime}
+                        onChange={studytimeHandler}>
                         <option value="17">17</option>
                         <option value="18">18</option>
                         <option value="19">19</option>
