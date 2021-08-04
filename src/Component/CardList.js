@@ -3,6 +3,7 @@ import Card from './Card';
 
 function CardList() {
     const [topics, setTopic] = useState([{ theme: "", numOfParticipant: 0, studyDate: "" }]);
+    
     useEffect(() => {
         fetch('/topic/MON')
             .then(response => response.json())
