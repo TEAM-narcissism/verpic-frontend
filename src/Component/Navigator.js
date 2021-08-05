@@ -11,16 +11,23 @@ const NavigatorWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 30px 16px;
-  ${tw`max-w-full bg-white rounded-lg shadow-lg`}
+  ${tw` max-w-full bg-white rounded-lg shadow-lg`}
 `;
 
 
 const NavigatorLogo = styled.img`
   width:60px;
-  ${tw`m-3`}
+  @media screen and (max-width: 500px) {
+    width: 40px;
+  }
+  ${tw`m-3 cursor-pointer`}
 `;
 
 const NavigatorText = styled.text`
+
+  @media screen and (max-width: 500px) {
+    display: none;
+  }
   ${tw`bg-clip-text my-auto text-lg font-extrabold text-transparent bg-gradient-to-r from-blue-400 via-black to-gray-500`}
 `;
 
@@ -35,7 +42,7 @@ function Navigator() {
     <>
       <NavigatorWrapper>
         <div class="flex">
-          <NavigatorLogo src={Logo}></NavigatorLogo>
+          <NavigatorLogo onClick={() => window.location.href="/"} src={Logo}></NavigatorLogo>
           <NavigatorText>Capture Your Picture</NavigatorText>
         </div>
         <div>

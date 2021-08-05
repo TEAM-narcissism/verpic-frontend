@@ -4,7 +4,6 @@ import './App.css';
 import Navigator from './Component/Navigator';
 import CardList from './Component/CardList';
 import StudyChat from './VideoChat/StudyChat';
-import VideoPlayer from './VideoChat/VideoPlayer'
 
 import ReservationForm from './Component/ReservationForm';
 import { Route } from 'react-router-dom';
@@ -29,20 +28,22 @@ function App() {
       <Navigator />
       
       <Route path="/" exact={true}>
-        <div className="ddd">
+        <div class="container flex">
           <CardList />
           <ReservationForm/>
+          <div class="mt-5">
+            <button class="p-1 border text-white border-black bg-black rounded" onClick={() => window.open('/videochat', '_blank')}>VideoChat</button>
+          </div>
+     
         </div>
       </Route>
 
 
       <Route path="/videochat" exact={true}>
-        <StudyChat uuid={localStorage.getItem("uuid")}/>
+        <StudyChat localUserName={localStorage.getItem("uuid")}/>
       </Route>
 
-      <Route path="/webrtc" >
-        <VideoPlayer></VideoPlayer>
-      </Route>
+  
     </div>
   );
 }

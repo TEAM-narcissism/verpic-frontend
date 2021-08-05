@@ -6,14 +6,10 @@ import axios from 'axios'
 function ReservationForm() {
 
     const ReservationWrapper = styled.div`
-    position: absolute;
-    display: flex;
-    width: 560px;
-    height: 280px;
-    justify-content: space-between;
-    /* align-items: center; */
-    padding: 30px 16px;
-    ${tw`max-w-full bg-white rounded-lg shadow-lg`}
+        width: 300px;
+        height: 280px;
+        padding: 30px 16px;
+        ${tw`flex mt-10 bg-white rounded-lg shadow-lg`}
   `;
 
     const [Mothertongue, SetMothertongue] = useState("");
