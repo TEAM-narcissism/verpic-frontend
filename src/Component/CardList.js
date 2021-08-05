@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Card from './Card';
 
-function CardList() {
+const CardList = React.memo(({ onChange }) => {
     const [topics, setTopic] = useState([{ topicId: "", theme: "", numOfParticipant: 0, studyDate: "" }]);
     useEffect(() => {
         fetch('/topic/MON')
@@ -15,15 +15,16 @@ function CardList() {
         console.log(topic)
         return (
             <label>
-                <input type="checkbox" name="topic" value="{topic.topicId}" />
+                <input type="radio" name="topic" value={topic.topicId} onChange={onChange} />
+                &nbsp;
                 <Card topic={topic} key={i} />
             </label>
         );
     });
 
     return (
-        <div>{topic}</div>
+        <>{topic}</>
     );
-}
+});
 
 export default CardList;

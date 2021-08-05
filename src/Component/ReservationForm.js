@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import tw from 'twin.macro';
 import styled from '@emotion/styled';
 import axios from 'axios'
+import CardList from './CardList';
 
 function ReservationForm() {
 
@@ -19,6 +20,7 @@ function ReservationForm() {
     const [Mothertongue, SetMothertongue] = useState("KOR");
     const [Studylanguage, SetStudylanguage] = useState("ENG");
     const [Proficiency, SetProficiency] = useState("INTERMEDIATE");
+    const [Topicid, SetTopicid] = useState("");
     const [Studytime, SetStudytime] = useState("17");
 
     const mothertongueHandler = (e) => {
@@ -36,6 +38,11 @@ function ReservationForm() {
         SetProficiency(e.target.value);
     };
 
+    const topicidHandler = (e) => {
+        e.preventDefault();
+        SetTopicid(e.target.value);
+    };
+
     const studytimeHandler = (e) => {
         e.preventDefault();
         SetStudytime(e.target.value);
@@ -46,28 +53,33 @@ function ReservationForm() {
         // state에 저장한 값을 가져옵니다.
 
         if (Mothertongue === Studylanguage) {
-            alert("Choose again");
+            alert("You choose same languages. Choose again!");
+            return;
+        }
+        else if (Topicid === "") {
+            alert("Choose topic!");
             return;
         }
 
         console.log(Mothertongue);
         console.log(Studylanguage);
         console.log(Proficiency);
+        console.log(Topicid);
         console.log(Studytime);
 
         let body = {
-            userId: 4,
+            userId: 5,
             familiarLanguage: Mothertongue,
             unfamiliarLanguage: Studylanguage,
             userLevel: Proficiency,
-            topicId: 2,
+            topicId: Topicid,
             startTime: Studytime,
             isSoldOut: false
         };
 
         axios
             .post("http://localhost:3000/reservation", body)
-            .then((res) => console.log(res));
+            .then((res) => console.log(res)).then(() => alert("예약 완료~"));
     };
 
     return (
@@ -76,6 +88,9 @@ function ReservationForm() {
                 <form id="form" action="/reservation"
                     method="post" style={{ display: "flex", flexDirection: "Column" }}
                     onSubmit={submitHandler}>
+
+                    <CardList onChange={topicidHandler} />
+
                     <label>Mother Tongue</label>
                     <select name="mothertongue" value={Mothertongue}
                         onChange={mothertongueHandler}>

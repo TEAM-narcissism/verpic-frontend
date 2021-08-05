@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
-
+import React from 'react';
 import tw from 'twin.macro';
 import styled from '@emotion/styled';
-
 import Logo from './logoVerpic.png';
 
 const NavigatorWrapper = styled.div`
@@ -30,7 +28,6 @@ const NavigatorLink = styled.text`
 
 
 function Navigator() {
-  const [navbarOpen, setNavbarOpen] = React.useState(false);
   return (
     <>
       <NavigatorWrapper>
