@@ -31,7 +31,7 @@ function Navigator() {
   return (
     <>
       <NavigatorWrapper>
-        <div class="flex">
+        <div className="flex">
           <NavigatorLogo src={Logo}></NavigatorLogo>
           <NavigatorText>Capture Your Picture</NavigatorText>
         </div>

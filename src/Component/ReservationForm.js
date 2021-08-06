@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import tw from 'twin.macro';
 import styled from '@emotion/styled';
 import axios from 'axios'
 import CardList from './CardList';
 
-function ReservationForm() {
+const ReservationForm = React.memo(() => {
 
     const ReservationWrapper = styled.div`
     position: absolute;
@@ -12,9 +11,7 @@ function ReservationForm() {
     width: 560px;
     height: 280px;
     justify-content: space-between;
-    /* align-items: center; */
     padding: 30px 16px;
-    ${tw`max-w-full bg-white rounded-lg shadow-lg`}
   `;
 
     const [Mothertongue, SetMothertongue] = useState("KOR");
@@ -22,6 +19,15 @@ function ReservationForm() {
     const [Proficiency, SetProficiency] = useState("INTERMEDIATE");
     const [Topicid, SetTopicid] = useState("");
     const [Studytime, SetStudytime] = useState("17");
+
+    const resertAll = (e) => {
+        e.preventDefault();
+        SetMothertongue("KOR");
+        SetStudylanguage("ENG");
+        SetProficiency("INTERMEDIATE");
+        SetTopicid("");
+        SetStudytime("17");
+    }
 
     const mothertongueHandler = (e) => {
         e.preventDefault();
@@ -85,11 +91,11 @@ function ReservationForm() {
     return (
         <>
             <ReservationWrapper>
-                <form id="form" action="/reservation"
+                <form id="form" action="/reservation" onSubmit={submitHandler}
                     method="post" style={{ display: "flex", flexDirection: "Column" }}
-                    onSubmit={submitHandler}>
+                >
 
-                    <CardList onChange={topicidHandler} />
+                    <CardList onChange={topicidHandler} resetAll={resertAll} />
 
                     <label>Mother Tongue</label>
                     <select name="mothertongue" value={Mothertongue}
@@ -125,6 +131,6 @@ function ReservationForm() {
             </ReservationWrapper>
         </>
     );
-}
+});
 
 export default ReservationForm;
