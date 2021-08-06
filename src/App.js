@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Navigator from './Component/Navigator';
 import CardList from './Component/CardList';
 import StudyChat from './VideoChat/StudyChat';
+import Login from './Auth/Login';
 
 import ReservationForm from './Component/ReservationForm';
 import { Route } from 'react-router-dom';
+
+
 function App() {
 
     function generateUuid() {
@@ -23,6 +25,10 @@ function App() {
     console.log("local.uuid:" + localStorage.getItem("uuid"));
 
 
+    // 실험용입니다.
+
+
+
   return (
     <div>
       <Navigator />
@@ -34,7 +40,6 @@ function App() {
           <div class="mt-5">
             <button class="p-1 border text-white border-black bg-black rounded" onClick={() => window.open('/videochat', '_blank')}>VideoChat</button>
           </div>
-     
         </div>
       </Route>
 
@@ -43,6 +48,9 @@ function App() {
         <StudyChat localUserName={localStorage.getItem("uuid")}/>
       </Route>
 
+      <Route path="/login" exact={true}>
+        <Login></Login>
+      </Route>
   
     </div>
   );
