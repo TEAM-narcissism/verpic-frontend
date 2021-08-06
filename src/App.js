@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Navigator from './Component/Navigator';
 import ReservationForm from './Component/ReservationForm';
