@@ -2,6 +2,8 @@ import React from 'react';
 import tw from 'twin.macro';
 import styled from '@emotion/styled';
 import Logo from './logoVerpic.png';
+import { BrowserRouter as Link } from 'react-router-dom';
+import ReservationForm from './ReservationForm';
 
 const NavigatorWrapper = styled.div`
   display: flex;
@@ -27,7 +29,17 @@ const NavigatorLink = styled.text`
 `;
 
 
+
 function Navigator() {
+
+  function reservationButtonClick(e) {
+    window.location.replace("/reservation");
+  }
+
+  function myPageButtonClick(e) {
+    window.location.replace("/mypage");
+  }
+
   return (
     <>
       <NavigatorWrapper>
@@ -36,9 +48,14 @@ function Navigator() {
           <NavigatorText>Capture Your Picture</NavigatorText>
         </div>
         <div>
-          <NavigatorLink> 신청하기 </NavigatorLink>
+          <button onClick={reservationButtonClick}>
+            <NavigatorLink> 신청하기 </NavigatorLink>
+          </button>
           <NavigatorLink> 예습하기 </NavigatorLink>
           <NavigatorLink> 피드백 </NavigatorLink>
+          <button onClick={myPageButtonClick}>
+            <NavigatorLink> 마이페이지 </NavigatorLink>
+          </button>
         </div>
       </NavigatorWrapper>
 
