@@ -3,34 +3,27 @@ import styled from 'styled-components';
 import oc from 'open-color';
 import { Link } from 'react-router-dom';
 import tw from 'twin.macro';
+import logo from '../assets/images/logoVerpic.png'
+
 // 화면의 중앙에 위치시킨다
 const Positioner = styled.div`
-    position: absolute;
-    top: 25%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    width: 2px;
+    ${tw `container mt-20 mx-auto`}
 `;
 
 // 너비, 그림자 설정
 const ShadowedBox = styled.div`
-    width: 500px;
-    ${tw`border rounded-lg shadow-lg`}
+    width: 400px;
+    ${tw `mx-auto border rounded-xl`}
 `;
 
 // 로고
 const LogoWrapper = styled.div`
-    background: ${oc.indigo[6]};
+    
     height: 5rem;
     display: flex;
     align-items: center;
     justify-content: center;
-`;
-
-const Logo = styled(Link)`
-    color: white;
-    font-size: 2.4rem;
-    letter-spacing: 5px;
-    text-decoration: none;
 `;
 
 // children 이 들어가는 곳
@@ -40,11 +33,27 @@ const Contents = styled.div`
     height: auto;
 `;
 
+const LoginTeamLogo = styled.img`
+  width:50px;
+  @media screen and (max-width: 500px) {
+    width: 40px;
+  }
+  ${tw`m-2 cursor-pointer`}
+`;
+
+const LoginTeamText = styled.text`
+  ${tw`bg-clip-text my-auto text-3xl font-extrabold text-transparent bg-gradient-to-r from-blue-400 via-black to-gray-500`}
+`;
+
 const AuthWrapper = ({children}) => (
     <Positioner>
+        
         <ShadowedBox>
             <LogoWrapper>
-                <Logo to="/">VERPIC</Logo>
+                <LoginTeamLogo src={logo}></LoginTeamLogo>
+                <LoginTeamText>
+                    VERPIC
+                </LoginTeamText>
             </LogoWrapper>
             <Contents>
                 {children}

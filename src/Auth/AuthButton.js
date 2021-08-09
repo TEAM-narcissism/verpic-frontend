@@ -25,7 +25,7 @@ const Wrapper = styled.div`
     &:active {
         background: ${oc.blue[7]};
     }
-    ${tw`bg-blue-400`}
+    ${tw`bg-gray-400 rounded-lg`}
 `;
 
 const AuthButton = ({children, onClick}) => (

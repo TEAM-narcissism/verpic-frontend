@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 
 import tw from 'twin.macro';
 import styled from '@emotion/styled';
-
-import Logo from './logoVerpic.png';
-
+import logout from '../Auth/Logout';
+import Logo from '../assets/images/logoVerpic.png'
+import isAuthorized from '../Auth/isAuthorized';
 const NavigatorWrapper = styled.div`
   display: flex;
   height: 70px;
@@ -32,7 +32,7 @@ const NavigatorText = styled.text`
 `;
 
 const NavigatorLink = styled.text`
-  ${tw`text-sm font-semibold text-black m-10 duration-500 text-right`}
+  ${tw`text-sm font-semibold text-black m-10 duration-500 text-right cursor-pointer`}
 `;
 
 
@@ -46,9 +46,16 @@ function Navigator() {
           <NavigatorText>Capture Your Picture</NavigatorText>
         </div>
         <div>
-          <NavigatorLink> 신청하기 </NavigatorLink>
+          <NavigatorLink > 신청하기 </NavigatorLink>
           <NavigatorLink> 예습하기 </NavigatorLink>
           <NavigatorLink> 피드백 </NavigatorLink>
+
+          {isAuthorized() ? 
+            <NavigatorLink onClick={() => window.location.href="/logout"} > 로그아웃 </NavigatorLink>
+              :
+            <NavigatorLink onClick= {() => window.location.href="/login"}> 로그인 </NavigatorLink>
+          }
+ 
         </div>
       </NavigatorWrapper>
 

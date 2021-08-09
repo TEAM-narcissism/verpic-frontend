@@ -408,16 +408,15 @@ function sendToServer(msg) {
     
     return (
         <VideoWrapper >
-
-        <div class="flex mb-3 mt-5">
-            <div class="flex-col">
-            <UserVideo autoPlay playsInline ref={myVideoRef}></UserVideo>
-            <UserVideo autoPlay playsInline ref={remoteVideoRef}></UserVideo>
+            <div class="flex mb-3 mt-5">
+                <div class="flex-col">
+                <UserVideo autoPlay playsInline ref={myVideoRef}></UserVideo>
+                <UserVideo autoPlay playsInline ref={remoteVideoRef}></UserVideo>
+                </div>
+                <div class="flex-col">
+                    <ChatView></ChatView>
+                </div>
             </div>
-            <div class="flex-col">
-                <ChatView></ChatView>
-            </div>
-        </div>
         </VideoWrapper>
       );
 

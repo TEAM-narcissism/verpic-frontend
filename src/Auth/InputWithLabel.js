@@ -6,7 +6,6 @@ import axios from 'axios'
 
 // 두개가 함께 있을땐 상단 (그 사이) 에 여백을 준다
 const Wrapper = styled.div`
-    
     ${tw``}
 `;
 
@@ -19,13 +18,12 @@ const Label = styled.div`
 const Input = styled.input`
     width: 100%;
     outline: none;
-    border-radius: 0px;
     line-height: 2.5rem;
     font-size: 1.2rem;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     
-    ${tw`border mb-3`}
+    ${tw`border rounded-md mb-3`}
 `;
 
 
@@ -35,8 +33,6 @@ const InputWithLabel = ({label, ...rest}) => (
     <Wrapper>
         <Label>{label}</Label>
         <Input {...rest}/>
-
-       
     </Wrapper>
 );
 

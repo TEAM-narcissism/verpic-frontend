@@ -5,6 +5,7 @@ import AuthButton from './AuthButton';
 import InputWithLabel from './InputWithLabel'
 import { debounce } from "lodash";
 
+import Cookies from 'universal-cookie';
 
 function Login() {
     const [inputs, setInputs] = useState({
@@ -18,10 +19,18 @@ function Login() {
     function postToLogin(){
         let body = inputs;
         console.log(body);
-
             axios
             .post("/login", body)
-            .then(res => console.log(res))
+            .then(res =>  {
+                console.log(res.data.data.Token);
+                const accessToken = res.data.data.Token;
+
+                const cookies = new Cookies();
+                cookies.set('vtoken', accessToken, {path: '/'});
+                window.location = '/';
+             
+            }
+            )
             .catch(error => {
       
                 if (error.response) {
@@ -47,11 +56,11 @@ function Login() {
     const debounceFunc =  debounce(onChange, 300);
 
     return(
-        <AuthWrapper>
+        <AuthWrapper >
             <InputWithLabel label="Email" name="email" placeholder="이메일" onChange={debounceFunc}  ref={emailRef}/>
             <InputWithLabel label="Password" name="password" placeholder="비밀번호" onChange={debounceFunc} ref={passwordRef}/>
             <AuthButton onClick={postToLogin}>로그인</AuthButton>
-
+            <AuthButton onClick="">구글로그인</AuthButton>
         </AuthWrapper>
 
     );
