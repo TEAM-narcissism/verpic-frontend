@@ -29,8 +29,23 @@ function App() {
   }
 
   return (
-    <div className="m-5">
-      <Preview />
+    <div>
+      {/* <Navigator/> */}
+
+      {/* 로그인을 해야 접근 가능한 영역 */}
+      <PrivateRoute component={Logout} path="/logout" exact />
+      <PrivateRoute
+        component={StudyChat}
+        localUserName={localStorage.getItem("uuid")}
+        path="/studychat"
+        exact
+      />
+
+      {/* 로그인을 안해야 접근 가능한 영역 */}
+      <PublicRoute component={Login} path="/login" exact />
+
+      {/* 로그인 / 로그아웃에 관계 없이 접근 가능한 영역 */}
+      <Route component={MainPage} path="/" exact />
     </div>
   );
 }
