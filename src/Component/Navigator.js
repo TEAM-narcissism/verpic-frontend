@@ -2,25 +2,26 @@ import React, { useState } from 'react';
 
 import tw from 'twin.macro';
 import styled from '@emotion/styled';
-import logout from '../Auth/Logout';
 import Logo from '../assets/images/logoVerpic.png'
 import isAuthorized from '../Auth/isAuthorized';
+
 const NavigatorWrapper = styled.div`
-  display: flex;
-  height: 70px;
-  justify-content: space-between;
-  align-items: center;
-  padding: 30px 16px;
+    font-family: "NanumGothic-Bold";
+    display: flex;
+    height: 70px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 16px;
   ${tw` max-w-full bg-white rounded-lg shadow-lg`}
 `;
 
 
 const NavigatorLogo = styled.img`
-  width:60px;
-  @media screen and (max-width: 500px) {
-    width: 40px;
-  }
-  ${tw`m-3 cursor-pointer`}
+    width:60px;
+    @media screen and (max-width: 500px) {
+      width: 40px;
+    }
+    ${tw`m-3 cursor-pointer`}
 `;
 
 const NavigatorText = styled.text`

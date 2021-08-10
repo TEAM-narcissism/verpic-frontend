@@ -9,6 +9,7 @@ import React from 'react';
 function MainPage() {
 
     const HomeComponentWrapper = styled.div`
+        font-family: "NotoSans-Bold";
         ${tw`container mx-auto flex my-10`}
     `;
 

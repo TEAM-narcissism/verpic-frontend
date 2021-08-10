@@ -4,6 +4,17 @@ import styled from '@emotion/styled';
 import tw from 'twin.macro';
 import ReservationForm from './ReservationForm';
 
+
+const CardListText = styled.div`
+
+    ${tw`text-3xl font-bold mb-1 mx-10 select-none`};
+`;
+
+const CardListWrapper = styled.div`
+    font-family: "NanumGothic-Regular";
+    ${tw`container mx-auto`}
+`;
+
 function CardList(props) {
     const [topics, setTopic] = useState([{ theme: "", numOfParticipant: 0, studyDate: "" }]);
     const [checkedItem, setCheckedItem] = useState("");
@@ -13,14 +24,6 @@ function CardList(props) {
         console.log(checkedItem);
     };
 
-    const CardListText = styled.div`
-        ${tw`text-3xl font-bold mb-1 mx-10 select-none`};
-    `;
-
-    const CardListWrapper = styled.div`
-
-        ${tw`container mx-auto`}
-    `;
 
     useEffect(() => {
         fetch('/topic/MON')
@@ -29,7 +32,6 @@ function CardList(props) {
                 setTopic(topics)
             });
     }, []);
-
 
 
     return (

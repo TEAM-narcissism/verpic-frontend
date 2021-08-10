@@ -2,48 +2,44 @@ import React, { useState } from 'react';
 import tw from 'twin.macro';
 import styled from '@emotion/styled';
 import axios from 'axios'
+import Cookies from 'universal-cookie';
+const ReservationWrapper = styled.div`
+    font-family: "NanumGothic-Regular";
+    ${tw`container ml-20  mr-10 mb-10`}
+`;
 
+const ReservationQuestionWrapper = styled.div`
+    ${tw`border rounded shadow-lg p-10`}
+`;
+
+const ResevationText = styled.div`
+
+    ${tw`text-3xl font-bold mb-1 select-none`}
+`;
+
+const ReservationOptionText = styled.div`
+    ${tw`font-semibold text-xl `}
+`;
+const ReservationOptionWrapper = styled.div`
+    ${tw`mx-auto mb-10`}
+`;
+
+const ReservationOptionSelect = styled.select`
+    ${tw`ml-10 border p-3 rounded mt-4`}
+`;
+
+
+const ReservationSendButton = styled.button`
+    ${tw`border w-full rounded-lg p-3  text-white font-bold`}
+`;
 
 function ReservationForm({ topicId }) {
-
-    const ReservationWrapper = styled.div`
-
-        ${tw`container ml-20  mr-10 mb-10`}
-  `;
-
-    const ReservationQuestionWrapper = styled.div`
-
-        ${tw`border rounded shadow-lg p-10`}
-    `;
-
-    const ResevationText = styled.div`
-
-        ${tw`text-3xl font-bold mb-1 select-none`}
-    `;
-
-    const ReservationOptionText = styled.div`
-        ${tw`font-semibold text-xl `}
-    `;
-    const ReservationOptionWrapper = styled.div`
-        ${tw`mx-auto mb-10`}
-    `;
-
-    const ReservationOptionSelect = styled.select`
-        ${tw`ml-10 border p-3 rounded mt-4`}
-    `;
-
-
-
-
-    const ReservationSendButton = styled.button`
-        ${tw`border w-full rounded-lg p-3  text-white font-bold`}
-    `;
-
     const [Mothertongue, SetMothertongue] = useState("");
     const [Studylanguage, SetStudylanguage] = useState("");
     const [Proficiency, SetProficiency] = useState("");
     const [Studytime, SetStudytime] = useState("");
-
+    const cookies = new Cookies();
+    const token = cookies.get('vtoken');
     const mothertongueHandler = (e) => {
         e.preventDefault();
         SetMothertongue(e.target.value);
@@ -91,7 +87,11 @@ function ReservationForm({ topicId }) {
         };
 
         axios
-            .post("/reservation", body)
+            .post("/reservation", body, {
+                headers: {
+                    'Authorization': token
+                }
+            })
             .then((res) => console.log(res));
     };
 
@@ -153,7 +153,9 @@ function ReservationForm({ topicId }) {
                         <option value="19">19시</option>
                     </ReservationOptionSelect>
                 </ReservationOptionWrapper>
-                <ReservationSendButton disabled={allAnswerFulfiled()} className={allAnswerFulfiled() ? "bg-gray-400 cursor-default" : "bg-yellow-400"} onClick={submitHandler}>스터디 신청</ReservationSendButton>
+                <ReservationSendButton disabled={allAnswerFulfiled()} className={allAnswerFulfiled() ? "bg-gray-400 cursor-default" : "bg-yellow-400"} onClick={submitHandler}>
+                    {allAnswerFulfiled() ? "모든 답변을 완료해주세요." : "스터디 신청"}
+                </ReservationSendButton>
 
             </ReservationQuestionWrapper>
         </ReservationWrapper>
