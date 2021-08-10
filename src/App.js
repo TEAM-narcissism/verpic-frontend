@@ -32,8 +32,6 @@ function App() {
       {/* <Navigator/> */}
 
 
-
-
       {/* 로그인을 해야 접근 가능한 영역 */}
       <PrivateRoute component={Logout} path="/logout" exact/>
       <PrivateRoute component={StudyChat} localUserName={localStorage.getItem("uuid")} path="/studychat" exact />
