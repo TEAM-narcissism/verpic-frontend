@@ -4,8 +4,8 @@ import styled from '@emotion/styled';
 import axios from 'axios'
 
 
-function ReservationForm() {
-    
+function ReservationForm({ topicId }) {
+
     const ReservationWrapper = styled.div`
 
         ${tw`container ml-20  mr-10 mb-10`}
@@ -13,12 +13,12 @@ function ReservationForm() {
 
     const ReservationQuestionWrapper = styled.div`
 
-        ${tw `border rounded shadow-lg p-10`}
+        ${tw`border rounded shadow-lg p-10`}
     `;
 
     const ResevationText = styled.div`
 
-        ${tw `text-3xl font-bold mb-1`}
+        ${tw`text-3xl font-bold mb-1 select-none`}
     `;
 
     const ReservationOptionText = styled.div`
@@ -36,7 +36,7 @@ function ReservationForm() {
 
 
     const ReservationSendButton = styled.button`
-        ${tw`border w-full rounded-lg p-3  bg-yellow-500 text-white font-bold`}
+        ${tw`border w-full rounded-lg p-3  text-white font-bold`}
     `;
 
     const [Mothertongue, SetMothertongue] = useState("");
@@ -64,6 +64,14 @@ function ReservationForm() {
         SetStudytime(e.target.value);
     };
 
+
+    const allAnswerFulfiled = () => {
+        if (Mothertongue && Studylanguage && Proficiency && Studytime && topicId)
+            return false;
+        else
+            return true;
+    }
+
     const submitHandler = (e) => {
         e.preventDefault();
         // state에 저장한 값을 가져옵니다.
@@ -77,76 +85,80 @@ function ReservationForm() {
             familiarLanguage: Mothertongue,
             unfamiliarLanguage: Studylanguage,
             userLevel: Proficiency,
-            topicId: 1,
+            topicId: topicId,
             startTime: Studytime,
             isSoldOut: true
         };
 
         axios
-            .post("http://localhost:3000/reservation", body)
+            .post("/reservation", body)
             .then((res) => console.log(res));
     };
 
     return (
-    
-            <ReservationWrapper>
+
+        <ReservationWrapper>
             <ResevationText>스터디 신청</ResevationText>
 
 
-            <div class="text-gray-600 mb-3">간단한 답변만 해주시면 돼요.</div>
+            <div class="text-gray-600 mb-3 select-none">간단한 답변만 해주시면 돼요.</div>
 
             <ReservationQuestionWrapper>
-              <ReservationOptionWrapper>
+                <ReservationOptionWrapper>
 
-                <ReservationOptionText className="mb-10">
-                    <span class="mr-3">Step1.</span>원하는 토픽을 먼저 골라주세요.
-                </ReservationOptionText>
-                <ReservationOptionText>
-                    <span class="mr-3">Step2.</span>모국어를 선택해주세요.
-                </ReservationOptionText>
+                    <ReservationOptionText className="mb-10">
+                        <span class="mr-3">Step1.</span>원하는 토픽을 먼저 골라주세요.
+                    </ReservationOptionText>
+                    <ReservationOptionText>
+                        <span class="mr-3">Step2.</span>모국어를 선택해주세요.
+                    </ReservationOptionText>
                     <ReservationOptionSelect name="mothertongue" value={Mothertongue} onChange={mothertongueHandler}>
+                        <option value="">선택</option>
                         <option value="KOR">korean</option>
                         <option value="ENG">english</option>
                     </ReservationOptionSelect>
-              </ReservationOptionWrapper>
+                </ReservationOptionWrapper>
 
-              <ReservationOptionWrapper>
-                <ReservationOptionText>
-                <span class="mr-3">Step3.</span>어떤 언어를 공부하실건가요?
-                </ReservationOptionText>
+                <ReservationOptionWrapper>
+                    <ReservationOptionText>
+                        <span class="mr-3">Step3.</span>어떤 언어를 공부하실건가요?
+                    </ReservationOptionText>
                     <ReservationOptionSelect name="studylanguage" value={Studylanguage} onChange={studylanguageHandler}>
+                        <option value="">선택</option>
                         <option value="KOR">korean</option>
                         <option value="ENG">english</option>
                     </ReservationOptionSelect>
-              </ReservationOptionWrapper>
+                </ReservationOptionWrapper>
 
-              <ReservationOptionWrapper>
-                <ReservationOptionText>
-                    <span class="mr-3">Step4.</span>간략한 언어 수준을 말해주세요.
-                </ReservationOptionText>
+                <ReservationOptionWrapper>
+                    <ReservationOptionText>
+                        <span class="mr-3">Step4.</span>간략한 언어 수준을 말해주세요.
+                    </ReservationOptionText>
                     <ReservationOptionSelect name="proficiency" value={Proficiency} onChange={proficiencyHandler}>
+                        <option value="">선택</option>
                         <option value="BEGINNER">beginner</option>
                         <option value="INTERMEDIATE">intermediate</option>
                         <option value="ADVANCED">advanced</option>
                     </ReservationOptionSelect>
-              </ReservationOptionWrapper>
+                </ReservationOptionWrapper>
 
-              <ReservationOptionWrapper>
-                <ReservationOptionText>
-                <span class="mr-3">Step5.</span>어떤 시간대에 참여하실래요?
-                </ReservationOptionText>
+                <ReservationOptionWrapper>
+                    <ReservationOptionText>
+                        <span class="mr-3">Step5.</span>어떤 시간대에 참여하실래요?
+                    </ReservationOptionText>
                     <ReservationOptionSelect name="studytime" value={Studytime} onChange={studytimeHandler}>
+                        <option value="">선택</option>
                         <option value="17">17시</option>
                         <option value="18">18시</option>
                         <option value="19">19시</option>
                     </ReservationOptionSelect>
-              </ReservationOptionWrapper>
-                <ReservationSendButton onClick={submitHandler}>스터디 신청</ReservationSendButton>
-          
-          </ReservationQuestionWrapper>
-            </ReservationWrapper>
-    
+                </ReservationOptionWrapper>
+                <ReservationSendButton disabled={allAnswerFulfiled()} className={allAnswerFulfiled() ? "bg-gray-400 cursor-default" : "bg-yellow-400"} onClick={submitHandler}>스터디 신청</ReservationSendButton>
+
+            </ReservationQuestionWrapper>
+        </ReservationWrapper>
+
     );
 }
 
-export default ReservationForm;
+export default React.memo(ReservationForm);

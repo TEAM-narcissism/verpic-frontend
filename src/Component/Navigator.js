@@ -28,7 +28,7 @@ const NavigatorText = styled.text`
   @media screen and (max-width: 500px) {
     display: none;
   }
-  ${tw`bg-clip-text my-auto text-lg font-extrabold text-transparent bg-gradient-to-r from-blue-400 via-black to-gray-500`}
+  ${tw`bg-clip-text my-auto text-lg font-extrabold text-transparent bg-gradient-to-r from-blue-400 via-black to-gray-500 select-none`}
 `;
 
 const NavigatorLink = styled.text`
@@ -42,20 +42,20 @@ function Navigator() {
     <>
       <NavigatorWrapper>
         <div class="flex">
-          <NavigatorLogo onClick={() => window.location.href="/"} src={Logo}></NavigatorLogo>
+          <NavigatorLogo onClick={() => window.location.href = "/"} src={Logo}></NavigatorLogo>
           <NavigatorText>Capture Your Picture</NavigatorText>
         </div>
         <div>
-          <NavigatorLink onClick={() => window.location.href="/"} > 신청하기 </NavigatorLink>
+          <NavigatorLink onClick={() => window.location.href = "/"} > 신청하기 </NavigatorLink>
           <NavigatorLink> 예습하기 </NavigatorLink>
           <NavigatorLink> 피드백 </NavigatorLink>
 
-          {isAuthorized() ? 
-            <NavigatorLink onClick={() => window.location.href="/logout"} > 로그아웃 </NavigatorLink>
-              :
-            <NavigatorLink onClick= {() => window.location.href="/login"}> 로그인 </NavigatorLink>
+          {isAuthorized() ?
+            <NavigatorLink onClick={() => window.location.href = "/logout"} > 로그아웃 </NavigatorLink>
+            :
+            <NavigatorLink onClick={() => window.location.href = "/login"}> 로그인 </NavigatorLink>
           }
- 
+
         </div>
       </NavigatorWrapper>
 
