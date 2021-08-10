@@ -1,25 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import Card from './Card';
+import React, { useEffect, useState } from "react";
+
+import Card from "./Card";
 
 function CardList() {
-    const [topics, setTopic] = useState([{ theme: "", numOfParticipant: 0, studyDate: "" }]);
-    
-    useEffect(() => {
-        fetch('/topic/MON')
-            .then(response => response.json())
-            .then(topics => {
-                setTopic(topics)
-            });
-    }, []);
+  const [topics, setTopic] = useState([
+    { theme: "", numOfParticipant: 0, studyDate: "" },
+  ]);
 
-    const topic = topics.map((topic, i) => {
-        console.log(topic)
-        return (<Card topic={topic} key={i} />);
-    });
+  useEffect(() => {
+    fetch("/topic/MON")
+      .then((response) => response.json())
+      .then((topics) => {
+        setTopic(topics);
+      });
+  }, []);
 
-    return (
-        <div>{topic}</div>
-    );
+  const topic = topics.map((topic, i) => {
+    console.log(topic);
+    return <Card topic={topic} key={i} />;
+  });
+
+  return <div>{topic}</div>;
 }
 
 export default CardList;
