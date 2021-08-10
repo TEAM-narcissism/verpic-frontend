@@ -8,7 +8,7 @@ function ReservationForm() {
     
     const ReservationWrapper = styled.div`
 
-        ${tw`container mx-10 mb-10`}
+        ${tw`container ml-20  mr-10 mb-10`}
   `;
 
     const ReservationQuestionWrapper = styled.div`
@@ -36,7 +36,7 @@ function ReservationForm() {
 
 
     const ReservationSendButton = styled.button`
-        ${tw`border w-full rounded-lg p-3  bg-gray-400 text-white font-bold`}
+        ${tw`border w-full rounded-lg p-3  bg-yellow-500 text-white font-bold`}
     `;
 
     const [Mothertongue, SetMothertongue] = useState("");

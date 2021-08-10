@@ -3,7 +3,7 @@ import Card from './Card';
 import styled from '@emotion/styled';
 import tw from 'twin.macro';
 
-function CardList() {
+function CardList({onCardClick, cardRef}) {
     const [topics, setTopic] = useState([{ theme: "", numOfParticipant: 0, studyDate: "" }]);
 
 
@@ -31,7 +31,7 @@ function CardList() {
             <CardListText>토픽 목록</CardListText>
             <div class="text-gray-600 mb-3 mx-10">버픽에서 이러한 토픽을 준비했어요.</div>
             {topics.map((topic, i) => (
-                <Card topic={topic} key={i} />
+                <Card topic={topic} key={i} onCardClick={onCardClick} cardRef={cardRef}/>
             )) }
         </CardListWrapper>
 
