@@ -7,7 +7,6 @@ import Login from './Auth/Login';
 
 import { Route } from 'react-router-dom';
 import PrivateRoute from './Route/PrivateRoute';
-import isAuthorized from './Auth/isAuthorized';
 import PublicRoute from './Route/PublicRoute';
 import MainPage from './Home/MainPage';
 import Logout from './Auth/Logout';
@@ -41,7 +40,7 @@ function App() {
 
       {/* 로그인을 해야 접근 가능한 영역 */}
       <PrivateRoute component={Logout} path="/logout" exact/>
-      <PrivateRoute component={StudyChat} localUserName={localStorage.getItem("uuid")} path="/studychat" exact />
+      <PrivateRoute component={StudyChat} path="/studychat" exact />
 
 
       {/* 로그인을 안해야 접근 가능한 영역 */}

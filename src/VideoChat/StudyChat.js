@@ -44,7 +44,8 @@ const StudyStartText = styled.text`
     ${tw`text-xl text-center font-bold mt-10 p-3 text-gray-700`}
 `;
 
-function StudyChat({localUserName}) {
+function StudyChat() {
+    const localUserName = localStorage.getItem("uuid") 
     const myVideoRef = useRef(null);
     const remoteVideoRef = useRef(null);
     const chatRef = useRef(null)
@@ -463,6 +464,7 @@ function sendToServer(msg) {
         try {
           const stream = await navigator.mediaDevices.getUserMedia({video: true});
           myVideoRef.current.srcObject = stream;
+          myVideoRef.current.muted = true;
         } catch (err) {
           console.log(err);
         }

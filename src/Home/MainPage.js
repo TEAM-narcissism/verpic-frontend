@@ -2,30 +2,33 @@ import Navigator from '../Component/Navigator';
 import ReservationForm from '../Component/ReservationForm';
 import CardList from '../Component/CardList';
 import styled from '@emotion/styled';
-
+import { useState, useRef } from 'react';
 import tw from 'twin.macro';
+import React from 'react';
+import {ModalProvider} from 'styled-react-modal';
 
 function MainPage() {
 
     const HomeComponentWrapper = styled.div`
-
-        ${tw `container mx-auto flex my-10`}
+        font-family: "NotoSans-Bold";
+        ${tw`container mx-auto flex my-10`}
     `;
+
+    const onChangeTopicId = (data) => {
+        console.log(data)
+
+    }
 
     return (
         <>
-            <Navigator/>
-            <HomeComponentWrapper>
-                <CardList />
-                <ReservationForm/>
-
-                {/* <div class="mt-5">
-                    <button class="p-1 border text-white border-black bg-black rounded" onClick={() => window.open('/studychat', '_blank')}>VideoChat</button>
-                </div> */}
-
-            </HomeComponentWrapper>
+            <ModalProvider>
+                <Navigator />
+                <HomeComponentWrapper>
+                    <CardList />
+                </HomeComponentWrapper>
+            </ModalProvider>
         </>
     );
 }
 
-export default MainPage;
+export default React.memo(MainPage);
