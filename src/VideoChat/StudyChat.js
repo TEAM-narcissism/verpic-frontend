@@ -9,7 +9,8 @@ import styled from '@emotion/styled';
 // 임시 변수
 const localRoom = 2;
 
-function StudyChat({localUserName}) {
+function StudyChat() {
+    const localUserName = localStorage.getItem("uuid") 
     const myVideoRef = useRef(null);
     const remoteVideoRef = useRef(null);
 
@@ -395,6 +396,7 @@ function sendToServer(msg) {
         try {
           const stream = await navigator.mediaDevices.getUserMedia({video: true});
           myVideoRef.current.srcObject = stream;
+          myVideoRef.current.muted = true;
         } catch (err) {
           console.log(err);
         }
