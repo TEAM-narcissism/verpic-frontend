@@ -12,6 +12,13 @@ import PublicRoute from './Route/PublicRoute';
 import MainPage from './Home/MainPage';
 import Logout from './Auth/Logout';
 
+import { Stomp } from '@stomp/stompjs';
+import * as SockJS from "sockjs-client";
+
+
+export const conn = new SockJS('http://localhost:8080/ws-stomp');
+export const stompconn = Stomp.over(conn);
+
 function App() {
 
     function generateUuid() {
