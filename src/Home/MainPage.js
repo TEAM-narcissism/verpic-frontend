@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import { useState, useRef } from 'react';
 import tw from 'twin.macro';
 import React from 'react';
+import {ModalProvider} from 'styled-react-modal';
 
 function MainPage() {
 
@@ -20,10 +21,12 @@ function MainPage() {
 
     return (
         <>
-            <Navigator />
-            <HomeComponentWrapper>
-                <CardList />
-            </HomeComponentWrapper>
+            <ModalProvider>
+                <Navigator />
+                <HomeComponentWrapper>
+                    <CardList />
+                </HomeComponentWrapper>
+            </ModalProvider>
         </>
     );
 }

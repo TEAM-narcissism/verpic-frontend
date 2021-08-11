@@ -3,6 +3,11 @@ import tw from 'twin.macro';
 import styled from '@emotion/styled';
 import axios from 'axios'
 import Cookies from 'universal-cookie';
+import Modal from 'styled-react-modal';
+
+import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 const ReservationWrapper = styled.div`
     font-family: "NanumGothic-Regular";
     ${tw`container ml-20  mr-10 mb-10`}
@@ -33,6 +38,22 @@ const ReservationSendButton = styled.button`
     ${tw`border w-full rounded-lg p-3  text-white font-bold`}
 `;
 
+
+const StyledModal = Modal.styled`
+    font-family: "NanumGothic-Regular";
+    width: 400px;
+    height: 300px;
+    ${tw`bg-gray-100 rounded-lg `}
+`;
+
+const ModalButton = styled.div`
+    font-family: "NanumGothic-Regular";
+    ${tw `p-2 border w-1/2 mx-auto mt-20 bg-yellow-400 text-white rounded-lg text-center cursor-pointer`}
+`;
+
+
+
+
 function ReservationForm({ topicId }) {
     const [Mothertongue, SetMothertongue] = useState("");
     const [Studylanguage, SetStudylanguage] = useState("");
@@ -40,6 +61,13 @@ function ReservationForm({ topicId }) {
     const [Studytime, SetStudytime] = useState("");
     const cookies = new Cookies();
     const token = cookies.get('vtoken');
+
+    const [isOpen, setIsOpen] = useState(false)
+
+    function toggleModal(e) {
+      setIsOpen(!isOpen)
+    }
+
     const mothertongueHandler = (e) => {
         e.preventDefault();
         SetMothertongue(e.target.value);
@@ -70,6 +98,7 @@ function ReservationForm({ topicId }) {
 
     const submitHandler = (e) => {
         e.preventDefault();
+     
         // state에 저장한 값을 가져옵니다.
         console.log(Mothertongue);
         console.log(Studylanguage);
@@ -93,6 +122,9 @@ function ReservationForm({ topicId }) {
                 }
             })
             .then((res) => console.log(res));
+
+
+        setIsOpen(!isOpen)
     };
 
     return (
@@ -107,10 +139,27 @@ function ReservationForm({ topicId }) {
                 <ReservationOptionWrapper>
 
                     <ReservationOptionText className="mb-10">
-                        <span class="mr-3">Step1.</span>원하는 토픽을 먼저 골라주세요.
+                        <div class="flex">
+                            <span class="mr-3">
+                                Step1. 원하는 토픽을 먼저 골라주세요.
+                            </span>
+                            <span>
+                            {topicId ? 
+                                <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
+                            }
+                            </span>
+                        </div>
                     </ReservationOptionText>
                     <ReservationOptionText>
-                        <span class="mr-3">Step2.</span>모국어를 선택해주세요.
+                        <div class="flex">
+                        <span class="mr-3">Step2. 모국어를 선택해주세요.</span>
+                        <span>
+                            {Mothertongue ? 
+                                <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
+                            }
+                            </span>
+                        </div>
+           
                     </ReservationOptionText>
                     <ReservationOptionSelect name="mothertongue" value={Mothertongue} onChange={mothertongueHandler}>
                         <option value="">선택</option>
@@ -121,7 +170,14 @@ function ReservationForm({ topicId }) {
 
                 <ReservationOptionWrapper>
                     <ReservationOptionText>
-                        <span class="mr-3">Step3.</span>어떤 언어를 공부하실건가요?
+                        <div class="flex">
+                            <span class="mr-3">Step3. 어떤 언어를 공부하실건가요?</span>
+                            <span>
+                            {Studylanguage ? 
+                                <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
+                            }
+                            </span>
+                        </div>
                     </ReservationOptionText>
                     <ReservationOptionSelect name="studylanguage" value={Studylanguage} onChange={studylanguageHandler}>
                         <option value="">선택</option>
@@ -132,7 +188,15 @@ function ReservationForm({ topicId }) {
 
                 <ReservationOptionWrapper>
                     <ReservationOptionText>
-                        <span class="mr-3">Step4.</span>간략한 언어 수준을 말해주세요.
+                        <div class="flex">
+                            <span class="mr-3">Step4. 배울 언어의 수준을 말해주세요.</span>
+                            <span>
+                            {Proficiency ? 
+                                <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
+                            }
+                            </span>
+
+                        </div>
                     </ReservationOptionText>
                     <ReservationOptionSelect name="proficiency" value={Proficiency} onChange={proficiencyHandler}>
                         <option value="">선택</option>
@@ -144,7 +208,14 @@ function ReservationForm({ topicId }) {
 
                 <ReservationOptionWrapper>
                     <ReservationOptionText>
-                        <span class="mr-3">Step5.</span>어떤 시간대에 참여하실래요?
+                        <div class="flex">
+                            <span class="mr-3">Step5. 어떤 시간대에 참여하실래요?</span>
+                            <span>
+                            {Studytime ? 
+                                <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
+                            }
+                            </span>
+                        </div>
                     </ReservationOptionText>
                     <ReservationOptionSelect name="studytime" value={Studytime} onChange={studytimeHandler}>
                         <option value="">선택</option>
@@ -153,6 +224,19 @@ function ReservationForm({ topicId }) {
                         <option value="19">19시</option>
                     </ReservationOptionSelect>
                 </ReservationOptionWrapper>
+
+                <StyledModal
+                    isOpen = {isOpen}
+                    onBackgroundClick={toggleModal}
+                    onEscapeKeydown={toggleModal}>
+                
+                    <div class="text-center mt-28 text-xl ">스터디 신청을 완료했어요.</div>
+                    <div class="text-align">
+                        <ModalButton onClick={toggleModal}>확인</ModalButton>
+                    </div>
+                </StyledModal>
+
+
                 <ReservationSendButton disabled={allAnswerFulfiled()} className={allAnswerFulfiled() ? "bg-gray-400 cursor-default" : "bg-yellow-400"} onClick={submitHandler}>
                     {allAnswerFulfiled() ? "모든 답변을 완료해주세요." : "스터디 신청"}
                 </ReservationSendButton>

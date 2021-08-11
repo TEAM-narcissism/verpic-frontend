@@ -37,7 +37,7 @@ function CardList(props) {
     return (
         <>
             <CardListWrapper>
-
+    
                 <CardListText>토픽 목록</CardListText>
                 <div class="text-gray-600 mb-3 mx-10 select-none">버픽에서 이러한 토픽을 준비했어요.</div>
                 {
