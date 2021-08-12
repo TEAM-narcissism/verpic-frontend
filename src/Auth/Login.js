@@ -1,4 +1,4 @@
-import React, {useState, useRef, useMemo} from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import axios from 'axios';
 import AuthWrapper from './AuthWrapper';
 import AuthButton from './AuthButton';
@@ -16,31 +16,43 @@ function Login() {
     const emailRef = useRef();
     const passwordRef = useRef();
 
-    function postToLogin(){
+    function postToLogin() {
         let body = inputs;
         console.log(body);
-            axios
+        axios
             .post("/login", body)
-            .then(res =>  {
+            .then(res => {
                 console.log(res.data.data.Token);
                 const accessToken = res.data.data.Token;
 
                 const cookies = new Cookies();
-                cookies.set('vtoken', accessToken, {path: '/'});
+                cookies.set('vtoken', accessToken, { path: '/' });
                 window.location = '/';
-             
+
+                function generateUuid() {
+                    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                        let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                        return v.toString(16);
+                    });
+                }
+
+                if (localStorage.getItem("uuid") === null) {
+                    localStorage.setItem("uuid", generateUuid());
+                }
+
+
             }
             )
             .catch(error => {
-      
+
                 if (error.response) {
                     const { data } = error.response;
                     console.error("data : ", data);
                 }
 
             });
-            
-     
+
+
     }
 
     const onChange = (e) => {
@@ -48,17 +60,17 @@ function Login() {
 
         console.log(value);
         setInputs({
-          ...inputs, 
-          [name]: value 
+            ...inputs,
+            [name]: value
         });
     };
 
-    const debounceFunc =  debounce(onChange, 300);
+    const debounceFunc = debounce(onChange, 300);
 
-    return(
+    return (
         <AuthWrapper >
-            <InputWithLabel label="Email" name="email" placeholder="이메일" onChange={debounceFunc}  ref={emailRef}/>
-            <InputWithLabel label="Password" name="password" placeholder="비밀번호" onChange={debounceFunc} ref={passwordRef}/>
+            <InputWithLabel label="Email" name="email" placeholder="이메일" onChange={debounceFunc} ref={emailRef} />
+            <InputWithLabel label="Password" name="password" placeholder="비밀번호" onChange={debounceFunc} ref={passwordRef} />
             <AuthButton onClick={postToLogin}>로그인</AuthButton>
             <AuthButton onClick="">구글로그인</AuthButton>
         </AuthWrapper>
@@ -66,4 +78,4 @@ function Login() {
     );
 }
 
-export default Login; 
+export default Login;

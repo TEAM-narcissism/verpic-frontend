@@ -20,35 +20,22 @@ export const stompconn = Stomp.over(conn);
 
 function App() {
 
-    function generateUuid() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-        });
-    }
-
-    if (localStorage.getItem("uuid")) {
-        localStorage.setItem("uuid", generateUuid());
-    }
- 
-
-
   return (
     <div>
       {/* <Navigator/> */}
 
 
       {/* 로그인을 해야 접근 가능한 영역 */}
-      <PrivateRoute component={Logout} path="/logout" exact/>
+      <PrivateRoute component={Logout} path="/logout" exact />
       <PrivateRoute component={StudyChat} path="/studychat" exact />
 
 
       {/* 로그인을 안해야 접근 가능한 영역 */}
-      <PublicRoute component = {Login} path="/login" exact />
+      <PublicRoute component={Login} path="/login" exact />
 
       {/* 로그인 / 로그아웃에 관계 없이 접근 가능한 영역 */}
-      <Route component = {MainPage} path="/" exact />
-      
+      <Route component={MainPage} path="/" exact />
+
     </div>
   );
 }

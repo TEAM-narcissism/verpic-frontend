@@ -11,8 +11,9 @@ import { conn, stompconn } from "../App";
 import Cookies from 'universal-cookie';
 import Timer from './Timer';
 
+
 // 임시 변수
-const localRoom = 2;
+const localRoom = 3;
 const cookies = new Cookies();
 
 
@@ -20,8 +21,6 @@ const ProgressBarWrapper = styled.div`
     font-family: 'NanumGothic-Bold';
     ${tw`container mt-10`}
 `;
-
-
 
 const ChatView = styled.div`
     font-family: 'NanumGothic-Regular';
@@ -43,7 +42,7 @@ const UserVideo = styled.video`
         width: 400px;
         flex-direction: column;
     }
-    ${tw`bg-white border  mx-10 my-10 `}
+    ${tw`bg-white border mx-10 my-10 `}
 `;
 
 const StudyStartText = styled.text`
@@ -51,15 +50,15 @@ const StudyStartText = styled.text`
 `;
 
 function StudyChat() {
-    const localUserName = localStorage.getItem("uuid") 
+    const localUserName = localStorage.getItem("uuid")
     const myVideoRef = useRef(null);
     const remoteVideoRef = useRef(null);
     const chatRef = useRef(null)
 
     const peerConnectionConfig = {
         'iceServers': [
-            {'urls': 'stun:stun.stunprotocol.org:3478'},
-            {'urls': 'stun:stun.l.google.com:19302'},
+            { 'urls': 'stun:stun.stunprotocol.org:3478' },
+            { 'urls': 'stun:stun.l.google.com:19302' },
         ]
     };
 
@@ -69,23 +68,24 @@ function StudyChat() {
         video: true
     };
 
+
     let localStream;
     let localVideoTracks;
     let myPeerConnection;
-    
+
 
     function stompWithSockJS() {
-        stompconn.connect({Authorization: cookies.get("vtoken")}, function(frame){
+        stompconn.connect({ Authorization: cookies.get("vtoken") }, function (frame) {
             console.log('Websocket connection complete.');
             subscribe();
-            chatSubscribe();
-            stompconn.send('/pub/videochat/enter', {Authorization: cookies.get("vtoken")}, JSON.stringify({matchId: localRoom}));
+            //chatSubscribe();
+            // stompconn.send('/pub/videochat/enter', { Authorization: cookies.get("vtoken") }, JSON.stringify({ matchId: localRoom }));
         });
 
     }
-    
+
     const subscribe = () => {
-        stompconn.subscribe('/sub/' + localUserName, function(frame) {
+        stompconn.subscribe('/sub/' + localUserName, function (frame) {
             let message = JSON.parse(frame.body);
             switch (message.type) {
                 case "text":
@@ -123,38 +123,38 @@ function StudyChat() {
             data: localRoom
         });
 
-        stompconn.onclose = function(frame) {
+        stompconn.onclose = function (frame) {
             log('Socket has been closed');
         }
-    
-        stompconn.onerror = function(frame) {
+
+        stompconn.onerror = function (frame) {
             handleErrorMessage("Error: " + frame);
         };
-            
-        
+
+
     };
 
     function sendToServer(msg) {
         let msgJSON = JSON.stringify(msg);
 
         console.log(msg)
-        stompconn.send("/pub/experiment",{}, msgJSON);
-    
+        stompconn.send("/pub/experiment", {}, msgJSON);
+
     }
 
 
-    const [ chatInputs, setChatInputs ] = useState({
+    const [chatInputs, setChatInputs] = useState({
         message: '',
         sender: 'testsss'
     });
 
     const { message, sender } = chatInputs;
-    
+
     const chatOnChange = useCallback(e => {
         const { name, value } = e.target;
-        setChatInputs( chatInputs => ({
-                ...chatInputs,
-                [name]: value
+        setChatInputs(chatInputs => ({
+            ...chatInputs,
+            [name]: value
         }));
     }, []);
 
@@ -179,8 +179,8 @@ function StudyChat() {
             message,
             sender,
         };
-        
-        stompconn.send('/pub/videochat/message', {Authorization: cookies.get("vtoken")}, JSON.stringify({matchId: localRoom, message: message}));
+
+        stompconn.send('/pub/videochat/message', { Authorization: cookies.get("vtoken") }, JSON.stringify({ matchId: localRoom, message: message }));
         // setChats(chats => chats.concat(chat));
 
         setChatInputs({
@@ -189,7 +189,7 @@ function StudyChat() {
     }, [message, sender]);
 
     const chatSubscribe = () => {
-        stompconn.subscribe('/sub/videochat/' + localRoom, function(message) {
+        stompconn.subscribe('/sub/videochat/' + localRoom, function (message) {
             console.log('chat subscribe')
             var content = JSON.parse(message.body);
             const chat = {
@@ -203,99 +203,99 @@ function StudyChat() {
         });
     }
 
-function stop() {
-    // send a message to the server to remove this client from the room clients list
-    log("Send 'leave' message to server");
-    sendToServer({
-        from: localUserName,
-        type: 'leave',
-        data: localRoom
-    });
+    function stop() {
+        // send a message to the server to remove this client from the room clients list
+        log("Send 'leave' message to server");
+        sendToServer({
+            from: localUserName,
+            type: 'leave',
+            data: localRoom
+        });
 
-    if (myPeerConnection) {
-        log('Close the RTCPeerConnection');
+        if (myPeerConnection) {
+            log('Close the RTCPeerConnection');
 
-        // disconnect all our event listeners
-        myPeerConnection.onicecandidate = null;
-        myPeerConnection.ontrack = null;
-        myPeerConnection.onnegotiationneeded = null;
-        myPeerConnection.oniceconnectionstatechange = null;
-        myPeerConnection.onsignalingstatechange = null;
-        myPeerConnection.onicegatheringstatechange = null;
-        myPeerConnection.onnotificationneeded = null;
-        myPeerConnection.onremovetrack = null;
+            // disconnect all our event listeners
+            myPeerConnection.onicecandidate = null;
+            myPeerConnection.ontrack = null;
+            myPeerConnection.onnegotiationneeded = null;
+            myPeerConnection.oniceconnectionstatechange = null;
+            myPeerConnection.onsignalingstatechange = null;
+            myPeerConnection.onicegatheringstatechange = null;
+            myPeerConnection.onnotificationneeded = null;
+            myPeerConnection.onremovetrack = null;
 
-        // Stop the videos
- 
-        if (remoteVideoRef.current.srcObject) {
-            remoteVideoRef.current.srcObject.getTracks().forEach(track => track.stop());
-        }
+            // Stop the videos
 
-        remoteVideoRef.current.src = null;
-        
-        
-        if (myVideoRef.current.srcObject) {
-            myVideoRef.current.srcObject.getTracks().forEach(track => track.stop());
-        }
-        myVideoRef.current.src = null;
+            if (remoteVideoRef.current.srcObject) {
+                remoteVideoRef.current.srcObject.getTracks().forEach(track => track.stop());
+            }
 
-        myPeerConnection.close();
-        myPeerConnection = null;
+            remoteVideoRef.current.src = null;
 
-        log('Close the socket');
-        if (conn != null) {
-            conn.close();
+
+            if (myVideoRef.current.srcObject) {
+                myVideoRef.current.srcObject.getTracks().forEach(track => track.stop());
+            }
+            myVideoRef.current.src = null;
+
+            myPeerConnection.close();
+            myPeerConnection = null;
+
+            log('Close the socket');
+            if (conn != null) {
+                conn.close();
+            }
         }
     }
-}
 
-/*
- UI Handlers
-  */
-// mute video buttons handler
-/*
-videoButtonOff.onclick = () => {
-    localVideoTracks = localStream.getVideoTracks();
-    localVideoTracks.forEach(track => localStream.removeTrack(track));
-    $(localVideo).css('display', 'none');
-    log('Video Off');
-};
-videoButtonOn.onclick = () => {
-    localVideoTracks.forEach(track => localStream.addTrack(track));
-    $(localVideo).css('display', 'inline');
-    log('Video On');
-};
+    /*
+     UI Handlers
+      */
+    // mute video buttons handler
+    /*
+    videoButtonOff.onclick = () => {
+        localVideoTracks = localStream.getVideoTracks();
+        localVideoTracks.forEach(track => localStream.removeTrack(track));
+        $(localVideo).css('display', 'none');
+        log('Video Off');
+    };
+    videoButtonOn.onclick = () => {
+        localVideoTracks.forEach(track => localStream.addTrack(track));
+        $(localVideo).css('display', 'inline');
+        log('Video On');
+    };
+    
+    // mute audio buttons handler
+    audioButtonOff.onclick = () => {
+        localVideo.muted = true;
+        log('Audio Off');
+    };
+    audioButtonOn.onclick = () => {
+        localVideo.muted = false;
+        log('Audio On');
+    };
+    
+    // room exit button handler
+    exitButton.onclick = () => {
+        stop();
+    };
+    */
+    function log(message) {
+        console.log(message);
+    }
 
-// mute audio buttons handler
-audioButtonOff.onclick = () => {
-    localVideo.muted = true;
-    log('Audio Off');
-};
-audioButtonOn.onclick = () => {
-    localVideo.muted = false;
-    log('Audio On');
-};
+    function handleErrorMessage(message) {
+        console.error(message);
+    }
 
-// room exit button handler
-exitButton.onclick = () => {
-    stop();
-};
-*/
-function log(message) {
-    console.log(message);
-}
+    // use JSON format to send WebSocket message
+    function sendToServer(msg) {
+        let msgJSON = JSON.stringify(msg);
 
-function handleErrorMessage(message) {
-    console.error(message);
-}
+        stompconn.send("/pub/experiment", {}, msgJSON);
 
-// use JSON format to send WebSocket message
-function sendToServer(msg) {
-    let msgJSON = JSON.stringify(msg);
-
-    stompconn.send("/pub/experiment",{}, msgJSON);
-
-}
+    }
 
     // initialize media stream
     function getMedia(constraints) {
@@ -333,16 +333,17 @@ function sendToServer(msg) {
     // add MediaStream to local video element and to the Peer
     function getLocalMediaStream(mediaStream) {
         localStream = mediaStream;
-        if(myVideoRef.current){
-            myVideoRef.current.srcObject = mediaStream;
-        }
+        // if (myVideoRef.current) {
+        //     //단지 html 요소야
+        //     myVideoRef.current.srcObject = mediaStream;
+        // }
         localStream.getTracks().forEach(track => myPeerConnection.addTrack(track, localStream));
     }
 
     // handle get media error
     function handleGetUserMediaError(error) {
         log('navigator.getUserMedia error: ', error);
-        switch(error.name) {
+        switch (error.name) {
             case "NotFoundError":
                 alert("Unable to open your call because no camera and/or microphone were found.");
                 break;
@@ -372,20 +373,20 @@ function sendToServer(msg) {
 
     function handleTrackEvent(event) {
         log('Track Event: set stream to remote video element');
-   
+
         remoteVideoRef.current.srcObject = event.streams[0];
-        
+
     }
 
-// WebRTC called handler to begin ICE negotiation
-// 1. create a WebRTC offer
-// 2. set local media description
-// 3. send the description as an offer on media format, resolution, etc
+    // WebRTC called handler to begin ICE negotiation
+    // 1. create a WebRTC offer
+    // 2. set local media description
+    // 3. send the description as an offer on media format, resolution, etc
     function handleNegotiationNeededEvent() {
-        myPeerConnection.createOffer().then(function(offer) {
+        myPeerConnection.createOffer().then(function (offer) {
             return myPeerConnection.setLocalDescription(offer);
         })
-            .then(function() {
+            .then(function () {
                 sendToServer({
                     from: localUserName,
                     type: 'offer',
@@ -393,7 +394,7 @@ function sendToServer(msg) {
                 });
                 log('Negotiation Needed Event: SDP offer sent');
             })
-            .catch(function(reason) {
+            .catch(function (reason) {
                 // an error occurred, so handle the failure to connect
                 handleErrorMessage('failure to connect error: ', reason);
             });
@@ -408,33 +409,30 @@ function sendToServer(msg) {
             log('RTC Signalling state: ' + myPeerConnection.signalingState);
             myPeerConnection.setRemoteDescription(desc).then(function () {
                 log("Set up local media stream");
-                return navigator.mediaDevices.getUserMedia(mediaConstraints);
+                return navigator.mediaDevices.getUserMedia({ audio: true, video: true });
             })
                 .then(function (stream) {
                     log("-- Local video stream obtained");
-                    localStream = stream;
-                    try {
-                        myVideoRef.current.srcObject = localStream;
-                    } catch (error) {
-                        myVideoRef.current.src = window.URL.createObjectURL(stream);
-                    }
+                    // localStream = stream;
+
+
+                    // 두번째 사용자가 자기 로컬의 비디오 목소리를 원격에게 넘김
+                    // try {
+                    //     myVideoRef.current.srcObject = localStream;
+                    // } catch (error) {
+                    //     myVideoRef.current.src = window.URL.createObjectURL(stream);
+                    // }
 
                     log("-- Adding stream to the RTCPeerConnection");
-                    localStream.getTracks().forEach(track => myPeerConnection.addTrack(track, localStream));
+                    // localStream.getTracks().forEach(track => myPeerConnection.addTrack(track, localStream));
                 })
                 .then(function () {
                     log("-- Creating answer");
-                    // Now that we've successfully set the remote description, we need to
-                    // start our stream up locally then create an SDP answer. This SDP
-                    // data describes the local end of our call, including the codec
-                    // information, options agreed upon, and so forth.
                     return myPeerConnection.createAnswer();
                 })
                 .then(function (answer) {
                     log("-- Setting local description after creating answer");
-                    // We now have our answer, so establish that as the local description.
-                    // This actually configures our end of the call to match the settings
-                    // specified in the SDP.
+
                     return myPeerConnection.setLocalDescription(answer);
                 })
                 .then(function () {
@@ -453,10 +451,6 @@ function sendToServer(msg) {
 
     function handleAnswerMessage(message) {
         log("The peer has accepted request");
-
-        // Configure the remote description, which is the SDP payload
-        // in our "video-answer" message.
-        // myPeerConnection.setRemoteDescription(new RTCSessionDescription(message.sdp)).catch(handleErrorMessage);
         myPeerConnection.setRemoteDescription(message.sdp).catch(handleErrorMessage);
     }
 
@@ -464,35 +458,52 @@ function sendToServer(msg) {
         let candidate = new RTCIceCandidate(message.candidate);
         log("Adding received ICE candidate: " + JSON.stringify(candidate));
         myPeerConnection.addIceCandidate(candidate).catch(handleErrorMessage);
-    } 
+    }
 
+    let initLocalStream;
+    //초기 비디오 설정. 내 얼굴 보이게! 내 목소리는 내가 안듣고싶어
     const getUserMediaReact = async () => {
         try {
-          const stream = await navigator.mediaDevices.getUserMedia({video: true});
-          myVideoRef.current.srcObject = stream;
-          myVideoRef.current.muted = true;
+            initLocalStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            myVideoRef.current.srcObject = initLocalStream;
+            //myVideoRef.current.muted = true;
         } catch (err) {
-          console.log(err);
+            console.log(err);
         }
-      };
+    };
 
-    useEffect( () => {
-       stompWithSockJS();
-       getUserMediaReact();
-       //chatSubscribe();
-       //stompconn.send('/pub/videochat/enter', {}, JSON.stringify({matchId: localRoom}));
+    useEffect(() => {
+        stompWithSockJS();
+        getUserMediaReact();
+        //chatSubscribe();
+        //stompconn.send('/pub/videochat/enter', {}, JSON.stringify({matchId: localRoom}));
     }, []);
 
-    
+
+    const videoButtonOff = () => {
+        console.log('클릭');
+        localVideoTracks = localStream.getVideoTracks();
+        localVideoTracks.forEach(track => track.enabled = !track.enabled);
+        initLocalStream.getVideoTracks().forEach(track => track.enabled = !track.enabled);
+    }
+    const micButtonOff = () => {
+        console.log('클릭');
+        localVideoTracks = localStream.getAudioTracks();
+        localVideoTracks.forEach(track => track.enabled = !track.enabled);
+        // initLocalStream.getAudioTracks().forEach(track => track.enabled = !track.enabled);
+    }
+
+
+
     return (
         <VideoWrapper >
 
             <ProgressBarWrapper>
                 <ul class="w-full steps">
-                            <li class="step step-primary ">자기소개</li> 
-                            <li class="step step-primary">한국어세션</li> 
-                            <li class="step step-primary">영어세션</li> 
-                            <li class="step">마무리</li>
+                    <li class="step step-primary ">자기소개</li>
+                    <li class="step step-primary">한국어세션</li>
+                    <li class="step step-primary">영어세션</li>
+                    <li class="step">마무리</li>
                 </ul>
 
             </ProgressBarWrapper>
@@ -504,8 +515,11 @@ function sendToServer(msg) {
 
             <div class="flex mb-3 mt-5">
                 <div class="flex-col">
-                <UserVideo autoPlay playsInline ref={myVideoRef}></UserVideo>
-                <UserVideo autoPlay playsInline ref={remoteVideoRef}></UserVideo>
+                    <div>회원님의 화면이에요.</div>
+                    <div onClick={videoButtonOff} class="border rounded-lg p-3">Video Off</div>
+                    <div onClick={micButtonOff} class="border rounded-lg p-3">Audio Off</div>
+                    <UserVideo autoPlay playsInline ref={myVideoRef}></UserVideo>
+                    <UserVideo autoPlay playsInline ref={remoteVideoRef}></UserVideo>
                 </div>
                 <div class="flex-col">
                     <ChatView ref={chatRef}>
@@ -519,9 +533,9 @@ function sendToServer(msg) {
                 </div>
             </div>
         </VideoWrapper>
-       
-        
-      );
+
+
+    );
 
 }
 
