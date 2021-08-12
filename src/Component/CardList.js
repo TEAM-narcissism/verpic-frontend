@@ -67,7 +67,7 @@ function CardList(props) {
             <CardListWrapper>
                 <CardListText>토픽 목록</CardListText>
                 <DaySorting dayPaginate={setCurrentPageAndDay} />
-                &nbsp;
+             
                 <div class="text-gray-600 mb-3 mx-10 select-none">버픽에서 이러한 토픽을 준비했어요.</div>
                 {
                     filteredTopicsByPaging.map((topic) => (
