@@ -21,7 +21,7 @@ const cookies = new Cookies();
 const ChatView = styled.div`
     height: 840px;
     width: 600px;
-    ${tw`mx-5 bg-gray-200 border rounded-lg mx-10 my-10`}
+    ${tw`mx-5 bg-gray-200 border rounded-lg my-10 flex flex-col justify-between`}
 `;
 
 const VideoWrapper = styled.div`
@@ -73,6 +73,7 @@ function StudyChat() {
             console.log('Websocket connection complete.');
             subscribe();
             chatSubscribe();
+            chatUserSubscribe();
             stompconn.send('/pub/videochat/enter', {Authorization: cookies.get("vtoken")}, JSON.stringify({matchId: localRoom}));
         });
 
@@ -182,10 +183,13 @@ function StudyChat() {
         })
     }, [message, sender]);
 
+    const [myName, setMyName] = useState("");
+
     const chatSubscribe = () => {
         stompconn.subscribe('/sub/videochat/' + localRoom, function(message) {
-            console.log('chat subscribe')
             var content = JSON.parse(message.body);
+            console.log('chat subscribe');
+    
             const chat = {
                 id: nextChatId.current,
                 message: content.message,
@@ -194,6 +198,14 @@ function StudyChat() {
             console.log(content)
             setChats(chats => chats.concat(chat))
             nextChatId.current += 1;
+        });
+    }
+
+    const chatUserSubscribe = () => {
+        stompconn.subscribe('/user/sub/videochat/' + localRoom, function(message) {
+            var content = JSON.parse(message.body);
+            console.log("개인 메세지", content.name);
+            setMyName(content.name);
         });
     }
 
@@ -487,7 +499,7 @@ function sendToServer(msg) {
                 </div>
                 <div class="flex-col">
                     <ChatView ref={chatRef}>
-                        <ChatList chats={chats} />
+                        <ChatList chats={chats} myName={myName} />
                         <CreateChat
                             message={message}
                             onChange={chatOnChange}
