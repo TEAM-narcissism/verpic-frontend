@@ -26,7 +26,7 @@ const ChatView = styled.div`
     font-family: 'NanumGothic-Regular';
     height: 840px;
     width: 600px;
-    ${tw`mx-5 bg-gray-200 border rounded-lg mx-10 my-10`}
+    ${tw`mx-5 bg-gray-200 border rounded-lg my-10 flex flex-col justify-between`}
 `;
 
 const VideoWrapper = styled.div`
@@ -78,8 +78,9 @@ function StudyChat() {
         stompconn.connect({ Authorization: cookies.get("vtoken") }, function (frame) {
             console.log('Websocket connection complete.');
             subscribe();
-            //chatSubscribe();
-            // stompconn.send('/pub/videochat/enter', { Authorization: cookies.get("vtoken") }, JSON.stringify({ matchId: localRoom }));
+            chatSubscribe();
+            chatUserSubscribe();
+            stompconn.send('/pub/videochat/enter', { Authorization: cookies.get("vtoken") }, JSON.stringify({ matchId: localRoom }));
         });
 
     }
@@ -188,10 +189,13 @@ function StudyChat() {
         })
     }, [message, sender]);
 
+    const [myName, setMyName] = useState("");
+
     const chatSubscribe = () => {
         stompconn.subscribe('/sub/videochat/' + localRoom, function (message) {
-            console.log('chat subscribe')
             var content = JSON.parse(message.body);
+            console.log('chat subscribe');
+
             const chat = {
                 id: nextChatId.current,
                 message: content.message,
@@ -200,6 +204,14 @@ function StudyChat() {
             console.log(content)
             setChats(chats => chats.concat(chat))
             nextChatId.current += 1;
+        });
+    }
+
+    const chatUserSubscribe = () => {
+        stompconn.subscribe('/user/sub/videochat/' + localRoom, function (message) {
+            var content = JSON.parse(message.body);
+            console.log("개인 메세지", content.name);
+            setMyName(content.name);
         });
     }
 
@@ -523,7 +535,7 @@ function StudyChat() {
                 </div>
                 <div class="flex-col">
                     <ChatView ref={chatRef}>
-                        <ChatList chats={chats} />
+                        <ChatList chats={chats} myName={myName} />
                         <CreateChat
                             message={message}
                             onChange={chatOnChange}
