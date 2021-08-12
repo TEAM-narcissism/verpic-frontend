@@ -1,24 +1,30 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import * as SockJS from "sockjs-client";
 
 import ChatList from "./ChatList";
 import CreateChat from "./CreateChat";
 
-import { Stomp } from '@stomp/stompjs';
 import tw from 'twin.macro';
 import styled from '@emotion/styled';
 import { conn, stompconn } from "../App";
-import { JsxEmit } from "typescript";
 
 import Cookies from 'universal-cookie';
-
+import Timer from './Timer';
 
 // 임시 변수
 const localRoom = 2;
 const cookies = new Cookies();
 
+
+const ProgressBarWrapper = styled.div`
+    font-family: 'NanumGothic-Bold';
+    ${tw`container mt-10`}
+`;
+
+
+
 const ChatView = styled.div`
+    font-family: 'NanumGothic-Regular';
     height: 840px;
     width: 600px;
     ${tw`mx-5 bg-gray-200 border rounded-lg mx-10 my-10`}
@@ -480,6 +486,22 @@ function sendToServer(msg) {
     
     return (
         <VideoWrapper >
+
+            <ProgressBarWrapper>
+                <ul class="w-full steps">
+                            <li class="step step-primary ">자기소개</li> 
+                            <li class="step step-primary">한국어세션</li> 
+                            <li class="step step-primary">영어세션</li> 
+                            <li class="step">마무리</li>
+                </ul>
+
+            </ProgressBarWrapper>
+
+            <Timer></Timer>
+
+
+
+
             <div class="flex mb-3 mt-5">
                 <div class="flex-col">
                 <UserVideo autoPlay playsInline ref={myVideoRef}></UserVideo>
