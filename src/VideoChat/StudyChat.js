@@ -1,44 +1,54 @@
 
-import React, { useEffect, useRef} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import * as SockJS from "sockjs-client";
+
+import ChatList from "./ChatList";
+import CreateChat from "./CreateChat";
 
 import { Stomp } from '@stomp/stompjs';
 import tw from 'twin.macro';
 import styled from '@emotion/styled';
+import { conn, stompconn } from "../App";
+import { JsxEmit } from "typescript";
+
+import Cookies from 'universal-cookie';
+
 
 // 임시 변수
 const localRoom = 2;
+const cookies = new Cookies();
+
+const ChatView = styled.div`
+    height: 840px;
+    width: 600px;
+    ${tw`mx-5 bg-gray-200 border rounded-lg mx-10 my-10`}
+`;
+
+const VideoWrapper = styled.div`
+    ${tw`container text-center mx-auto`}
+`;
+
+const UserVideo = styled.video`
+    height: 390px;   
+    width: 520px;
+
+    @media screen and (max-width: 500px) {
+        height: 200px;
+        width: 400px;
+        flex-direction: column;
+    }
+    ${tw`bg-white border  mx-10 my-10 `}
+`;
+
+const StudyStartText = styled.text`
+    ${tw`text-xl text-center font-bold mt-10 p-3 text-gray-700`}
+`;
 
 function StudyChat() {
     const localUserName = localStorage.getItem("uuid") 
     const myVideoRef = useRef(null);
     const remoteVideoRef = useRef(null);
-
-    const VideoWrapper = styled.div`
-        ${tw`container text-center mx-auto`}
-    `;
-
-    const UserVideo = styled.video`
-        height: 390px;   
-        width: 520px;
-
-        @media screen and (max-width: 500px) {
-            height: 200px;
-            width: 400px;
-            flex-direction: column;
-        }
-        ${tw`bg-white border  mx-10 my-10 `}
-    `;
-
-    const StudyStartText = styled.text`
-    ${tw`text-xl text-center font-bold mt-10 p-3 text-gray-700`}
-    `;
-
-    const ChatView = styled.div`
-        height: 840px;
-        width: 600px;
-        ${tw`mx-5 bg-gray-200 border rounded-lg mx-10 my-10`}
-    `;
+    const chatRef = useRef(null)
 
     const peerConnectionConfig = {
         'iceServers': [
@@ -56,15 +66,14 @@ function StudyChat() {
     let localStream;
     let localVideoTracks;
     let myPeerConnection;
-
-    const conn = new SockJS('http://localhost:8080/ws-stomp');
-    const stompconn = Stomp.over(conn);
     
 
     function stompWithSockJS() {
-        stompconn.connect({}, function(frame){
+        stompconn.connect({Authorization: cookies.get("vtoken")}, function(frame){
             console.log('Websocket connection complete.');
             subscribe();
+            chatSubscribe();
+            stompconn.send('/pub/videochat/enter', {Authorization: cookies.get("vtoken")}, JSON.stringify({matchId: localRoom}));
         });
 
     }
@@ -128,6 +137,65 @@ function StudyChat() {
     }
 
 
+    const [ chatInputs, setChatInputs ] = useState({
+        message: '',
+        sender: 'testsss'
+    });
+
+    const { message, sender } = chatInputs;
+    
+    const chatOnChange = useCallback(e => {
+        const { name, value } = e.target;
+        setChatInputs( chatInputs => ({
+                ...chatInputs,
+                [name]: value
+        }));
+    }, []);
+
+    const [chats, setChats] = useState([
+        {
+            id: 1,
+            sender: 'test_sender',
+            message: '테스트용 메세지 입니다.'
+        },
+        {
+            id: 2,
+            sender: 'test_sender2',
+            message: '두 번째 테스트용 메세지 입니다.'
+        },
+    ]);
+    const nextChatId = useRef(3)
+
+    const chatOnCreate = useCallback(() => {
+        // 채팅 보내는 부분
+        const chat = {
+            id: nextChatId.current,
+            message,
+            sender,
+        };
+        
+        stompconn.send('/pub/videochat/message', {Authorization: cookies.get("vtoken")}, JSON.stringify({matchId: localRoom, message: message}));
+        // setChats(chats => chats.concat(chat));
+
+        setChatInputs({
+            message: ''
+        })
+    }, [message, sender]);
+
+    const chatSubscribe = () => {
+        stompconn.subscribe('/sub/videochat/' + localRoom, function(message) {
+            console.log('chat subscribe')
+            var content = JSON.parse(message.body);
+            const chat = {
+                id: nextChatId.current,
+                message: content.message,
+                sender: content.senderName
+            }
+            console.log(content)
+            setChats(chats => chats.concat(chat))
+            nextChatId.current += 1;
+        });
+    }
 
 function stop() {
     // send a message to the server to remove this client from the room clients list
@@ -405,6 +473,8 @@ function sendToServer(msg) {
     useEffect( () => {
        stompWithSockJS();
        getUserMediaReact();
+       //chatSubscribe();
+       //stompconn.send('/pub/videochat/enter', {}, JSON.stringify({matchId: localRoom}));
     }, []);
 
     
@@ -416,10 +486,19 @@ function sendToServer(msg) {
                 <UserVideo autoPlay playsInline ref={remoteVideoRef}></UserVideo>
                 </div>
                 <div class="flex-col">
-                    <ChatView></ChatView>
+                    <ChatView ref={chatRef}>
+                        <ChatList chats={chats} />
+                        <CreateChat
+                            message={message}
+                            onChange={chatOnChange}
+                            onCreate={chatOnCreate}
+                        ></CreateChat>
+                    </ChatView>
                 </div>
             </div>
         </VideoWrapper>
+       
+        
       );
 
 }
