@@ -12,6 +12,11 @@ import Cookies from 'universal-cookie';
 import Timer from './Timer';
 
 
+
+let localStream;
+let localVideoTracks;
+let myPeerConnection;
+
 // 임시 변수
 const localRoom = 3;
 const cookies = new Cookies();
@@ -69,9 +74,6 @@ function StudyChat() {
     };
 
 
-    let localStream;
-    let localVideoTracks;
-    let myPeerConnection;
 
 
     function stompWithSockJS() {
@@ -137,7 +139,6 @@ function StudyChat() {
 
     function sendToServer(msg) {
         let msgJSON = JSON.stringify(msg);
-
         console.log(msg)
         stompconn.send("/pub/experiment", {}, msgJSON);
 
@@ -310,15 +311,30 @@ function StudyChat() {
     }
 
     // initialize media stream
-    function getMedia(constraints) {
+    // function getMedia(constraints) {
+    //     if (localStream) {
+    //         localStream.getTracks().forEach(track => {
+    //             track.stop();
+    //         });
+    //     }
+    //     navigator.mediaDevices.getUserMedia(constraints)
+    //         .then(getLocalMediaStream).catch(handleGetUserMediaError);
+    // }
+
+    const getMedia = async (constraints) => {
+
         if (localStream) {
             localStream.getTracks().forEach(track => {
                 track.stop();
             });
         }
-        navigator.mediaDevices.getUserMedia(constraints)
+        await navigator.mediaDevices.getUserMedia(constraints)
             .then(getLocalMediaStream).catch(handleGetUserMediaError);
-    }
+
+    };
+
+
+
 
     // create peer connection, get media, start negotiating when second participant appears
     function handlePeerConnection(message) {
@@ -345,11 +361,14 @@ function StudyChat() {
     // add MediaStream to local video element and to the Peer
     function getLocalMediaStream(mediaStream) {
         localStream = mediaStream;
-        // if (myVideoRef.current) {
-        //     //단지 html 요소야
-        //     myVideoRef.current.srcObject = mediaStream;
-        // }
-        localStream.getTracks().forEach(track => myPeerConnection.addTrack(track, localStream));
+        if (myVideoRef.current) {
+            myVideoRef.current.srcObject = mediaStream;
+        }
+
+        console.log('localStream:', localStream);
+        localStream.getTracks().forEach(track => {
+            myPeerConnection.addTrack(track, localStream)
+        });
     }
 
     // handle get media error
@@ -419,25 +438,7 @@ function StudyChat() {
         //TODO test this
         if (desc != null && message.sdp != null) {
             log('RTC Signalling state: ' + myPeerConnection.signalingState);
-            myPeerConnection.setRemoteDescription(desc).then(function () {
-                log("Set up local media stream");
-                return navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-            })
-                .then(function (stream) {
-                    log("-- Local video stream obtained");
-                    // localStream = stream;
-
-
-                    // 두번째 사용자가 자기 로컬의 비디오 목소리를 원격에게 넘김
-                    // try {
-                    //     myVideoRef.current.srcObject = localStream;
-                    // } catch (error) {
-                    //     myVideoRef.current.src = window.URL.createObjectURL(stream);
-                    // }
-
-                    log("-- Adding stream to the RTCPeerConnection");
-                    // localStream.getTracks().forEach(track => myPeerConnection.addTrack(track, localStream));
-                })
+            myPeerConnection.setRemoteDescription(desc)
                 .then(function () {
                     log("-- Creating answer");
                     return myPeerConnection.createAnswer();
@@ -476,9 +477,10 @@ function StudyChat() {
     //초기 비디오 설정. 내 얼굴 보이게! 내 목소리는 내가 안듣고싶어
     const getUserMediaReact = async () => {
         try {
-            initLocalStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-            myVideoRef.current.srcObject = initLocalStream;
-            //myVideoRef.current.muted = true;
+            console.log('get my video .');
+            localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            myVideoRef.current.srcObject = localStream;
+            myVideoRef.current.muted = true;
         } catch (err) {
             console.log(err);
         }
@@ -487,22 +489,30 @@ function StudyChat() {
     useEffect(() => {
         stompWithSockJS();
         getUserMediaReact();
+
         //chatSubscribe();
         //stompconn.send('/pub/videochat/enter', {}, JSON.stringify({matchId: localRoom}));
     }, []);
 
 
     const videoButtonOff = () => {
-        console.log('클릭');
-        localVideoTracks = localStream.getVideoTracks();
-        localVideoTracks.forEach(track => track.enabled = !track.enabled);
-        initLocalStream.getVideoTracks().forEach(track => track.enabled = !track.enabled);
+        console.log('localStream:', localStream);
+
+        myVideoRef.current.srcObject.getVideoTracks().forEach(track => {
+            track.enabled = !track.enabled;
+            console.log(track);
+        })
+
     }
     const micButtonOff = () => {
         console.log('클릭');
-        localVideoTracks = localStream.getAudioTracks();
-        localVideoTracks.forEach(track => track.enabled = !track.enabled);
-        // initLocalStream.getAudioTracks().forEach(track => track.enabled = !track.enabled);
+
+        myVideoRef.current.srcObject.getAudioTracks().forEach(track => {
+            track.enabled = !track.enabled;
+            console.log(track);
+        })
+
+
     }
 
 
