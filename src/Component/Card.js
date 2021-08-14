@@ -46,7 +46,7 @@ function Card({ topic, checkedItemHandler, checkedItem }) {
 
   return (
 
-    <CardWrapper value={topic.id} onClick={onClick} className={checkedItem === topic.id ? "ring-2 ring-yellow-400 px-2 py-6" : ""} >
+    <CardWrapper value={topic.id} onClick={onClick} className={checkedItem === topic.id ? "border ring-2 ring-yellow-400 px-2 py-6" : ""} >
 
 
       <ImageWrapper>

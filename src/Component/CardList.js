@@ -5,7 +5,8 @@ import tw from 'twin.macro';
 import ReservationForm from './ReservationForm';
 import DaySorting from './DaySorting';
 import Pagination from './Pagination';
-
+import axios from 'axios';
+import Cookies from 'universal-cookie';
 
 const CardListText = styled.div`
 
@@ -26,12 +27,20 @@ function CardList(props) {
     const [currentPage, setCurrentPage] = useState(1);
     const [topicsPerPage, setTopicsPerPage] = useState(5);
 
+    const cookies = new Cookies();
+    const token = cookies.get('vtoken');
+
     useEffect(() => {
-        fetch('/topic/' + today)
-            .then(response => response.json())
-            .then(topics => {
-                setTopic(topics)
-            });
+        axios.get('/topic/' + today, {
+            headers: {
+                'Authorization': token
+            }
+        })
+            .then(res => setTopic(res.data))
+            .catch(err => {
+                window.location.ref = '/logout';
+            })
+
     }, [today]);
 
     const checkedItemHandler = (id) => {
@@ -68,16 +77,35 @@ function CardList(props) {
         <>
             <CardListWrapper>
                 <CardListText>토픽 목록</CardListText>
-                <DaySorting dayPaginate={setCurrentPageAndDay} />
-                &nbsp;
+
+
                 <div class="text-gray-600 mb-3 mx-10 select-none">버픽에서 이러한 토픽을 준비했어요.</div>
+
+                <div class="">
+                    <DaySorting dayPaginate={setCurrentPageAndDay} />
+                </div>
+
+                {
+                    filteredTopicsByPaging.length === 0 ?
+                        <div class="text-center font-lg font-semibold">
+                            해당 요일에 토픽이 없어요.
+                        </div> : ""}
+
                 {
                     filteredTopicsByPaging.map((topic) => (
                         <Card topic={topic} checkedItemHandler={checkedItemHandler} key={topic.id} checkedItem={checkedItem} />
                     ))
 
                 }
-                <Pagination topicsPerPage={topicsPerPage} totalTopics={topics.length} paginate={setCurrentPage} />
+                {
+                    filteredTopicsByPaging.length === 0 ?
+                        <div></div> :
+                        <div class="">
+                            <Pagination topicsPerPage={topicsPerPage} totalTopics={topics.length} paginate={setCurrentPage} />
+                        </div>
+
+                }
+
             </CardListWrapper>
             <ReservationForm topicId={checkedItem} />
         </>

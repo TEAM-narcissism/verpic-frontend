@@ -1,25 +1,24 @@
 import React, { useRef, useCallback, useEffect } from "react";
 import tw from 'twin.macro';
 import styled from '@emotion/styled';
-import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
-import { render } from "react-dom";
+
 
 
 const ChatWrapper = styled.div`
-    ${tw`ml-2 py-2 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white`}`;
+    ${tw`ml-2 py-1 px-4 bg-gray-200 text-sm rounded-br-3xl rounded-tr-3xl rounded-tl-xl`}`;
 
 const MyChatWrapper = styled.div`
-    ${tw`mr-2 py-2 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white`}`;
+    ${tw`mr-2 py-1 px-4 bg-indigo-300 text-sm rounded-bl-3xl rounded-tl-3xl rounded-tr-xl `}`;
 
 const Chat = React.memo(function Chat({ chat, myName }) {
     if (myName === chat.sender) {
         return (
             <div>
-                <span class='flex justify-end mr-2 text-sm'>{chat.sender}</span>
-                <div class='flex justify-end'>
-                    
+                <span class='flex justify-end mr-2 text-sm font-semibold'>{chat.sender}</span>
+                <div class='flex justify-end mb-3'>
+
                     <div class='text-right'>
-                        
+
                         <MyChatWrapper>
                             {chat.message}
                         </MyChatWrapper>
@@ -31,13 +30,13 @@ const Chat = React.memo(function Chat({ chat, myName }) {
     else {
 
     }
-    return (        
+    return (
         <div>
-            <span class='flex justify-start ml-2 text-sm'>{chat.sender}</span>
-            <div class='flex justify-start'>
-                
+            <span class='flex justify-start ml-2 text-sm font-semibold'>{chat.sender}</span>
+            <div class='flex justify-start mb-3'>
+
                 <div class='text-right'>
-                    
+
                     <ChatWrapper>
                         {chat.message}
                     </ChatWrapper>
@@ -66,14 +65,14 @@ function ChatList({ chats, myName }) {
     const divRref = useRef(null);
     useEffect(() => {
         divRref.current.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
-      }, [chats]);
-    
+    }, [chats]);
+
 
     return (
         <ChatListWrapper>
             {chats.map(chat => (
-                <Chat chat={chat} myName={myName} key={chat.id}/>
-                ))}
+                <Chat chat={chat} myName={myName} key={chat.id} />
+            ))}
             <div ref={divRref}></div>
         </ChatListWrapper>
 

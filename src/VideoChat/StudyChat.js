@@ -7,11 +7,13 @@ import CreateChat from "./CreateChat";
 import tw from 'twin.macro';
 import styled from '@emotion/styled';
 import { conn, stompconn } from "../App";
-
 import Cookies from 'universal-cookie';
 import Timer from './Timer';
 
-
+import { faCamera, faMicrophone, faMicrophoneAltSlash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import getuser from '../Api/getuser';
+import Loader from "react-loader-spinner";
 
 let localStream;
 let localVideoTracks;
@@ -22,6 +24,8 @@ const localRoom = 3;
 const cookies = new Cookies();
 
 
+
+
 const ProgressBarWrapper = styled.div`
     font-family: 'NanumGothic-Bold';
     ${tw`container mt-10`}
@@ -29,29 +33,46 @@ const ProgressBarWrapper = styled.div`
 
 const ChatView = styled.div`
     font-family: 'NanumGothic-Regular';
-    height: 840px;
-    width: 600px;
-    ${tw`mx-5 bg-gray-200 border rounded-lg my-10 flex flex-col justify-between`}
+    height: 830px;
+    width: 450px;
+
+    @media screen and (max-width: 500px) {
+        height: 400px;
+        width: 200px;
+        flex-direction: column;
+    }
+    ${tw`mr-28 border rounded-lg mb-10 flex flex-col justify-between`}
 `;
 
 const VideoWrapper = styled.div`
-    ${tw`container text-center mx-auto`}
+    font-family: 'NanumGothic-Regular';
+    ${tw`container mx-auto text-center`}
 `;
 
 const UserVideo = styled.video`
-    height: 390px;   
-    width: 520px;
+    height: 350px;   
+    width: 750px;
 
     @media screen and (max-width: 500px) {
         height: 200px;
         width: 400px;
         flex-direction: column;
     }
-    ${tw`bg-white border mx-10 my-10 `}
+    ${tw`bg-black border ml-28  mb-3 rounded-lg`}
 `;
 
-const StudyStartText = styled.text`
-    ${tw`text-xl text-center font-bold mt-10 p-3 text-gray-700`}
+
+const ToggleButton = styled.div`
+    ${tw`border p-1 rounded border-gray-200 text-gray-400 w-1/6 mb-10 cursor-pointer`}
+`;
+
+const VideoUserText = styled.text`
+
+    ${tw`rounded-sm ml-28 font-semibold p-2 `}
+`;
+
+const ChatLabelText = styled.text`
+    ${tw`rounded-sm font-semibold p-2 `}
 `;
 
 function StudyChat() {
@@ -59,6 +80,40 @@ function StudyChat() {
     const myVideoRef = useRef(null);
     const remoteVideoRef = useRef(null);
     const chatRef = useRef(null)
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [localVideoState, SetLocalVideoState] = useState(true);
+    const [localAudioState, SetLocalAudioState] = useState(true);
+
+
+    const [chatInputs, setChatInputs] = useState({
+        message: '',
+        sender: 'testsss'
+    });
+
+    const { message, sender } = chatInputs;
+
+
+    const chatOnChange = useCallback(e => {
+        const { name, value } = e.target;
+        setChatInputs(chatInputs => ({
+            ...chatInputs,
+            [name]: value
+        }));
+    }, []);
+
+    const [chats, setChats] = useState([
+        {
+            id: 1,
+            sender: 'test_sender',
+            message: '테스트용 메세지 입니다.'
+        },
+        {
+            id: 2,
+            sender: 'test_sender2',
+            message: '두 번째 테스트용 메세지 입니다.'
+        },
+    ]);
+    const nextChatId = useRef(3)
 
     const peerConnectionConfig = {
         'iceServers': [
@@ -72,9 +127,6 @@ function StudyChat() {
         audio: true,
         video: true
     };
-
-
-
 
     function stompWithSockJS() {
         stompconn.connect({ Authorization: cookies.get("vtoken") }, function (frame) {
@@ -145,34 +197,6 @@ function StudyChat() {
     }
 
 
-    const [chatInputs, setChatInputs] = useState({
-        message: '',
-        sender: 'testsss'
-    });
-
-    const { message, sender } = chatInputs;
-
-    const chatOnChange = useCallback(e => {
-        const { name, value } = e.target;
-        setChatInputs(chatInputs => ({
-            ...chatInputs,
-            [name]: value
-        }));
-    }, []);
-
-    const [chats, setChats] = useState([
-        {
-            id: 1,
-            sender: 'test_sender',
-            message: '테스트용 메세지 입니다.'
-        },
-        {
-            id: 2,
-            sender: 'test_sender2',
-            message: '두 번째 테스트용 메세지 입니다.'
-        },
-    ]);
-    const nextChatId = useRef(3)
 
     const chatOnCreate = useCallback(() => {
         // 채팅 보내는 부분
@@ -262,38 +286,7 @@ function StudyChat() {
         }
     }
 
-    /*
-     UI Handlers
-      */
-    // mute video buttons handler
-    /*
-    videoButtonOff.onclick = () => {
-        localVideoTracks = localStream.getVideoTracks();
-        localVideoTracks.forEach(track => localStream.removeTrack(track));
-        $(localVideo).css('display', 'none');
-        log('Video Off');
-    };
-    videoButtonOn.onclick = () => {
-        localVideoTracks.forEach(track => localStream.addTrack(track));
-        $(localVideo).css('display', 'inline');
-        log('Video On');
-    };
-    
-    // mute audio buttons handler
-    audioButtonOff.onclick = () => {
-        localVideo.muted = true;
-        log('Audio Off');
-    };
-    audioButtonOn.onclick = () => {
-        localVideo.muted = false;
-        log('Audio On');
-    };
-    
-    // room exit button handler
-    exitButton.onclick = () => {
-        stop();
-    };
-    */
+
     function log(message) {
         console.log(message);
     }
@@ -310,17 +303,6 @@ function StudyChat() {
 
     }
 
-    // initialize media stream
-    // function getMedia(constraints) {
-    //     if (localStream) {
-    //         localStream.getTracks().forEach(track => {
-    //             track.stop();
-    //         });
-    //     }
-    //     navigator.mediaDevices.getUserMedia(constraints)
-    //         .then(getLocalMediaStream).catch(handleGetUserMediaError);
-    // }
-
     const getMedia = async (constraints) => {
 
         if (localStream) {
@@ -332,9 +314,6 @@ function StudyChat() {
             .then(getLocalMediaStream).catch(handleGetUserMediaError);
 
     };
-
-
-
 
     // create peer connection, get media, start negotiating when second participant appears
     function handlePeerConnection(message) {
@@ -426,7 +405,6 @@ function StudyChat() {
                 log('Negotiation Needed Event: SDP offer sent');
             })
             .catch(function (reason) {
-                // an error occurred, so handle the failure to connect
                 handleErrorMessage('failure to connect error: ', reason);
             });
     }
@@ -457,7 +435,6 @@ function StudyChat() {
                     });
 
                 })
-                // .catch(handleGetUserMediaError);
                 .catch(handleErrorMessage)
         }
     }
@@ -473,8 +450,7 @@ function StudyChat() {
         myPeerConnection.addIceCandidate(candidate).catch(handleErrorMessage);
     }
 
-    let initLocalStream;
-    //초기 비디오 설정. 내 얼굴 보이게! 내 목소리는 내가 안듣고싶어
+
     const getUserMediaReact = async () => {
         try {
             console.log('get my video .');
@@ -486,79 +462,109 @@ function StudyChat() {
         }
     };
 
-    useEffect(() => {
+
+    const [userObject, setUserObject] = useState(null);
+    useEffect(async () => {
+        const token = cookies.get("vtoken");
+        await getuser(token)
+            .then((res) => {
+                setUserObject(res);
+                //userName.current.innerText = res.firstName + res.lastName + "의 비디오";
+                setIsLoaded(true);
+
+            })
+            .catch((err) => {
+                alert("로그인 세션이 만료되었어요.");
+                window.location.href = "/logout"
+            })
+
         stompWithSockJS();
         getUserMediaReact();
-
-        //chatSubscribe();
-        //stompconn.send('/pub/videochat/enter', {}, JSON.stringify({matchId: localRoom}));
     }, []);
 
 
     const videoButtonOff = () => {
-        console.log('localStream:', localStream);
-
         myVideoRef.current.srcObject.getVideoTracks().forEach(track => {
             track.enabled = !track.enabled;
-            console.log(track);
+            SetLocalVideoState(!localVideoState)
         })
-
     }
     const micButtonOff = () => {
-        console.log('클릭');
-
         myVideoRef.current.srcObject.getAudioTracks().forEach(track => {
             track.enabled = !track.enabled;
-            console.log(track);
+            SetLocalAudioState(!localAudioState)
         })
-
 
     }
 
-
-
     return (
-        <VideoWrapper >
 
-            <ProgressBarWrapper>
-                <ul class="w-full steps">
-                    <li class="step step-primary ">자기소개</li>
-                    <li class="step step-primary">한국어세션</li>
-                    <li class="step step-primary">영어세션</li>
-                    <li class="step">마무리</li>
-                </ul>
+        <VideoWrapper>
+            {!isLoaded ? <div class="text-center">로딩중이에요...</div> :
+                <div>
+                    <ProgressBarWrapper>
+                        <ul class="w-full steps">
+                            <li class="step step-primary ">자기소개</li>
+                            <li class="step step-primary">한국어세션</li>
+                            <li class="step step-primary">영어세션</li>
+                            <li class="step">마무리</li>
+                        </ul>
 
-            </ProgressBarWrapper>
+                    </ProgressBarWrapper>
 
-            <Timer></Timer>
-
-
+                    {/* <Timer></Timer> */}
 
 
-            <div class="flex mb-3 mt-5">
-                <div class="flex-col">
-                    <div>회원님의 화면이에요.</div>
-                    <div onClick={videoButtonOff} class="border rounded-lg p-3">Video Off</div>
-                    <div onClick={micButtonOff} class="border rounded-lg p-3">Audio Off</div>
-                    <UserVideo autoPlay playsInline ref={myVideoRef}></UserVideo>
-                    <UserVideo autoPlay playsInline ref={remoteVideoRef}></UserVideo>
-                </div>
-                <div class="flex-col">
-                    <ChatView ref={chatRef}>
-                        <ChatList chats={chats} myName={myName} />
-                        <CreateChat
-                            message={message}
-                            onChange={chatOnChange}
-                            onCreate={chatOnCreate}
-                        ></CreateChat>
-                    </ChatView>
-                </div>
-            </div>
-        </VideoWrapper>
+                    <div class="flex mb-3 mt-5 justify-between">
+                        <div class="flex-col">
+                            <div class="text-left">
+                                <VideoUserText>{userObject.firstName}{userObject.lastName}의 비디오</VideoUserText>
+                            </div>
+
+                            <UserVideo class="z-0" autoPlay playsInline ref={myVideoRef}>
+
+                            </UserVideo>
+                            <div class="flex justify-between">
+                                <ToggleButton className="ml-28" onClick={videoButtonOff}>{localVideoState ?
+                                    <FontAwesomeIcon icon={faCamera} />
+
+                                    : <FontAwesomeIcon icon={faCamera} />}
+                                </ToggleButton>
+                                <ToggleButton onClick={micButtonOff}>{localAudioState ?
+                                    <FontAwesomeIcon icon={faMicrophoneAltSlash} />
+
+                                    : <FontAwesomeIcon icon={faMicrophone} />}
+                                </ToggleButton>
+                            </div>
+                            <div class="text-left">
+                                <VideoUserText>상대방의 비디오</VideoUserText>
+                            </div>
+                            <UserVideo autoPlay playsInline ref={remoteVideoRef}></UserVideo>
+                        </div>
+                        <div class="flex-col">
+                            <div class="text-left">
+                                <ChatLabelText>채팅</ChatLabelText>
+                            </div>
+
+                            <ChatView ref={chatRef}>
+                                <ChatList chats={chats} myName={myName} />
+                                <CreateChat
+                                    message={message}
+                                    onChange={chatOnChange}
+                                    onCreate={chatOnCreate}
+                                ></CreateChat>
+                            </ChatView>
+                        </div>
+                    </div>
+                </ div>}
+        </VideoWrapper >
+
+
+
 
 
     );
 
 }
 
-export default StudyChat;
+export default React.memo(StudyChat);

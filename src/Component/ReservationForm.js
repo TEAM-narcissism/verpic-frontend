@@ -106,7 +106,7 @@ function ReservationForm({ topicId }) {
         console.log(Studytime);
 
         if (Mothertongue === Studylanguage) {
-            alert("Choose language again!");
+            alert("모국어와 공부할 언어는 달라야 해요.");
             return;
         }
 
@@ -126,7 +126,12 @@ function ReservationForm({ topicId }) {
                     'Authorization': token
                 }
             })
-            .then((res) => console.log(res));
+            .then((res) =>
+                console.log(res)
+            )
+            .catch((err) =>
+                window.location.ref = '/logout'
+            );
 
 
         setIsOpen(!isOpen)
