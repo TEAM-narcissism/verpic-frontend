@@ -18,7 +18,9 @@ const CardListWrapper = styled.div`
 `;
 
 function CardList(props) {
-    const [topics, setTopic] = useState([{ theme: "", numOfParticipant: 0, studyDate: "" }]);
+    const [topics, setTopic] = useState([{
+        theme: "", numOfParticipant: 0, studyDate: "", data: ""
+    }]);
     const [checkedItem, setCheckedItem] = useState("");
     const [today, setToday] = useState(getTodayLabel());
     const [currentPage, setCurrentPage] = useState(1);
@@ -67,7 +69,7 @@ function CardList(props) {
             <CardListWrapper>
                 <CardListText>토픽 목록</CardListText>
                 <DaySorting dayPaginate={setCurrentPageAndDay} />
-             
+                &nbsp;
                 <div class="text-gray-600 mb-3 mx-10 select-none">버픽에서 이러한 토픽을 준비했어요.</div>
                 {
                     filteredTopicsByPaging.map((topic) => (

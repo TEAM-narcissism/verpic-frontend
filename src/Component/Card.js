@@ -50,7 +50,7 @@ function Card({ topic, checkedItemHandler, checkedItem }) {
 
 
       <ImageWrapper>
-        <TopicImage src="https://images.pexels.com/photos/853199/pexels-photo-853199.jpeg?auto=compress&cs=tinysrgb&h=650&w=940" alt="Flower and sky" />
+        <TopicImage src={"data:image/png;base64," + topic.data} alt="Flower and sky" />
       </ImageWrapper>
 
       <TopicContentWrapper>
