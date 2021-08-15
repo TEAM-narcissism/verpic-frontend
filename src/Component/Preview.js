@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import Axios from "axios";
 import ExpressionList from "./ExpressionList";
+import Navigator from "../Component/Navigator";
 import PreviewandDetail from "./PreviewandDetail";
 import UserAnswerList from "./UserAnswerList";
 
@@ -38,9 +39,10 @@ function Preview() {
 
   return (
     <>
+      <Navigator />
       <div className="pt-4 pb-4">
-        <h2>예습하기</h2>
-        <h4>Topic 주제</h4>
+        <div className="text-3xl font-bold mb-1">예습하기</div>
+        <div className="text-gray-600 mb-3">Topic 주제</div>
       </div>
 
       <div className="grid grid-cols-2 space-x-2">
@@ -60,8 +62,8 @@ function Preview() {
 
           <div className="border-2 border-black">
             <h1 className="border-b-2 border-black">질문</h1>
-            <input placeholder="예시답안 작성란"></input>
-            {/* <UserAnswerList userAnswerList={previewset.} /> */}
+            {/* <input placeholder="예시답안 작성란"></input> */}
+            <UserAnswerList />
           </div>
         </div>
       </div>

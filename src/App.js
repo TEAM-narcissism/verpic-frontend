@@ -46,6 +46,8 @@ function App() {
 
       {/* 로그인 / 로그아웃에 관계 없이 접근 가능한 영역 */}
       <Route component={MainPage} path="/" exact />
+      <Route component={Preview} path="/preview" exact />
+      <Route component={StudyChat} path="/chat" exact />
     </div>
   );
 }
