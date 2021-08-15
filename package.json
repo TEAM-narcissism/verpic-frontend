@@ -70,6 +70,8 @@
     "react-loader-spinner": "^4.0.0",
     "react-refresh": "^0.8.3",
     "react-router-dom": "^5.2.0",
+    "react-slick": "^0.28.1",
+    "slick-carousel": "^1.8.1",
     "react-scripts": "^4.0.0",
     "react-stomp": "^5.1.0",
     "resolve": "1.18.1",

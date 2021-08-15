@@ -318,7 +318,9 @@ function StudyChat() {
 
     // create peer connection, get media, start negotiating when second participant appears
     function handlePeerConnection(message) {
-        remoteVideoRef.current.src = null;
+        if (remoteVideoRef) {
+            remoteVideoRef.current.src = null;
+        }
         createPeerConnection();
 
         getMedia(mediaConstraints);

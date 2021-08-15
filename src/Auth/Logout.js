@@ -1,17 +1,16 @@
-import { Redirect } from 'react-router-dom';
-import Cookies from 'universal-cookie';
+import Cookies from "universal-cookie";
+import { Redirect } from "react-router-dom";
 
 function Logout() {
-  const cookies = new Cookies;
+  const cookies = new Cookies();
   const options = {
-    path: '/',
+    path: "/",
   };
-  cookies.remove('vtoken', options);
+  cookies.remove("vtoken", options);
   localStorage.removeItem("uuid");
   //cookies.set('vtoken', '', {path: '/'});
 
-  return <Redirect to="/"></Redirect>
-
+  return <Redirect to="/"></Redirect>;
 }
 
 export default Logout;

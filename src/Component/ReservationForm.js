@@ -1,43 +1,39 @@
 import React, { useState, useRef } from 'react';
-import tw from 'twin.macro';
-import styled from '@emotion/styled';
-import axios from 'axios'
 import Cookies from 'universal-cookie';
 import Modal from 'styled-react-modal';
-
-import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
+import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import styled from "@emotion/styled";
+import tw from "twin.macro";
 
 const ReservationWrapper = styled.div`
-    font-family: "NanumGothic-Regular";
-    ${tw`container ml-20  mr-10 mb-10`}
+  font-family: "NanumGothic-Regular";
+  ${tw`container ml-20  mr-10 mb-10`}
 `;
 
 const ReservationQuestionWrapper = styled.div`
-    ${tw`border rounded shadow-lg p-10`}
+  ${tw`border rounded shadow-lg p-10`}
 `;
 
 const ResevationText = styled.div`
-
-    ${tw`text-3xl font-bold mb-1 select-none`}
+  ${tw`text-3xl font-bold mb-1 select-none`}
 `;
 
 const ReservationOptionText = styled.div`
-    ${tw`font-semibold text-xl `}
+  ${tw`font-semibold text-xl `}
 `;
 const ReservationOptionWrapper = styled.div`
-    ${tw`mx-auto mb-10`}
+  ${tw`mx-auto mb-10`}
 `;
 
 const ReservationOptionSelect = styled.select`
-    ${tw`ml-10 border p-3 rounded mt-4`}
+  ${tw`ml-10 border p-3 rounded mt-4`}
 `;
-
 
 const ReservationSendButton = styled.button`
-    ${tw`border w-full rounded-lg p-3  text-white font-bold`}
+  ${tw`border w-full rounded-lg p-3  text-white font-bold`}
 `;
-
 
 const StyledModal = Modal.styled`
     font-family: "NanumGothic-Regular";
@@ -47,12 +43,9 @@ const StyledModal = Modal.styled`
 `;
 
 const ModalButton = styled.div`
-    font-family: "NanumGothic-Regular";
-    ${tw`p-2 border w-1/2 mx-auto mt-20 bg-yellow-400 text-white rounded-lg text-center cursor-pointer`}
+  font-family: "NanumGothic-Regular";
+  ${tw`p-2 border w-1/2 mx-auto mt-20 bg-yellow-400 text-white rounded-lg text-center cursor-pointer`}
 `;
-
-
-
 
 function ReservationForm({ topicId }) {
     const [Mothertongue, SetMothertongue] = useState("");
