@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import tw from 'twin.macro';
 import styled from '@emotion/styled';
 import axios from 'axios'
@@ -41,7 +41,7 @@ const ReservationSendButton = styled.button`
 
 const StyledModal = Modal.styled`
     font-family: "NanumGothic-Regular";
-    width: 400px;
+    width: 500px;
     height: 300px;
     ${tw`bg-gray-100 rounded-lg `}
 `;
@@ -61,8 +61,10 @@ function ReservationForm({ topicId }) {
     const [Studytime, SetStudytime] = useState("");
     const cookies = new Cookies();
     const token = cookies.get('vtoken');
+    const modalRef = useRef();
 
     const [isOpen, setIsOpen] = useState(false)
+    const [modalContent, setModalContent] = useState();
 
     function toggleModal(e) {
         setIsOpen(!isOpen)
@@ -106,12 +108,13 @@ function ReservationForm({ topicId }) {
         console.log(Studytime);
 
         if (Mothertongue === Studylanguage) {
-            alert("모국어와 공부할 언어는 달라야 해요.");
+            setModalContent("모국어와 공부할 언어는 달라야 해요.")
+            setIsOpen(!isOpen);
+
             return;
         }
 
         let body = {
-            userId: 3,
             familiarLanguage: Mothertongue,
             unfamiliarLanguage: Studylanguage,
             userLevel: Proficiency,
@@ -126,15 +129,33 @@ function ReservationForm({ topicId }) {
                     'Authorization': token
                 }
             })
-            .then((res) =>
-                console.log(res)
-            )
-            .catch((err) =>
-                window.location.ref = '/logout'
-            );
+            .then((res) => {
+                console.log(res);
+                setModalContent("스터디 예약을 완료했어요.")
+                setIsOpen(!isOpen);
 
 
-        setIsOpen(!isOpen)
+            })
+            .catch((err) => {
+                if (err.response) {
+                    const statusCode = err.response.data.httpStatus;
+                    if (statusCode === "UNAUTHORIZED") {
+                        setModalContent("중복된 토픽과 시간대에 이미 예약을 했어요.")
+                        setIsOpen(!isOpen);
+                    }
+                    else {
+                        setModalContent("로그인 세션이 만료되었어요.")
+                        setIsOpen(!isOpen);
+                        window.location.href = "/logout"
+                    }
+
+                }
+                console.log(err.response);
+                //
+            });
+
+
+
     };
 
     return (
@@ -238,9 +259,10 @@ function ReservationForm({ topicId }) {
                 <StyledModal
                     isOpen={isOpen}
                     onBackgroundClick={toggleModal}
-                    onEscapeKeydown={toggleModal}>
+                    onEscapeKeydown={toggleModal}
+                >
 
-                    <div class="text-center mt-28 text-xl ">스터디 신청을 완료했어요.</div>
+                    <div class="text-center mt-28 text-xl" ref={modalRef}>{modalContent}</div>
                     <div class="text-align">
                         <ModalButton onClick={toggleModal}>확인</ModalButton>
                     </div>

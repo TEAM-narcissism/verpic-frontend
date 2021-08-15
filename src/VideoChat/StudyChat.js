@@ -14,7 +14,7 @@ import { faCamera, faMicrophone, faMicrophoneAltSlash } from "@fortawesome/free-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import getuser from '../Api/getuser';
 import Loader from "react-loader-spinner";
-
+import logoVerpic from '../assets/images/logoVerpic.png';
 let localStream;
 let localVideoTracks;
 let myPeerConnection;
@@ -242,6 +242,7 @@ function StudyChat() {
 
     function stop() {
         // send a message to the server to remove this client from the room clients list
+
         log("Send 'leave' message to server");
         sendToServer({
             from: localUserName,
@@ -317,8 +318,11 @@ function StudyChat() {
 
     // create peer connection, get media, start negotiating when second participant appears
     function handlePeerConnection(message) {
+        remoteVideoRef.current.src = null;
         createPeerConnection();
+
         getMedia(mediaConstraints);
+
         if (message.data === "true") {
             myPeerConnection.onnegotiationneeded = handleNegotiationNeededEvent;
         }
@@ -342,6 +346,7 @@ function StudyChat() {
         localStream = mediaStream;
         if (myVideoRef.current) {
             myVideoRef.current.srcObject = mediaStream;
+            myVideoRef.current.muted = true;
         }
 
         console.log('localStream:', localStream);
@@ -464,12 +469,11 @@ function StudyChat() {
 
 
     const [userObject, setUserObject] = useState(null);
-    useEffect(async () => {
+    useEffect(() => {
         const token = cookies.get("vtoken");
-        await getuser(token)
+        getuser(token)
             .then((res) => {
                 setUserObject(res);
-                //userName.current.innerText = res.firstName + res.lastName + "의 비디오";
                 setIsLoaded(true);
 
             })
@@ -479,7 +483,7 @@ function StudyChat() {
             })
 
         stompWithSockJS();
-        getUserMediaReact();
+        //getUserMediaReact();
     }, []);
 
 
@@ -521,7 +525,7 @@ function StudyChat() {
                                 <VideoUserText>{userObject.firstName}{userObject.lastName}의 비디오</VideoUserText>
                             </div>
 
-                            <UserVideo class="z-0" autoPlay playsInline ref={myVideoRef}>
+                            <UserVideo poster={logoVerpic} class="z-0" autoPlay playsInline ref={myVideoRef}>
 
                             </UserVideo>
                             <div class="flex justify-between">
@@ -539,7 +543,7 @@ function StudyChat() {
                             <div class="text-left">
                                 <VideoUserText>상대방의 비디오</VideoUserText>
                             </div>
-                            <UserVideo autoPlay playsInline ref={remoteVideoRef}></UserVideo>
+                            <UserVideo poster={logoVerpic} autoPlay playsInline ref={remoteVideoRef}></UserVideo>
                         </div>
                         <div class="flex-col">
                             <div class="text-left">
