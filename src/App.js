@@ -4,7 +4,6 @@ import './App.css';
 import StudyChat from './VideoChat/StudyChat';
 import Login from './Auth/Login';
 
-
 import { Route } from 'react-router-dom';
 import PrivateRoute from './Route/PrivateRoute';
 import PublicRoute from './Route/PublicRoute';
@@ -13,6 +12,7 @@ import Logout from './Auth/Logout';
 
 import { Stomp } from '@stomp/stompjs';
 import * as SockJS from "sockjs-client";
+import UserCardList from './Component/UserCardList';
 
 
 export const conn = new SockJS('http://localhost:8080/ws-stomp');
@@ -28,6 +28,7 @@ function App() {
       {/* 로그인을 해야 접근 가능한 영역 */}
       <PrivateRoute component={Logout} path="/logout" exact />
       <PrivateRoute component={StudyChat} path="/studychat" exact />
+      <PrivateRoute component={UserCardList} path="/topic/reservation" exact />
 
 
       {/* 로그인을 안해야 접근 가능한 영역 */}
