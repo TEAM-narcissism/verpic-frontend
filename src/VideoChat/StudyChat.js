@@ -10,8 +10,6 @@ import ChatList from "./ChatList";
 import Cookies from "universal-cookie";
 import CreateChat from "./CreateChat";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Loader from "react-loader-spinner";
-import Timer from "./Timer";
 import getuser from "../Api/getuser";
 import styled from "@emotion/styled";
 import tw from "twin.macro";

@@ -1,6 +1,6 @@
+import { useEffect, useRef, useState } from "react";
 
-import { useState, useEffect, useRef } from 'react';
-import React from 'react';
+import React from "react";
 
 function Timer() {
   const [min, setMin] = useState(3);
@@ -32,6 +32,6 @@ function Timer() {
       {min} 분 {sec} 초
     </div>
   );
-};
+}
 
 export default React.memo(Timer);

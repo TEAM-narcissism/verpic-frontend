@@ -1,5 +1,4 @@
 import Cookies from "universal-cookie";
-import axios from "axios";
 
 function isAuthorized() {
   const cookies = new Cookies();
