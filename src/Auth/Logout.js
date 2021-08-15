@@ -7,6 +7,7 @@ function Logout() {
     path: "/",
   };
   cookies.remove("vtoken", options);
+  localStorage.removeItem("uuid");
   //cookies.set('vtoken', '', {path: '/'});
 
   return <Redirect to="/"></Redirect>;

@@ -1,10 +1,12 @@
+import React, { useState } from "react";
+
 import Logo from "../assets/images/logoVerpic.png";
-import React from "react";
 import isAuthorized from "../Auth/isAuthorized";
 import styled from "@emotion/styled";
 import tw from "twin.macro";
 
 const NavigatorWrapper = styled.div`
+  font-family: "NanumGothic-Bold";
   display: flex;
   height: 70px;
   justify-content: space-between;
@@ -25,7 +27,7 @@ const NavigatorText = styled.text`
   @media screen and (max-width: 500px) {
     display: none;
   }
-  ${tw`bg-clip-text my-auto text-lg font-extrabold text-transparent bg-gradient-to-r from-blue-400 via-black to-gray-500`}
+  ${tw`bg-clip-text my-auto text-lg font-extrabold text-transparent bg-gradient-to-r from-blue-400 via-black to-gray-500 select-none`}
 `;
 
 const NavigatorLink = styled.text`
@@ -49,10 +51,7 @@ function Navigator() {
             {" "}
             신청하기{" "}
           </NavigatorLink>
-          <NavigatorLink onClick={() => (window.location.href = "/preview")}>
-            {" "}
-            예습하기{" "}
-          </NavigatorLink>
+          <NavigatorLink> 예습하기 </NavigatorLink>
           <NavigatorLink> 피드백 </NavigatorLink>
 
           {isAuthorized() ? (

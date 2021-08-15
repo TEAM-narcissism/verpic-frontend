@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 
 import AuthButton from "./AuthButton";
 import AuthWrapper from "./AuthWrapper";
@@ -28,29 +28,21 @@ function Login() {
         const cookies = new Cookies();
         cookies.set("vtoken", accessToken, { path: "/" });
         window.location = "/";
-      })
-      .catch((error) => {
-        if (error.response) {
-          const { data } = error.response;
-          console.error("data : ", data);
+
+        function generateUuid() {
+          return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+            /[xy]/g,
+            function (c) {
+              let r = (Math.random() * 16) | 0,
+                v = c == "x" ? r : (r & 0x3) | 0x8;
+              return v.toString(16);
+            }
+          );
         }
-      });
-  }
 
-  function GoogleLogin() {
-    let body = "";
-    console.log(body);
-    const getCodeURL =
-      "https://accounts.google.com/o/oauth2/v2/auth?scope=https%3A//www.googleapis.com/auth/drive.metadata.readonly&access_type=offline&include_granted_scopes=true&response_type=code&state=state_parameter_passthrough_value&redirect_uri=https%3A//oauth2.example.com/code&client_id=732357881374-s8ol03uom7tp564gm1104bs9t07fdmjq.apps.googleusercontent.com";
-    axios
-      .post(getCodeURL, body)
-      .then((res) => {
-        console.log(res.data.data);
-        // const accessToken = res.data.data.Token;
-
-        // const cookies = new Cookies();
-        // cookies.set("vtoken", accessToken, { path: "/" });
-        // window.location = "/";
+        if (localStorage.getItem("uuid") === null) {
+          localStorage.setItem("uuid", generateUuid());
+        }
       })
       .catch((error) => {
         if (error.response) {
@@ -89,7 +81,7 @@ function Login() {
         ref={passwordRef}
       />
       <AuthButton onClick={postToLogin}>로그인</AuthButton>
-      <AuthButton onClick={GoogleLogin}>구글로그인</AuthButton>
+      <AuthButton onClick="">구글로그인</AuthButton>
     </AuthWrapper>
   );
 }

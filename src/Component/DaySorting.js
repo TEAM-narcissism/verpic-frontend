@@ -1,0 +1,52 @@
+import React from 'react';
+import styled from '@emotion/styled';
+import tw from 'twin.macro';
+
+const PageUl = styled.ul`
+
+  font-family: 'NanumGothic-Regular';
+  ${tw`text-gray-400 bg-white border rounded-lg text-center mx-10 mb-5 flex-col py-1`}
+`;
+
+const PageLi = styled.li`
+  display:inline-block;
+
+  &:hover{
+    color:white;
+    background-color:#263A6C;
+    border-radius:10%;
+  }
+  &:focus::after{
+    color:white;
+    background-color:#263A6C;
+    border-radius:10%;
+  }
+  ${tw`bg-white cursor-pointer py-2`}
+`;
+
+const PageSpan = styled.span`
+
+  ${tw`p-1 w-full mx-3`}
+`;
+
+const DaySorting = ({ dayPaginate }) => {
+  const dayList = ["MON", "TUES", "WED", "THUR", "FRI", "SAT", "SUN"];
+
+  return (
+    <div class="">
+      <nav>
+        <PageUl className="pagination">
+          {dayList.map(day => (
+            <PageLi key={day} className="page-item">
+              <PageSpan className="page-link" onClick={() => dayPaginate(day)}>
+                {day}
+              </PageSpan>
+            </PageLi>
+          ))}
+        </PageUl>
+      </nav>
+    </div>
+  );
+};
+
+export default React.memo(DaySorting);
