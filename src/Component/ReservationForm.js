@@ -113,11 +113,11 @@ function ReservationForm({ topicId }) {
             userLevel: Proficiency,
             topicId: topicId,
             startTime: Studytime,
-            isSoldOut: true
+            isSoldOut: false
         };
 
         axios
-            .post("/reservation", body, {
+            .post("/reservation/", body, {
                 headers: {
                     'Authorization': token
                 }

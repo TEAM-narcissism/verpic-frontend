@@ -1,6 +1,17 @@
 import "./App.css";
 
+import StudyChat from './VideoChat/StudyChat';
+import Login from './Auth/Login';
+
+import { Route } from 'react-router-dom';
+import PrivateRoute from './Route/PrivateRoute';
+import PublicRoute from './Route/PublicRoute';
+import MainPage from './Home/MainPage';
+import Logout from './Auth/Logout';
+
+import { Stomp } from '@stomp/stompjs';
 import * as SockJS from "sockjs-client";
+import UserCardList from './Component/UserCardList';
 
 import React, { useEffect, useState } from "react";
 
@@ -26,6 +37,7 @@ function App() {
       {/* 로그인을 해야 접근 가능한 영역 */}
       <PrivateRoute component={Logout} path="/logout" exact />
       <PrivateRoute component={StudyChat} path="/studychat" exact />
+      <PrivateRoute component={UserCardList} path="/topic/reservation" exact />
       <PrivateRoute component={MatchingPost} path="/matching" exact />
       <PrivateRoute component={Mypage} path="/profile/:id" />
 
