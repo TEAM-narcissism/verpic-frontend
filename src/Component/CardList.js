@@ -27,6 +27,8 @@ function CardList(props) {
       data: "",
     },
   ]);
+
+  const [isLoading, setIsLoading] = useState(true);
   const [checkedItem, setCheckedItem] = useState("");
   const [today, setToday] = useState(getTodayLabel());
   const [currentPage, setCurrentPage] = useState(1);
@@ -42,7 +44,11 @@ function CardList(props) {
           Authorization: token,
         },
       })
-      .then((res) => setTopic(res.data))
+      .then((res) => {
+        setTopic(res.data);
+        setIsLoading(false);
+      }
+      )
       .catch((err) => {
         window.location.ref = "/logout";
       });
@@ -79,46 +85,49 @@ function CardList(props) {
 
   return (
     <>
-      <CardListWrapper>
-        <CardListText>토픽 목록</CardListText>
+      {isLoading ? <div class="text-center">로딩중이에요..</div> :
+        <>
+          <CardListWrapper>
+            <CardListText>토픽 목록</CardListText>
 
-        <div class="text-gray-600 mb-3 mx-10 select-none">
-          버픽에서 이러한 토픽을 준비했어요.
-        </div>
+            <div class="text-gray-600 mb-3 mx-10 select-none">
+              버픽에서 이러한 토픽을 준비했어요.
+            </div>
 
-        <div class="">
-          <DaySorting dayPaginate={setCurrentPageAndDay} />
-        </div>
+            <div class="">
+              <DaySorting dayPaginate={setCurrentPageAndDay} />
+            </div>
 
-        {filteredTopicsByPaging.length === 0 ? (
-          <div class="text-center font-lg font-semibold">
-            해당 요일에 토픽이 없어요.
-          </div>
-        ) : (
-          ""
-        )}
+            {filteredTopicsByPaging.length === 0 ? (
+              <div class="text-center font-lg font-semibold">
+                해당 요일에 토픽이 없어요.
+              </div>
+            ) : (
+              ""
+            )}
 
-        {filteredTopicsByPaging.map((topic) => (
-          <Card
-            topic={topic}
-            checkedItemHandler={checkedItemHandler}
-            key={topic.id}
-            checkedItem={checkedItem}
-          />
-        ))}
-        {filteredTopicsByPaging.length === 0 ? (
-          <div></div>
-        ) : (
-          <div class="">
-            <Pagination
-              topicsPerPage={topicsPerPage}
-              totalTopics={topics.length}
-              paginate={setCurrentPage}
-            />
-          </div>
-        )}
-      </CardListWrapper>
-      <ReservationForm topicId={checkedItem} />
+            {filteredTopicsByPaging.map((topic) => (
+              <Card
+                topic={topic}
+                checkedItemHandler={checkedItemHandler}
+                key={topic.id}
+                checkedItem={checkedItem}
+              />
+            ))}
+            {filteredTopicsByPaging.length === 0 ? (
+              <div></div>
+            ) : (
+              <div class="">
+                <Pagination
+                  topicsPerPage={topicsPerPage}
+                  totalTopics={topics.length}
+                  paginate={setCurrentPage}
+                />
+              </div>
+            )}
+          </CardListWrapper>
+          <ReservationForm topicId={checkedItem} />
+        </>}
     </>
   );
 }
