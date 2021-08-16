@@ -73,7 +73,7 @@ function CardList(props) {
                 <div class="text-gray-600 mb-3 mx-10 select-none">버픽에서 이러한 토픽을 준비했어요.</div>
                 {
                     filteredTopicsByPaging.map((topic) => (
-                        <Card topic={topic} checkedItemHandler={checkedItemHandler} key={topic.id} checkedItem={checkedItem} />
+                        <Card topic={topic} checkedItemHandler={checkedItemHandler} key={topic.id} checkedItem={checkedItem} isPreviewButton={false} />
                     ))
 
                 }

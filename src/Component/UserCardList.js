@@ -23,7 +23,6 @@ function UserCardList(props) {
     const data = {
         headers: { 'Authorization': token }
     };
-    // const [userId, setUserId] = useState(getUserId());
     const [topics, setTopic] = useState([{
         theme: "", numOfParticipant: 0, studyDate: "", data: ""
     }])
@@ -32,24 +31,12 @@ function UserCardList(props) {
     const [currentPage, setCurrentPage] = useState(1);
     const [topicsPerPage, setTopicsPerPage] = useState(5);
 
-    // async function getUserId() {
-    //     await axios.get("/users/current-login-user", data)
-    //         .then(response => {
-    //             return response.data.id;
-    //         });
-    // }
-
     useEffect(() => {
         axios.get('/topic/reservationList/' + today, data)
             .then(response => {
                 console.log(response.data);
                 setTopic(response.data);
             });
-        // fetch('/topic/reservationList/' + userId + '/' + today)
-        // .then(response => response.json())
-        // .then(topics => {
-        //     setTopic(topics)
-        // });
     }, [today]);
 
     const checkedItemHandler = (id) => {
@@ -90,7 +77,7 @@ function UserCardList(props) {
                 <div class="text-gray-600 mb-3 mx-10 select-none">예약된 학습의 토픽입니다. 학습하기에 앞서 예습을 원하신다면 토픽을 클릭해주세요. 예습은 학습의 효과를 4배로 늘려준다는 연구결과도 있습니다. 그러므로 Verpic은 여러분의 적극적인 예습을 권장합니다!</div>
                 {
                     filteredTopicsByPaging.map((topic) => (
-                        <Card topic={topic} checkedItemHandler={checkedItemHandler} key={topic.id} checkedItem={checkedItem} />
+                        <Card topic={topic} checkedItemHandler={checkedItemHandler} key={topic.id} checkedItem={checkedItem} isPreviewButton={true} />
                     ))
 
                 }
