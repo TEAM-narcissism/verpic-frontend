@@ -1,58 +1,51 @@
-import React, { useState } from 'react';
-import tw from 'twin.macro';
-import styled from '@emotion/styled';
-import axios from 'axios'
+import React, { useState, useRef } from 'react';
 import Cookies from 'universal-cookie';
 import Modal from 'styled-react-modal';
-
-import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
+import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import styled from "@emotion/styled";
+import tw from "twin.macro";
 
 const ReservationWrapper = styled.div`
-    font-family: "NanumGothic-Regular";
-    ${tw`container ml-20  mr-10 mb-10`}
+  font-family: "NanumGothic-Regular";
+  ${tw`container ml-20  mr-10 mb-10`}
 `;
 
 const ReservationQuestionWrapper = styled.div`
-    ${tw`border rounded shadow-lg p-10`}
+  ${tw`border rounded shadow-lg p-10`}
 `;
 
 const ResevationText = styled.div`
-
-    ${tw`text-3xl font-bold mb-1 select-none`}
+  ${tw`text-3xl font-bold mb-1 select-none`}
 `;
 
 const ReservationOptionText = styled.div`
-    ${tw`font-semibold text-xl `}
+  ${tw`font-semibold text-xl `}
 `;
 const ReservationOptionWrapper = styled.div`
-    ${tw`mx-auto mb-10`}
+  ${tw`mx-auto mb-10`}
 `;
 
 const ReservationOptionSelect = styled.select`
-    ${tw`ml-10 border p-3 rounded mt-4`}
+  ${tw`ml-10 border p-3 rounded mt-4`}
 `;
-
 
 const ReservationSendButton = styled.button`
-    ${tw`border w-full rounded-lg p-3  text-white font-bold`}
+  ${tw`border w-full rounded-lg p-3  text-white font-bold`}
 `;
-
 
 const StyledModal = Modal.styled`
     font-family: "NanumGothic-Regular";
-    width: 400px;
+    width: 500px;
     height: 300px;
     ${tw`bg-gray-100 rounded-lg `}
 `;
 
 const ModalButton = styled.div`
-    font-family: "NanumGothic-Regular";
-    ${tw`p-2 border w-1/2 mx-auto mt-20 bg-yellow-400 text-white rounded-lg text-center cursor-pointer`}
+  font-family: "NanumGothic-Regular";
+  ${tw`p-2 border w-1/2 mx-auto mt-20 bg-yellow-400 text-white rounded-lg text-center cursor-pointer`}
 `;
-
-
-
 
 function ReservationForm({ topicId }) {
     const [Mothertongue, SetMothertongue] = useState("");
@@ -61,8 +54,10 @@ function ReservationForm({ topicId }) {
     const [Studytime, SetStudytime] = useState("");
     const cookies = new Cookies();
     const token = cookies.get('vtoken');
+    const modalRef = useRef();
 
     const [isOpen, setIsOpen] = useState(false)
+    const [modalContent, setModalContent] = useState();
 
     function toggleModal(e) {
         setIsOpen(!isOpen)
@@ -106,7 +101,9 @@ function ReservationForm({ topicId }) {
         console.log(Studytime);
 
         if (Mothertongue === Studylanguage) {
-            alert("Choose language again!");
+            setModalContent("모국어와 공부할 언어는 달라야 해요.")
+            setIsOpen(!isOpen);
+
             return;
         }
 
@@ -125,10 +122,33 @@ function ReservationForm({ topicId }) {
                     'Authorization': token
                 }
             })
-            .then((res) => console.log(res));
+            .then((res) => {
+                console.log(res);
+                setModalContent("스터디 예약을 완료했어요.")
+                setIsOpen(!isOpen);
 
 
-        setIsOpen(!isOpen)
+            })
+            .catch((err) => {
+                if (err.response) {
+                    const statusCode = err.response.data.httpStatus;
+                    if (statusCode === "UNAUTHORIZED") {
+                        setModalContent("중복된 토픽과 시간대에 이미 예약을 했어요.")
+                        setIsOpen(!isOpen);
+                    }
+                    else {
+                        setModalContent("로그인 세션이 만료되었어요.")
+                        setIsOpen(!isOpen);
+                        window.location.href = "/logout"
+                    }
+
+                }
+                console.log(err.response);
+                //
+            });
+
+
+
     };
 
     return (
@@ -232,9 +252,10 @@ function ReservationForm({ topicId }) {
                 <StyledModal
                     isOpen={isOpen}
                     onBackgroundClick={toggleModal}
-                    onEscapeKeydown={toggleModal}>
+                    onEscapeKeydown={toggleModal}
+                >
 
-                    <div class="text-center mt-28 text-xl ">스터디 신청을 완료했어요.</div>
+                    <div class="text-center mt-28 text-xl" ref={modalRef}>{modalContent}</div>
                     <div class="text-align">
                         <ModalButton onClick={toggleModal}>확인</ModalButton>
                     </div>
