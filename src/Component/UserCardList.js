@@ -4,6 +4,8 @@ import tw from 'twin.macro';
 import Card from './Card';
 import DaySorting from './DaySorting';
 import Pagination from './Pagination';
+import Cookies from 'universal-cookie';
+import axios from 'axios';
 
 const CardListText = styled.div`
 
@@ -16,7 +18,12 @@ const CardListWrapper = styled.div`
 `;
 
 function UserCardList(props) {
-    const [userId, setUserId] = useState(1);
+    const cookies = new Cookies();
+    const token = cookies.get('vtoken');
+    const data = {
+        headers: { 'Authorization': token }
+    };
+    // const [userId, setUserId] = useState(getUserId());
     const [topics, setTopic] = useState([{
         theme: "", numOfParticipant: 0, studyDate: "", data: ""
     }])
@@ -25,19 +32,25 @@ function UserCardList(props) {
     const [currentPage, setCurrentPage] = useState(1);
     const [topicsPerPage, setTopicsPerPage] = useState(5);
 
-    // function getUserId() {
-    //     // 현재 로그인한 사용자의 id를 get해야 함
-    //     // 지금은 임시로 유저 아이디를 1로 설정함
-    //     return 1;
+    // async function getUserId() {
+    //     await axios.get("/users/current-login-user", data)
+    //         .then(response => {
+    //             return response.data.id;
+    //         });
     // }
 
     useEffect(() => {
-        fetch('/topic/reservationList/' + userId + '/' + today)
-            .then(response => response.json())
-            .then(topics => {
-                setTopic(topics)
+        axios.get('/topic/reservationList/' + today, data)
+            .then(response => {
+                console.log(response.data);
+                setTopic(response.data);
             });
-    }, [today])
+        // fetch('/topic/reservationList/' + userId + '/' + today)
+        // .then(response => response.json())
+        // .then(topics => {
+        //     setTopic(topics)
+        // });
+    }, [today]);
 
     const checkedItemHandler = (id) => {
         setCheckedItem(id);
