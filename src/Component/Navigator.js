@@ -47,6 +47,14 @@ function Navigator() {
           <NavigatorText>Capture Your Picture</NavigatorText>
         </div>
         <div>
+          {!isAuthorized() ? (
+            <NavigatorLink onClick={() => (window.location.href = "/signup")}>
+              회원가입
+            </NavigatorLink>
+          ) : (
+            ""
+          )}
+
           <NavigatorLink onClick={() => (window.location.href = "/")}>
             {" "}
             신청하기{" "}

@@ -8,6 +8,7 @@ import PrivateRoute from './Route/PrivateRoute';
 import PublicRoute from './Route/PublicRoute';
 import MainPage from './Home/MainPage';
 import Logout from './Auth/Logout';
+import Signup from './Auth/Signup';
 
 import { Stomp } from '@stomp/stompjs';
 import * as SockJS from "sockjs-client";
@@ -15,14 +16,6 @@ import UserCardList from './Component/UserCardList';
 
 import React, { useEffect, useState } from "react";
 
-import Login from "./Auth/Login";
-import Logout from "./Auth/Logout";
-import MainPage from "./Home/MainPage";
-import PrivateRoute from "./Route/PrivateRoute";
-import PublicRoute from "./Route/PublicRoute";
-import { Route } from "react-router-dom";
-import { Stomp } from "@stomp/stompjs";
-import StudyChat from "./VideoChat/StudyChat";
 import MatchingPost from "./Api/MatchingPost";
 import Mypage from "./User/Mypage";
 
@@ -43,6 +36,7 @@ function App() {
 
       {/* 로그인을 안해야 접근 가능한 영역 */}
       <PublicRoute component={Login} path="/login" exact />
+      <PublicRoute component={Signup} path="/signup" exact />
 
       {/* 로그인 / 로그아웃에 관계 없이 접근 가능한 영역 */}
       <Route component={MainPage} path="/" exact />
