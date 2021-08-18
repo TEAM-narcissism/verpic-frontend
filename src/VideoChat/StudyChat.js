@@ -16,6 +16,10 @@ import getuser from '../Api/getuser';
 import logoVerpic from '../assets/images/logoVerpic.png';
 import { useParams } from "react-router";
 
+import getRemainTime from "../Api/getRemainTime";
+import AudioRecord from "./AudioRecord";
+import ProgressBar from "./ProgressBar";
+
 let localStream;
 let localVideoTracks;
 let myPeerConnection;
@@ -86,6 +90,8 @@ function StudyChat() {
     const { localRoom } = useParams();
 
 
+    const audioRecordRef = useRef();
+    const [step, setStep] = useState(0);
     const [chatInputs, setChatInputs] = useState({
         message: '',
         sender: 'testsss'
@@ -103,16 +109,16 @@ function StudyChat() {
     }, []);
 
     const [chats, setChats] = useState([
-        {
-            id: 1,
-            sender: 'test_sender',
-            message: '테스트용 메세지 입니다.'
-        },
-        {
-            id: 2,
-            sender: 'test_sender2',
-            message: '두 번째 테스트용 메세지 입니다.'
-        },
+        // {
+        //     id: 1,
+        //     sender: 'test_sender',
+        //     message: '테스트용 메세지 입니다.'
+        // },
+        // {
+        //     id: 2,
+        //     sender: 'test_sender2',
+        //     message: '두 번째 테스트용 메세지 입니다.'
+        // }
     ]);
     const nextChatId = useRef(3)
 
@@ -471,7 +477,7 @@ function StudyChat() {
             getuser()
                 .then((res) => {
                     setUserObject(res);
-                    setIsLoaded(true);
+
 
                 })
                 .catch((err) => {
@@ -480,6 +486,46 @@ function StudyChat() {
                 })
         }
 
+        getRemainTime(cookies.get("vtoken"), 1)
+            .then((remainTime => {
+
+                if (remainTime >= 0) {
+                    setTimeout(() => {
+                        setStep(1);
+                        console.log("시작 직후 뒤 실행되는 부분")
+                    }, remainTime);
+                }
+                // 시작시각 + 3분 후
+                if (remainTime + 2000 >= 0) {
+                    setTimeout(() => {
+                        setStep(2);
+                        console.log("3분 뒤 실행되는 부분")
+                        audioRecordRef.current.onRecAudio();
+                    }, remainTime + 4000);
+                }
+                // 시작시각 + 10분 후
+                if (remainTime + 2000 >= 0) {
+                    setTimeout(() => {
+                        setStep(3);
+                        console.log("10분 뒤 실행되는 부분")
+                        audioRecordRef.current.offRecAudio(1, "ko");
+                        audioRecordRef.current.onRecAudio();
+                    }, remainTime + 6000);
+                }
+                // 시작시각 + 17분 후
+                if (remainTime + 2000 >= 0) {
+                    setTimeout(() => {
+                        setStep(4);
+                        console.log("17분 뒤 실행되는 부분")
+                        audioRecordRef.current.offRecAudio(2, "en");
+                    }, remainTime + 8000);
+                }
+                setIsLoaded(true);
+
+            }))
+            .catch((err) => {
+                console.log("에러발생", err);
+            })
         stompWithSockJS();
         //getUserMediaReact();
     }, []);
@@ -505,17 +551,10 @@ function StudyChat() {
             {!isLoaded ? <div class="text-center">로딩중이에요...</div> :
                 <div>
                     <ProgressBarWrapper>
-                        <ul class="w-full steps">
-                            <li class="step step-primary ">자기소개</li>
-                            <li class="step step-primary">한국어세션</li>
-                            <li class="step step-primary">영어세션</li>
-                            <li class="step">마무리</li>
-                        </ul>
-
+                        <ProgressBar step={step}></ProgressBar>
                     </ProgressBarWrapper>
 
                     {/* <Timer></Timer> */}
-
 
                     <div class="flex mb-3 mt-5 justify-between">
                         <div class="flex-col">
@@ -558,6 +597,8 @@ function StudyChat() {
                             </ChatView>
                         </div>
                     </div>
+                    {/* 여기 matchId 들어가야함! */}
+                    <AudioRecord matchId={1} ref={audioRecordRef}></AudioRecord>
                 </ div>}
         </VideoWrapper >
 
