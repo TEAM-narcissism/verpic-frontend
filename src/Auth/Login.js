@@ -6,7 +6,7 @@ import Cookies from "universal-cookie";
 import InputWithLabel from "./InputWithLabel";
 import axios from "axios";
 import { debounce } from "lodash";
-import getuser from "../Api/getuser";
+import Navigator from "../Component/Navigator";
 
 function Login() {
   const [inputs, setInputs] = useState({
@@ -80,24 +80,27 @@ function Login() {
   const debounceFunc = debounce(onChange, 300);
 
   return (
-    <AuthWrapper>
-      <InputWithLabel
-        label="Email"
-        name="email"
-        placeholder="이메일"
-        onChange={debounceFunc}
-        ref={emailRef}
-      />
-      <InputWithLabel
-        label="Password"
-        name="password"
-        placeholder="비밀번호"
-        onChange={debounceFunc}
-        ref={passwordRef}
-      />
-      <AuthButton onClick={postToLogin}>로그인</AuthButton>
-      <AuthButton onClick="">구글로그인</AuthButton>
-    </AuthWrapper>
+    <>
+      <Navigator />
+      <AuthWrapper>
+        <InputWithLabel
+          label="Email"
+          name="email"
+          placeholder="이메일"
+          onChange={debounceFunc}
+          ref={emailRef}
+        />
+        <InputWithLabel
+          label="Password"
+          name="password"
+          placeholder="비밀번호"
+          onChange={debounceFunc}
+          ref={passwordRef}
+        />
+        <AuthButton onClick={postToLogin}>로그인</AuthButton>
+        <AuthButton onClick="">구글로그인</AuthButton>
+      </AuthWrapper>
+    </>
   );
 }
 

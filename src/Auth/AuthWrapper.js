@@ -21,6 +21,8 @@ const LogoWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  ${tw`mr-5`}
 `;
 
 // children 이 들어가는 곳

@@ -51,35 +51,38 @@ function Navigator({ user }) {
           <NavigatorText>Capture Your Picture</NavigatorText>
         </div>
         <div>
-          {!isAuthorized() ? (
-            <NavigatorLink onClick={() => (window.location.href = "/signup")}>
-              회원가입
-            </NavigatorLink>
-          ) : (
-            ""
-          )}
 
-          <NavigatorLink onClick={() => (window.location.href = "/")}>
-            {" "}
-            신청하기{" "}
-          </NavigatorLink>
-          <NavigatorLink onClick={() => window.location.href = "/topic/reservation"}> 예습하기 </NavigatorLink>
-          <NavigatorLink> 피드백 </NavigatorLink>
 
-          {isAuthorized() ? (
+
+          {isAuthorized() ?
             <>
-              <NavigatorLink onClick={() => (window.location.href = "/profile/" + user.id)}> 마이페이지 </NavigatorLink>
+              <NavigatorLink onClick={() => (window.location.href = "/")}>
+                신청하기
+              </NavigatorLink>
+              <NavigatorLink onClick={() => window.location.href = "/topic/reservation"}>
+                예습하기
+              </NavigatorLink>
+              <NavigatorLink>
+                피드백
+              </NavigatorLink>
+              <NavigatorLink onClick={() => (window.location.href = "/profile/" + user.id)}>
+                마이페이지
+              </NavigatorLink>
               <NavigatorLink onClick={() => (window.location.href = "/logout")}>
-                {" "}
-                로그아웃{" "}
+                로그아웃
               </NavigatorLink>
             </>
-          ) : (
-            <NavigatorLink onClick={() => (window.location.href = "/login")}>
-              {" "}
-              로그인{" "}
-            </NavigatorLink>
-          )}
+            :
+            <>
+              <NavigatorLink onClick={() => (window.location.href = "/login")}>
+                로그인
+              </NavigatorLink>
+
+              <NavigatorLink onClick={() => (window.location.href = "/signup")}>
+                회원가입
+              </NavigatorLink>
+            </>
+          }
         </div>
       </NavigatorWrapper>
     </>

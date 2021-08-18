@@ -35,11 +35,11 @@ function App() {
       <PrivateRoute component={UserCardList} path="/topic/reservation" exact />
       <PrivateRoute component={MatchingPost} path="/matching" exact />
       <PrivateRoute component={Mypage} path="/profile/:id" />
-
+      <PrivateRoute component={MainPage} path="/" exact />
 
 
       {/* 로그인 / 로그아웃에 관계 없이 접근 가능한 영역 */}
-      <Route component={MainPage} path="/" exact />
+      {/* <Route component={MainPage} path="/" exact /> */}
 
 
       {/* 로그인을 안해야 접근 가능한 영역 */}
