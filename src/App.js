@@ -31,7 +31,7 @@ function App() {
 
 
       <PrivateRoute component={Logout} path="/logout" exact />
-      <PrivateRoute component={StudyChat} path="/studychat" exact />
+      <PrivateRoute component={StudyChat} path="/studychat/:localRoom" />
       <PrivateRoute component={UserCardList} path="/topic/reservation" exact />
       <PrivateRoute component={MatchingPost} path="/matching" exact />
       <PrivateRoute component={Mypage} path="/profile/:id" />

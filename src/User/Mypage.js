@@ -31,10 +31,27 @@ function Mypage() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoding] = useState(true);
   const [reservationList, setReservationList] = useState();
-
+  const [matchList, setMatchList] = useState();
 
 
   const { id } = useParams();
+
+  const studyChatLink = async (reservationId) => {
+    let matchId;
+    console.log(reservationId);
+
+    await matchList.map(match => {
+      console.log('matchId:' + match.studyReservationResponseDto.id);
+      if (match.studyReservationResponseDto.id === reservationId) {
+        console.log(match.id);
+        matchId = match.id;
+      }
+    })
+
+
+    window.location.href = '/studychat/' + matchId;
+
+  }
 
   useEffect(async () => {
     await axios.get("/users/" + id)
@@ -51,9 +68,20 @@ function Mypage() {
         if (res.data) {
           setReservationList(res.data);
           console.log(res.data);
+
+        }
+      })
+
+    await axios.get('/matching/' + id)
+      .then((res) => {
+        if (res.data) {
+          setMatchList(res.data);
+          console.log(res.data);
           setIsLoding(false);
         }
       })
+
+
   }, []);
 
   return (
@@ -91,7 +119,8 @@ function Mypage() {
                   {reservation.soldOut ?
                     <>
                       <div>상대방과의 매칭이 완료되었어요.</div>
-                      <div class="border p-1 rounded-lg w-1/6 my-2 mx-auto cursor-pointer">
+                      <div class="border p-1 rounded-lg w-1/6 my-2 mx-auto cursor-pointer"
+                        onClick={() => studyChatLink(reservation.id)}>
                         스터디룸 링크
                       </div>
                     </>

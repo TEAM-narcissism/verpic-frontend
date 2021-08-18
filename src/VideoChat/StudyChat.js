@@ -14,15 +14,11 @@ import { faCamera, faMicrophone, faMicrophoneAltSlash } from "@fortawesome/free-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import getuser from '../Api/getuser';
 import logoVerpic from '../assets/images/logoVerpic.png';
+import { useParams } from "react-router";
 
 let localStream;
 let localVideoTracks;
 let myPeerConnection;
-
-// 임시 변수
-const localRoom = 3;
-
-
 
 
 
@@ -77,6 +73,7 @@ const ChatLabelText = styled.text`
 
 function StudyChat() {
     const cookies = new Cookies();
+    const token = cookies.get('vtoken');
     const localUserName = localStorage.getItem("uuid")
     const myVideoRef = useRef(null);
     const remoteVideoRef = useRef(null);
@@ -84,6 +81,9 @@ function StudyChat() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [localVideoState, SetLocalVideoState] = useState(true);
     const [localAudioState, SetLocalAudioState] = useState(true);
+
+
+    const { localRoom } = useParams();
 
 
     const [chatInputs, setChatInputs] = useState({
@@ -130,18 +130,18 @@ function StudyChat() {
     };
 
     function stompWithSockJS() {
-        stompconn.connect({ Authorization: cookies.get("vtoken") }, function (frame) {
+        stompconn.connect({ Authorization: token }, function (frame) {
             console.log('Websocket connection complete.');
-            subscribe();
+            videoSubscribe();
             chatSubscribe();
             chatUserSubscribe();
-            stompconn.send('/pub/videochat/enter', { Authorization: cookies.get("vtoken") }, JSON.stringify({ matchId: localRoom }));
+            stompconn.send('/pub/videochat/enter', { Authorization: token }, JSON.stringify({ matchId: localRoom }));
         });
 
     }
 
-    const subscribe = () => {
-        stompconn.subscribe('/sub/' + localUserName, function (frame) {
+    const videoSubscribe = () => {
+        stompconn.subscribe('/sub/video-signal/' + localUserName, function (frame) {
             let message = JSON.parse(frame.body);
             switch (message.type) {
                 case "text":
@@ -190,13 +190,6 @@ function StudyChat() {
 
     };
 
-    function sendToServer(msg) {
-        let msgJSON = JSON.stringify(msg);
-        console.log(msg)
-        stompconn.send("/pub/experiment", {}, msgJSON);
-
-    }
-
 
 
     const chatOnCreate = useCallback(() => {
@@ -207,7 +200,7 @@ function StudyChat() {
             sender,
         };
 
-        stompconn.send('/pub/videochat/message', { Authorization: cookies.get("vtoken") }, JSON.stringify({ matchId: localRoom, message: message }));
+        stompconn.send('/pub/videochat/message', { Authorization: token }, JSON.stringify({ matchId: localRoom, message: message }));
         // setChats(chats => chats.concat(chat));
 
         setChatInputs({
@@ -301,7 +294,7 @@ function StudyChat() {
     function sendToServer(msg) {
         let msgJSON = JSON.stringify(msg);
 
-        stompconn.send("/pub/experiment", {}, msgJSON);
+        stompconn.send("/pub/video-signal", { Authorization: token }, msgJSON);
 
     }
 
@@ -320,7 +313,7 @@ function StudyChat() {
     // create peer connection, get media, start negotiating when second participant appears
     function handlePeerConnection(message) {
         if (remoteVideoRef) {
-            remoteVideoRef.current.src = null;
+            remoteVideoRef.current.srcObject = null;
         }
         createPeerConnection();
 
@@ -474,16 +467,18 @@ function StudyChat() {
     const [userObject, setUserObject] = useState(null);
     useEffect(() => {
 
-        getuser()
-            .then((res) => {
-                setUserObject(res);
-                setIsLoaded(true);
+        if (!userObject) {
+            getuser()
+                .then((res) => {
+                    setUserObject(res);
+                    setIsLoaded(true);
 
-            })
-            .catch((err) => {
-                alert("로그인 세션이 만료되었어요.");
-                window.location.href = "/logout"
-            })
+                })
+                .catch((err) => {
+                    alert("로그인 세션이 만료되었어요.");
+                    window.location.href = "/logout"
+                })
+        }
 
         stompWithSockJS();
         //getUserMediaReact();

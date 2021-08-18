@@ -5,7 +5,7 @@ function getuser(token) {
     const cookies = new Cookies();
     const token = cookies.get('vtoken');
     axios
-      .get("users/current-login-user", {
+      .get("http://localhost:3000/users/current-login-user", {
         headers: {
           Authorization: token,
         },
