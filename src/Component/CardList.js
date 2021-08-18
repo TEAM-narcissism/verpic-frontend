@@ -112,6 +112,7 @@ function CardList(props) {
                 checkedItemHandler={checkedItemHandler}
                 key={topic.id}
                 checkedItem={checkedItem}
+                isPreviewButton={false}
               />
             ))}
             {filteredTopicsByPaging.length === 0 ? (

@@ -54,9 +54,15 @@ function Login() {
         window.location = "/";
       })
       .catch((error) => {
+        console.log(error.response);
         if (error.response) {
-          const { data } = error.response;
-          console.error("data : ", data);
+          const statusCode = error.response.data.httpStatus;
+          if (statusCode == "BAD_REQUEST") {
+            console.log("잘못된 email 또는 password입니다.");
+          }
+          else {
+            console.log("예상치 못한 오류입니다.");
+          }
         }
       });
   }

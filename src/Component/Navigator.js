@@ -51,11 +51,19 @@ function Navigator({ user }) {
           <NavigatorText>Capture Your Picture</NavigatorText>
         </div>
         <div>
+          {!isAuthorized() ? (
+            <NavigatorLink onClick={() => (window.location.href = "/signup")}>
+              회원가입
+            </NavigatorLink>
+          ) : (
+            ""
+          )}
+
           <NavigatorLink onClick={() => (window.location.href = "/")}>
             {" "}
             신청하기{" "}
           </NavigatorLink>
-          <NavigatorLink> 예습하기 </NavigatorLink>
+          <NavigatorLink onClick={() => window.location.href = "/topic/reservation"}> 예습하기 </NavigatorLink>
           <NavigatorLink> 피드백 </NavigatorLink>
 
           {isAuthorized() ? (

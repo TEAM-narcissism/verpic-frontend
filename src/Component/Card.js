@@ -31,7 +31,11 @@ const PersonCountTag = styled.div`
   ${tw`inline-block bg-gray-200 rounded-full px-3 py-1 font-semibold text-gray-700 mr-2`}
 `;
 
-function Card({ topic, checkedItemHandler, checkedItem }) {
+const PreviewButton = styled.button`
+  ${tw`w-full sm:w-1/3 border text-green-400 bg-blue-200 text-4xl`}
+`
+
+function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton }) {
   const [isSelected, setIsSelected] = useState(false);
 
   const onClick = (e) => {
@@ -66,8 +70,12 @@ function Card({ topic, checkedItemHandler, checkedItem }) {
           총 {topic.numOfParticipant}명이 참여중이에요
         </PersonCountTag>
       </TopicContentWrapper>
+      {
+        isPreviewButton ? <PreviewButton onClick={() => window.location.href = "/"}>Go to Preview!</PreviewButton> : ""
+      }
     </CardWrapper>
   );
 }
+
 
 export default React.memo(Card);
