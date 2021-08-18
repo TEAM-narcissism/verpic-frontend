@@ -6,6 +6,7 @@ import Cookies from "universal-cookie";
 import InputWithLabel from "./InputWithLabel";
 import axios from "axios";
 import { debounce } from "lodash";
+import getuser from "../Api/getuser";
 
 function Login() {
   const [inputs, setInputs] = useState({
@@ -16,18 +17,24 @@ function Login() {
   const emailRef = useRef();
   const passwordRef = useRef();
 
-  function postToLogin() {
+  async function postToLogin() {
     let body = inputs;
     console.log(body);
-    axios
+    await axios
       .post("/login", body)
-      .then((res) => {
-        console.log(res.data.data.Token);
+      .then(async (res) => {
         const accessToken = res.data.data.Token;
-
         const cookies = new Cookies();
         cookies.set("vtoken", accessToken, { path: "/" });
-        window.location = "/";
+
+        // await getuser(accessToken).then(
+        //   (res) => {
+        //     console.log(res);
+        //     cookies.set("uid", res.id, { path: "/" });
+        //   }
+        // )
+
+
 
         function generateUuid() {
           return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
@@ -43,6 +50,8 @@ function Login() {
         if (localStorage.getItem("uuid") === null) {
           localStorage.setItem("uuid", generateUuid());
         }
+
+        window.location = "/";
       })
       .catch((error) => {
         if (error.response) {

@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Logo from "../assets/images/logoVerpic.png";
 import isAuthorized from "../Auth/isAuthorized";
 import styled from "@emotion/styled";
 import tw from "twin.macro";
+import Cookies from 'universal-cookie';
+
+import getuser from "../Api/getuser";
 
 const NavigatorWrapper = styled.div`
   font-family: "NanumGothic-Bold";
@@ -34,8 +37,9 @@ const NavigatorLink = styled.text`
   ${tw`text-sm font-semibold text-black m-10 duration-500 text-right cursor-pointer`}
 `;
 
-function Navigator() {
-  const [navbarOpen, setNavbarOpen] = React.useState(false);
+function Navigator({ user }) {
+
+
   return (
     <>
       <NavigatorWrapper>
@@ -55,10 +59,13 @@ function Navigator() {
           <NavigatorLink> 피드백 </NavigatorLink>
 
           {isAuthorized() ? (
-            <NavigatorLink onClick={() => (window.location.href = "/logout")}>
-              {" "}
-              로그아웃{" "}
-            </NavigatorLink>
+            <>
+              <NavigatorLink onClick={() => (window.location.href = "/profile/" + user.id)}> 마이페이지 </NavigatorLink>
+              <NavigatorLink onClick={() => (window.location.href = "/logout")}>
+                {" "}
+                로그아웃{" "}
+              </NavigatorLink>
+            </>
           ) : (
             <NavigatorLink onClick={() => (window.location.href = "/login")}>
               {" "}
@@ -70,4 +77,8 @@ function Navigator() {
     </>
   );
 }
-export default Navigator;
+export default React.memo(Navigator);
+
+Navigator.defaultProps = {
+  user: null
+}

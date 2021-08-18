@@ -62,7 +62,7 @@ function Mypage() {
 
       {isLoading ? <div class="text-center">로딩중이에요...</div> :
         <>
-          <Navigator />
+          <Navigator user={user} />
 
           <ProfileWrapper>
             <div class=" text-xl font-semibold mb-2"> 프로필</div>
@@ -89,12 +89,16 @@ function Mypage() {
                   </div>
 
                   {reservation.soldOut ?
-                    <div>
-                      스터디룸 링크
-
-                    </div> :
-
-                    ""
+                    <>
+                      <div>상대방과의 매칭이 완료되었어요.</div>
+                      <div class="border p-1 rounded-lg w-1/6 my-2 mx-auto cursor-pointer">
+                        스터디룸 링크
+                      </div>
+                    </>
+                    :
+                    <>
+                      <div>적절한 상대를 찾고 있어요.</div>
+                    </>
                   }
 
                 </div>

@@ -13,15 +13,15 @@ import Timer from './Timer';
 import { faCamera, faMicrophone, faMicrophoneAltSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import getuser from '../Api/getuser';
-import Loader from "react-loader-spinner";
 import logoVerpic from '../assets/images/logoVerpic.png';
+
 let localStream;
 let localVideoTracks;
 let myPeerConnection;
 
 // 임시 변수
 const localRoom = 3;
-const cookies = new Cookies();
+
 
 
 
@@ -76,6 +76,7 @@ const ChatLabelText = styled.text`
 `;
 
 function StudyChat() {
+    const cookies = new Cookies();
     const localUserName = localStorage.getItem("uuid")
     const myVideoRef = useRef(null);
     const remoteVideoRef = useRef(null);
@@ -472,8 +473,8 @@ function StudyChat() {
 
     const [userObject, setUserObject] = useState(null);
     useEffect(() => {
-        const token = cookies.get("vtoken");
-        getuser(token)
+
+        getuser()
             .then((res) => {
                 setUserObject(res);
                 setIsLoaded(true);
