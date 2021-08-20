@@ -14,7 +14,7 @@ import { Stomp } from '@stomp/stompjs';
 import * as SockJS from "sockjs-client";
 import UserCardList from './Component/UserCardList';
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import MatchingPost from "./Api/MatchingPost";
 import Mypage from "./User/Mypage";

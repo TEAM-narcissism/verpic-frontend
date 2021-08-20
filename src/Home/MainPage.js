@@ -11,9 +11,9 @@ function MainPage() {
     ${tw`container mx-auto flex my-10`}
   `;
 
-  const onChangeTopicId = (data) => {
-    console.log(data);
-  };
+  // const onChangeTopicId = (data) => {
+  //   console.log(data);
+  // };
 
   return (
     <>
