@@ -103,7 +103,6 @@ function ReservationForm({ topicId }) {
         if (Mothertongue === Studylanguage) {
             setModalContent("모국어와 공부할 언어는 달라야 해요.")
             setIsOpen(!isOpen);
-
             return;
         }
 
@@ -157,29 +156,29 @@ function ReservationForm({ topicId }) {
             <ResevationText>스터디 신청</ResevationText>
 
 
-            <div class="text-gray-600 mb-3 select-none">간단한 답변만 해주시면 돼요.</div>
+            <div className="text-gray-600 mb-3 select-none">간단한 답변만 해주시면 돼요.</div>
 
             <ReservationQuestionWrapper>
                 <ReservationOptionWrapper>
 
                     <ReservationOptionText className="mb-10">
-                        <div class="flex">
-                            <span class="mr-3">
+                        <div className="flex">
+                            <span className="mr-3">
                                 Step1. 원하는 토픽을 먼저 골라주세요.
                             </span>
                             <span>
                                 {topicId ?
-                                    <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
+                                    <FontAwesomeIcon icon={faCheckCircle} className="text-green-500 w-5 mt-1" /> : ""
                                 }
                             </span>
                         </div>
                     </ReservationOptionText>
                     <ReservationOptionText>
-                        <div class="flex">
-                            <span class="mr-3">Step2. 모국어를 선택해주세요.</span>
+                        <div className="flex">
+                            <span className="mr-3">Step2. 모국어를 선택해주세요.</span>
                             <span>
                                 {Mothertongue ?
-                                    <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
+                                    <FontAwesomeIcon icon={faCheckCircle} className="text-green-500 w-5 mt-1" /> : ""
                                 }
                             </span>
                         </div>
@@ -194,8 +193,8 @@ function ReservationForm({ topicId }) {
 
                 <ReservationOptionWrapper>
                     <ReservationOptionText>
-                        <div class="flex">
-                            <span class="mr-3">Step3. 어떤 언어를 공부하실건가요?</span>
+                        <div className="flex">
+                            <span className="mr-3">Step3. 어떤 언어를 공부하실건가요?</span>
                             <span>
                                 {Studylanguage ?
                                     <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
@@ -212,11 +211,11 @@ function ReservationForm({ topicId }) {
 
                 <ReservationOptionWrapper>
                     <ReservationOptionText>
-                        <div class="flex">
-                            <span class="mr-3">Step4. 배울 언어의 수준을 말해주세요.</span>
+                        <div className="flex">
+                            <span className="mr-3">Step4. 배울 언어의 수준을 말해주세요.</span>
                             <span>
                                 {Proficiency ?
-                                    <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
+                                    <FontAwesomeIcon icon={faCheckCircle} className="text-green-500 w-5 mt-1" /> : ""
                                 }
                             </span>
 
@@ -232,11 +231,11 @@ function ReservationForm({ topicId }) {
 
                 <ReservationOptionWrapper>
                     <ReservationOptionText>
-                        <div class="flex">
-                            <span class="mr-3">Step5. 어떤 시간대에 참여하실래요?</span>
+                        <div className="flex">
+                            <span className="mr-3">Step5. 어떤 시간대에 참여하실래요?</span>
                             <span>
                                 {Studytime ?
-                                    <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
+                                    <FontAwesomeIcon icon={faCheckCircle} className="text-green-500 w-5 mt-1" /> : ""
                                 }
                             </span>
                         </div>
@@ -255,8 +254,8 @@ function ReservationForm({ topicId }) {
                     onEscapeKeydown={toggleModal}
                 >
 
-                    <div class="text-center mt-28 text-xl" ref={modalRef}>{modalContent}</div>
-                    <div class="text-align">
+                    <div className="text-center mt-28 text-xl" ref={modalRef}>{modalContent}</div>
+                    <div className="text-align">
                         <ModalButton onClick={toggleModal}>확인</ModalButton>
                     </div>
                 </StyledModal>
