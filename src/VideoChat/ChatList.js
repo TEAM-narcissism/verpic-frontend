@@ -51,25 +51,24 @@ const ChatListWrapper = styled.div`
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 4px;
   }
-  ${tw`flex flex-col mt-2 overflow-y-auto gap-1`}
+  ${tw`flex flex-col mt-2 overflow-y-scroll gap-1`}
 `;
 
 function ChatList({ chats, myName }) {
-  const divRref = useRef(null);
+  const scrollRef = useRef(null);
   useEffect(() => {
-    divRref.current.scrollIntoView({
-      behavior: "smooth",
-      block: "end",
-      inline: "nearest",
-    });
+    
+    const scroll = scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
+    scrollRef.current.scrollTo(0, scroll);
+    
   }, [chats]);
 
   return (
-    <ChatListWrapper>
+    <ChatListWrapper ref={scrollRef}>
       {chats.map((chat) => (
         <Chat chat={chat} myName={myName} key={chat.id} />
       ))}
-      <div ref={divRref}></div>
+      <div ></div>
     </ChatListWrapper>
   );
 }

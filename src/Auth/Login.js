@@ -6,6 +6,7 @@ import Cookies from "universal-cookie";
 import InputWithLabel from "./InputWithLabel";
 import axios from "axios";
 import { debounce } from "lodash";
+import Navigator from "../Component/Navigator";
 
 function Login() {
   const [inputs, setInputs] = useState({
@@ -16,18 +17,24 @@ function Login() {
   const emailRef = useRef();
   const passwordRef = useRef();
 
-  function postToLogin() {
+  async function postToLogin() {
     let body = inputs;
     console.log(body);
-    axios
+    await axios
       .post("/login", body)
-      .then((res) => {
-        console.log(res.data.data.Token);
+      .then(async (res) => {
         const accessToken = res.data.data.Token;
-
         const cookies = new Cookies();
         cookies.set("vtoken", accessToken, { path: "/" });
-        window.location = "/";
+
+        // await getuser(accessToken).then(
+        //   (res) => {
+        //     console.log(res);
+        //     cookies.set("uid", res.id, { path: "/" });
+        //   }
+        // )
+
+
 
         function generateUuid() {
           return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
@@ -43,6 +50,8 @@ function Login() {
         if (localStorage.getItem("uuid") === null) {
           localStorage.setItem("uuid", generateUuid());
         }
+
+        window.location = "/";
       })
       .catch((error) => {
         console.log(error.response);
@@ -71,24 +80,27 @@ function Login() {
   const debounceFunc = debounce(onChange, 300);
 
   return (
-    <AuthWrapper>
-      <InputWithLabel
-        label="Email"
-        name="email"
-        placeholder="이메일"
-        onChange={debounceFunc}
-        ref={emailRef}
-      />
-      <InputWithLabel
-        label="Password"
-        name="password"
-        placeholder="비밀번호"
-        onChange={debounceFunc}
-        ref={passwordRef}
-      />
-      <AuthButton onClick={postToLogin}>로그인</AuthButton>
-      <AuthButton onClick="">구글로그인</AuthButton>
-    </AuthWrapper>
+    <>
+      <Navigator />
+      <AuthWrapper>
+        <InputWithLabel
+          label="Email"
+          name="email"
+          placeholder="이메일"
+          onChange={debounceFunc}
+          ref={emailRef}
+        />
+        <InputWithLabel
+          label="Password"
+          name="password"
+          placeholder="비밀번호"
+          onChange={debounceFunc}
+          ref={passwordRef}
+        />
+        <AuthButton onClick={postToLogin}>로그인</AuthButton>
+        <AuthButton onClick="">구글로그인</AuthButton>
+      </AuthWrapper>
+    </>
   );
 }
 

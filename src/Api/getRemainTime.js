@@ -1,11 +1,9 @@
 import axios from "axios";
-import Cookies from 'universal-cookie';
-function getuser(token) {
+
+function getRemainTime(token, matchId) {
   return new Promise((resolve, reject) => {
-    const cookies = new Cookies();
-    const token = cookies.get('vtoken');
     axios
-      .get("http://localhost:3000/users/current-login-user", {
+      .get("http://localhost:3000/time/" + matchId, {
         headers: {
           Authorization: token,
         },
@@ -19,4 +17,4 @@ function getuser(token) {
   });
 }
 
-export default getuser;
+export default getRemainTime;
