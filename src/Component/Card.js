@@ -20,16 +20,21 @@ const TopicContentWrapper = styled.div`
 `;
 
 const TopicThemeText = styled.div`
-  ${tw`mb-3 text-xl font-semibold tracking-tight text-gray-800`}
+  ${tw`mb-5 mt-5 text-xl font-semibold  tracking-wider text-gray-800`}
 `;
 
 const TopicStartTimeText = styled.div`
-  ${tw`leading-normal text-gray-700 mb-5`}
+  ${tw`leading-normal text-gray-700 mb-2`}
 `;
 
 const PersonCountTag = styled.div`
   ${tw`inline-block bg-gray-200 rounded-full px-3 py-1 font-semibold text-gray-700 mr-2`}
 `;
+
+const StartTimeTag = styled.div`
+  ${tw`inline-block bg-gray-200 rounded-full px-2 py-1 font-semibold text-sm text-gray-700 mr-2 mb-5`}
+`;
+
 
 const PreviewButton = styled.button`
   ${tw`w-full sm:w-1/3 border text-green-400 bg-blue-200 text-4xl`}
@@ -44,6 +49,8 @@ function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton }) {
     checkedItemHandler(topic.id);
   };
 
+  let studyDate = new Date(topic.studyDate);
+  const studyDateFullString = studyDate.getFullYear() + '년 ' + studyDate.getMonth() + '월 ' + studyDate.getDay() + '일';
   return (
     <CardWrapper
       value={topic.id}
@@ -63,12 +70,19 @@ function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton }) {
 
       <TopicContentWrapper>
         <TopicThemeText>{topic.theme}</TopicThemeText>
+        <div class="font-semibold">개최</div>
         <TopicStartTimeText>
-          Study starts at {topic.studyDate}
+          {studyDateFullString}에 참여할 수 있어요.
         </TopicStartTimeText>
-        <PersonCountTag>
+
+
+        <div class="font-semibold">인원</div>
+        {/* <PersonCountTag>
           총 {topic.numOfParticipant}명이 참여중이에요
-        </PersonCountTag>
+        </PersonCountTag> */}
+        <TopicStartTimeText>
+          총 {topic.numOfParticipant}명이 신청했어요.
+        </TopicStartTimeText>
       </TopicContentWrapper>
       {
         isPreviewButton ? <PreviewButton onClick={() => window.location.href = "/"}>Go to Preview!</PreviewButton> : ""

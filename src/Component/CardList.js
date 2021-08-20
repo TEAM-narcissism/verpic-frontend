@@ -56,8 +56,11 @@ function CardList(props) {
   }, []);
 
   const checkedItemHandler = (id) => {
-    setCheckedItem(id);
-
+    if (id === checkedItem) {
+      setCheckedItem(0);
+    } else {
+      setCheckedItem(id);
+    }
     console.log(checkedItem);
   };
 
