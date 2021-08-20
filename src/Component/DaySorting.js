@@ -29,15 +29,15 @@ const PageSpan = styled.span`
   ${tw`p-1 w-full mx-3`}
 `;
 
-const DaySorting = ({ dayPaginate }) => {
+const DaySorting = ({ dayPaginate, today }) => {
   const dayList = ["MON", "TUES", "WED", "THUR", "FRI", "SAT", "SUN"];
 
   return (
-    <div class="">
+    <div className="">
       <nav>
         <PageUl className="pagination">
           {dayList.map(day => (
-            <PageLi key={day} className="page-item">
+            <PageLi key={day} className={today === day ? "text-pink-500 font-semibold" : "page-item"}>
               <PageSpan className="page-link" onClick={() => dayPaginate(day)}>
                 {day}
               </PageSpan>
