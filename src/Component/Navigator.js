@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import Logo from "../assets/images/logoVerpic.png";
 import isAuthorized from "../Auth/isAuthorized";
@@ -35,11 +35,11 @@ const NavigatorLink = styled.text`
 `;
 
 function Navigator() {
-  const [navbarOpen, setNavbarOpen] = React.useState(false);
+  // const [navbarOpen, setNavbarOpen] = React.useState(false);
   return (
     <>
       <NavigatorWrapper>
-        <div class="flex">
+        <div className="flex">
           <NavigatorLogo
             onClick={() => (window.location.href = "/")}
             src={Logo}
@@ -59,7 +59,7 @@ function Navigator() {
             {" "}
             신청하기{" "}
           </NavigatorLink>
-          <NavigatorLink onClick={() => window.location.href = "/topic/reservation"}> 예습하기 </NavigatorLink>
+          <NavigatorLink onClick={() => window.location.href = "/topic/reservation"}> 신청목록 </NavigatorLink>
           <NavigatorLink> 피드백 </NavigatorLink>
 
           {isAuthorized() ? (
