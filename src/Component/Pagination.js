@@ -27,7 +27,7 @@ const PageSpan = styled.span`
 ${tw`p-1 w-full mx-3 font-semibold`}
 `;
 
-const Pagination = ({ topicsPerPage, totalTopics, paginate }) => {
+const Pagination = ({ topicsPerPage, totalTopics, paginate, currentPage }) => {
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(totalTopics / topicsPerPage); i++) {
     pageNumbers.push(i);
@@ -37,7 +37,7 @@ const Pagination = ({ topicsPerPage, totalTopics, paginate }) => {
       <nav>
         <PageUl className="pagination">
           {pageNumbers.map(number => (
-            <PageLi key={number} className="page-item">
+            <PageLi key={number} className={currentPage === number ? "text-pink-500 font-semibold" : "page-item"}>
               <PageSpan onClick={() => paginate(number)} className="page-link">
                 {number}
               </PageSpan>

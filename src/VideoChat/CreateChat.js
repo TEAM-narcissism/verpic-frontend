@@ -8,7 +8,7 @@ const InputStyle = styled.input`
 `;
 
 const ButtonStyle = styled.button`
-  ${tw`bg-yellow-400 text-white text-sm p-1 ml-2 rounded-lg w-1/6 h-full`}
+  ${tw`bg-indigo-800 text-white text-base font-bold p-1 ml-2 rounded-lg w-1/6 h-full`}
 `;
 
 const CreateChat = ({ message, onChange, onCreate }) => {

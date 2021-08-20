@@ -13,7 +13,7 @@ import Timer from './Timer';
 import { faCamera, faMicrophone, faMicrophoneAltSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import getuser from '../Api/getuser';
-import logoVerpic from '../assets/images/logoVerpic.png';
+import peopledefault from '../assets/images/peopledefault.png';
 import { useParams } from "react-router";
 
 import getRemainTime from "../Api/getRemainTime";
@@ -21,67 +21,70 @@ import AudioRecord from "./AudioRecord";
 import ProgressBar from "./ProgressBar";
 import axios from "axios";
 
-let localStream;
-let localVideoTracks;
-let myPeerConnection;
 
 
 
 const ProgressBarWrapper = styled.div`
     font-family: 'NanumGothic-Bold';
-    ${tw`container pt-10`}
+    ${tw`pt-10`}
 `;
 
 const ChatView = styled.div`
     font-family: 'NanumGothic-Regular';
-    height: 830px;
-    width: 450px;
+    background: #262624;
+    border: 2px solid #262626;
 
-    @media screen and (max-width: 500px) {
-        height: 400px;
-        width: 200px;
-        flex-direction: column;
-    }
-    ${tw`mr-28 border rounded-lg mb-10 flex flex-col bg-white justify-between`}
+
+    ${tw`border h-80vh w-35vh rounded-lg mx-10 flex flex-col justify-between`}
 `;
 
 const VideoWrapper = styled.div`
     font-family: 'NanumGothic-Regular';
-    ${tw`container mx-auto text-center`}
+    background: #0D0D0E;
+    ${tw`text-center max-w-full h-100vh`}
 `;
 
 const UserVideo = styled.video`
-    height: 350px;   
-    width: 750px;
+    background: #0D0D0E;
+    background-image: url(${peopledefault});
+    color: #25292E;
+    border: 2px solid #262626;
+    background-size: 20%;
+    background-repeat: no-repeat;
+    background-position: center;
 
-    @media screen and (max-width: 500px) {
-        height: 200px;
-        width: 400px;
-        flex-direction: column;
-    }
-    ${tw`bg-black border ml-28  mb-3 rounded-lg`}
+
+    ${tw` w-75vh h-35vh mb-3 rounded-lg`}
 `;
 
 
-const ToggleButton = styled.div`
-
+const ToggleButton = styled.div`   
+    background: #262626;
     &:hover {
         color: 	#4B7DDA;
         border: 1px solid
     }
-    ${tw`border p-1 rounded border-gray-200 bg-white text-gray-400 w-1/6 mb-10 cursor-pointer`}
+    ${tw`border p-1 rounded border-gray-400 text-gray-200  w-1/6 mb-10 cursor-pointer`}
 `;
 
 const VideoUserText = styled.text`
 
-    ${tw`rounded-sm ml-28 font-semibold p-2 `}
+    ${tw`text-gray-100 font-semibold p-2 `}
 `;
 
 const ChatLabelText = styled.text`
-    ${tw`rounded-sm font-semibold p-2 `}
+    ${tw`text-gray-100 font-semibold mx-10 p-2 `}
+`;
+
+
+const StudyExitButton = styled.div`
+
+    ${tw`mt-10 mr-10 flex-row cursor-pointer rounded-lg w-1/12  font-semibold text-white bg-red-600 p-2`}
 `;
 
 function StudyChat() {
+    let localStream;
+    let myPeerConnection;
     const cookies = new Cookies();
     const token = cookies.get('vtoken');
     const localUserName = localStorage.getItem("uuid")
@@ -464,21 +467,21 @@ function StudyChat() {
     }
 
 
-    const getUserMediaReact = async () => {
-        try {
-            console.log('get my video .');
-            localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-            myVideoRef.current.srcObject = localStream;
-            myVideoRef.current.muted = true;
-        } catch (err) {
-            console.log(err);
-        }
-    };
+    // const getUserMediaReact = async () => {
+    //     try {
+    //         console.log('get my video .');
+    //         localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    //         myVideoRef.current.srcObject = localStream;
+    //         myVideoRef.current.muted = true;
+    //     } catch (err) {
+    //         console.log(err);
+    //     }
+    // };
 
 
     const [user, setUser] = useState(null);
 
-    useEffect(async () => {
+    useEffect(() => {
         if (!user) {
             getuser()
                 .then((res) => {
@@ -563,62 +566,69 @@ function StudyChat() {
     }
 
     return (
-        <div class="container max-w-full h-100vh bg-gray-100">
-            <VideoWrapper>
-                {!isLoaded ? <div class="text-center">로딩중이에요...</div> :
-                    <div>
-                        <ProgressBarWrapper>
-                            <ProgressBar step={step}></ProgressBar>
-                        </ProgressBarWrapper>
 
-                        {/* <Timer></Timer> */}
+        <VideoWrapper>
+            {!isLoaded ? <div class="text-center">로딩중이에요...</div> :
+                <div>
+                    <ProgressBarWrapper>
+                        <ProgressBar step={step}></ProgressBar>
+                    </ProgressBarWrapper>
 
-                        <div class="flex mb-3 mt-5 justify-between">
-                            <div class="flex-col">
+                    {/* <Timer></Timer> */}
+
+                    <div class="container flex mt-5 justify-between mx-auto">
+                        <div class="flex-col">
+
+
+                            <div class="">
                                 <div class="text-left">
                                     <VideoUserText>{user.firstName}{user.lastName}의 비디오</VideoUserText>
                                 </div>
+                                <UserVideo autoPlay playsInline ref={myVideoRef} />
 
-                                <UserVideo poster={logoVerpic} class="z-0" autoPlay playsInline ref={myVideoRef}>
 
-                                </UserVideo>
                                 <div class="flex justify-between">
-                                    <ToggleButton className="ml-28" onClick={videoButtonOff}>{localVideoState ?
+                                    <ToggleButton onClick={videoButtonOff}>{localVideoState ?
                                         <FontAwesomeIcon icon={faCamera} />
 
                                         : <FontAwesomeIcon icon={faCamera} />}
                                     </ToggleButton>
                                     <ToggleButton onClick={micButtonOff}>{localAudioState ?
-                                        <FontAwesomeIcon icon={faMicrophoneAltSlash} />
+                                        <FontAwesomeIcon icon={faMicrophone} />
 
-                                        : <FontAwesomeIcon icon={faMicrophone} />}
+                                        : <FontAwesomeIcon icon={faMicrophoneAltSlash} />}
                                     </ToggleButton>
                                 </div>
                                 <div class="text-left">
                                     <VideoUserText>상대방의 비디오</VideoUserText>
+                                    <UserVideo autoPlay playsInline ref={remoteVideoRef} />
                                 </div>
-                                <UserVideo poster={logoVerpic} autoPlay playsInline ref={remoteVideoRef}></UserVideo>
-                            </div>
-                            <div class="flex-col">
-                                <div class="text-left">
-                                    <ChatLabelText>채팅</ChatLabelText>
-                                </div>
-
-                                <ChatView ref={chatRef}>
-                                    <ChatList chats={chats} myName={myName} />
-                                    <CreateChat
-                                        message={message}
-                                        onChange={chatOnChange}
-                                        onCreate={chatOnCreate}
-                                    ></CreateChat>
-                                </ChatView>
                             </div>
                         </div>
-                        {/* 여기 matchId 들어가야함! */}
-                        <AudioRecord matchId={localRoom} ref={audioRecordRef}></AudioRecord>
-                    </ div>}
-            </VideoWrapper >
-        </div>
+                        <div class="flex-col">
+                            <div class="text-left">
+                                <ChatLabelText>채팅</ChatLabelText>
+                            </div>
+
+                            <ChatView ref={chatRef}>
+                                <ChatList chats={chats} myName={myName} />
+                                <CreateChat
+                                    message={message}
+                                    onChange={chatOnChange}
+                                    onCreate={chatOnCreate}
+                                ></CreateChat>
+                            </ChatView>
+                        </div>
+
+                    </div>
+                    {/* 여기 matchId 들어가야함! */}
+                    <AudioRecord matchId={localRoom} ref={audioRecordRef}></AudioRecord>
+                    <div class="flex justify-end">
+                        <StudyExitButton onClick={() => window.close()}>학습 종료</StudyExitButton>
+                    </div>
+                </ div>}
+        </VideoWrapper >
+
 
 
 

@@ -17,14 +17,14 @@ const Wrapper = styled.div`
   cursor: pointer;
   user-select: none;
   transition: 0.2s all;
-  background: #090B17;
+  background: #0D0D0E;
   &:hover {
     color: #DEDEE2;
-    background: ${oc.blue[5]};
+    background: ${oc.indigo[7]};
   }
 
   &:active {
-    background: ${oc.blue[7]};
+    background: ${oc.indigo[7]};
   }
   ${tw`rounded-lg`}
 `;

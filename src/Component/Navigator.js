@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import Logo from "../assets/images/logoVerpic.png";
 import isAuthorized from "../Auth/isAuthorized";
 import styled from "@emotion/styled";
@@ -52,11 +51,10 @@ const NavigatorLink = styled.div`
 
 function Navigator({ user, focus }) {
 
-
   return (
     <>
       <NavigatorWrapper>
-        <div class="flex">
+        <div className="flex">
           <NavigatorLogo
             onClick={() => (window.location.href = "/")}
             src={Logo}
@@ -64,9 +62,6 @@ function Navigator({ user, focus }) {
           <NavigatorText>Capture Your Picture</NavigatorText>
         </div>
         <div>
-
-
-
           {isAuthorized() ?
             <div class="flex">
 

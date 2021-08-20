@@ -1,16 +1,13 @@
-import React, { useState, useRef } from "react";
-import tw from "twin.macro";
-
-
+import React, { useState } from "react";
 
 
 const ProgressNode = React.memo(function ProgressNode({ active, name }) {
 
     if (active) {
-        return <li class="step step-primary">{name}</li>
+        return <li class="step step-primary text-gray-100">{name}</li>
     }
     else {
-        return <li class="step">{name}</li>
+        return <li class="step text-gray-100">{name}</li>
     }
 })
 
@@ -36,7 +33,7 @@ function ProgressBar({ step }) {
     ]);
     return <ul class="w-full steps">
         {nodeNames.map((nodeName) => (
-            <ProgressNode active={nodeName.id <= step} name={nodeName.name} key={nodeName.id}/>
+            <ProgressNode active={nodeName.id <= step} name={nodeName.name} key={nodeName.id} />
         ))}
     </ul>
 }

@@ -5,9 +5,8 @@ import React, { useState, useEffect, createContext } from "react";
 import styled from "@emotion/styled";
 import tw from "twin.macro";
 import getuser from "../Api/getuser";
-import Cookies from "universal-cookie";
 import isAuthorized from "../Auth/isAuthorized";
-import TestingComponent from "../User/TestingComponent";
+
 
 
 const HomeComponentWrapper = styled.div`
@@ -36,8 +35,6 @@ function MainPage() {
         })
     }
   })
-
-
 
   return (
     <div class="container max-w-full bg-gray-100 h-200vh">
