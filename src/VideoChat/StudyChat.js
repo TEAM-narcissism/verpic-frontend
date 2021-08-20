@@ -96,9 +96,8 @@ function StudyChat() {
     const [localVideoState, SetLocalVideoState] = useState(true);
     const [localAudioState, SetLocalAudioState] = useState(true);
     const [myId, setMyId] = useState("");
-    const [detailTopicList, setDetailTopicList] = useState();
-
     const { localRoom } = useParams();
+    const adminName = 'Verpic';
 
 
     const audioRecordRef = useRef();
@@ -120,13 +119,19 @@ function StudyChat() {
     }, []);
 
     const [chats, setChats] = useState([
-        // {
-        //     id: 1,
-        //     sender: 'test_sender',
-        //     message: '테스트용 메세지 입니다.'
-        // }
     ]);
-    const nextChatId = useRef(3)
+    const nextChatId = useRef(1)
+
+    const addChat = (message, sender, userId) => {
+        const chat = {
+            id: nextChatId.current,
+            message: message,
+            sender: sender,
+            userId: userId,
+        }
+        setChats(chats => chats.concat(chat));
+        nextChatId.current += 1;
+    }
 
     const peerConnectionConfig = {
         'iceServers': [
@@ -215,28 +220,17 @@ function StudyChat() {
         })
     }, [message]);
 
-
     const chatSubscribe = () => {
         stompconn.subscribe('/sub/videochat/' + localRoom, function (message) {
             var content = JSON.parse(message.body);
-            console.log('chat subscribe');
-
-            const chat = {
-                id: nextChatId.current,
-                message: content.message,
-                sender: content.senderName,
-                userId: content.matchUserId
-            }
+            addChat(content.message, content.senderName, content.matchUserId);
             console.log(content)
-            setChats(chats => chats.concat(chat))
-            nextChatId.current += 1;
         });
     }
 
     const chatUserSubscribe = () => {
         stompconn.subscribe('/user/sub/videochat/' + localRoom, function (message) {
             var content = JSON.parse(message.body);
-            console.log("개인 메세지", content.matchUserId);
             setMyId(content.matchUserId);
         });
     }
@@ -503,7 +497,6 @@ function StudyChat() {
                 let topics = "";
                 getDetailTopics(cookies.get("vtoken"), localRoom)
                 .then((detailTopics => {
-                    console.log(detailTopics);
                     topics += detailTopics[0].context + '\n' + detailTopics[1].context;
                 }))
                 if (remainTime >= 0) {
@@ -516,18 +509,11 @@ function StudyChat() {
                 if (remainTime + 2000 >= 0) {
                     setTimeout(() => {
                         setStep(2);
-                        console.log("3분 뒤 실행되는 부분", detailTopicList)
+                        console.log("3분 뒤 실행되는 부분")
                         var message = "지금부터 한국어 세션이 시작합니다.\n아래 토픽에 대해 한국어로 대화해주세요.\nThe Korean session starts now.\nPlease talk about the topic below in Korean.\n\n";
                         message += topics;
-                        //audioRecordRef.current.onRecAudio(localVideoState);
-                        const notice = {
-                            id: nextChatId.current,
-                            message: message,
-                            sender: 'Verpic',
-                            userId: 0
-                        }
-                        setChats(chats => chats.concat(notice));
-                        nextChatId.current += 1;
+                        audioRecordRef.current.onRecAudio(localVideoState);
+                        addChat(message, adminName, 0);
                     }, remainTime + 5000);
                 }
                 // 시작시각 + 10분 후
@@ -537,16 +523,9 @@ function StudyChat() {
                         var message = "지금부터 영어 세션이 시작합니다.\n아래 토픽에 대해 영어로 대화해주세요.\nThe English session starts now.\nPlease talk about the topic below in English.\n\n";
                         message += topics;
                         console.log("10분 뒤 실행되는 부분")
-                        const notice = {
-                            id: nextChatId.current,
-                            message: message,
-                            sender: 'Verpic',
-                            userId: 0
-                        }
-                        setChats(chats => chats.concat(notice));
-                        nextChatId.current += 1;
-                        //audioRecordRef.current.offRecAudio(1, "ko");
-                        //audioRecordRef.current.onRecAudio(localVideoState);
+                        addChat(message, adminName, 0);
+                        audioRecordRef.current.offRecAudio(1, "ko");
+                        audioRecordRef.current.onRecAudio(localVideoState);
                     }, remainTime + 10000);
                 }
                 // 시작시각 + 17분 후
@@ -554,16 +533,9 @@ function StudyChat() {
                     setTimeout(() => {
                         setStep(4);
                         console.log("17분 뒤 실행되는 부분")
+                        audioRecordRef.current.offRecAudio(2, "en");
                         var message = "곧 세션이 마감됩니다. 마무리 인사를 해주세요.\nThe session will be closed soon.\nPlease say goodbye to your partner."
-                        //audioRecordRef.current.offRecAudio(2, "en");
-                        const notice = {
-                            id: nextChatId.current,
-                            message: message,
-                            sender: 'Verpic',
-                            userId: 0
-                        }
-                        setChats(chats => chats.concat(notice));
-                        nextChatId.current += 1;
+                        addChat(message, adminName, 0);
                     }, remainTime + 18000);
                 }
                 setIsLoaded(true);
@@ -575,10 +547,6 @@ function StudyChat() {
         stompWithSockJS();
         //getUserMediaReact();
     }, []);
-    
-        useEffect(() => {
-            console.log(detailTopicList)
-            }, [detailTopicList]);
 
 
     const videoButtonOff = () => {

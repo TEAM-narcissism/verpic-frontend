@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import styled from "@emotion/styled";
 import tw from "twin.macro";
@@ -15,13 +15,12 @@ const NoticeWrapper = styled.p`
   ${tw`mx-1 py-1 px-4 rounded-3xl bg-yellow-200 whitespace-pre-wrap`};
 `;
 
-const Chat = React.memo(function Chat({ chat, myId }) {
-  console.log(0 === chat.userId);
+const Chat = React.memo(function Chat({ chat, myId, succesive }) {
   if (myId === chat.userId) {
     return (
       <div>
-        <span class="flex justify-end mr-2 text-gray-100 text-sm">{chat.sender}</span>
-        <div class="flex justify-end mb-3">
+        {succesive ? null : <span class="flex justify-end mr-2 text-gray-100 text-sm">{chat.sender}</span>}
+        <div class="flex justify-end mb-1">
           <div class="text-right">
             <MyChatWrapper>{chat.message}</MyChatWrapper>
           </div>
@@ -32,10 +31,8 @@ const Chat = React.memo(function Chat({ chat, myId }) {
   else if (0 === chat.userId) {
     return (
     <div>
-      <span class="flex justify-center mr-2 text-gray-100 text-sm font-semibold">
-          {chat.sender}
-        </span>
-        <div class="flex justify-center mb-3">
+      {succesive ? null : <span class="flex justify-center mr-2 text-gray-100 text-sm font-semibold">{chat.sender}</span>}
+        <div class="flex justify-center mb-1">
           <div class="text-left">
             <NoticeWrapper>{chat.message}</NoticeWrapper>
           </div>
@@ -47,10 +44,8 @@ const Chat = React.memo(function Chat({ chat, myId }) {
   }
   return (
     <div>
-      <span class="flex justify-start ml-2 text-gray-100 text-sm ">
-        {chat.sender}
-      </span>
-      <div class="flex justify-start mb-3">
+      {succesive ? null : <span class="flex justify-start ml-2 text-gray-100 text-sm ">{chat.sender}</span>}
+      <div class="flex justify-start mb-1">
         <div class="text-right">
           <ChatWrapper>{chat.message}</ChatWrapper>
         </div>
@@ -69,22 +64,41 @@ const ChatListWrapper = styled.div`
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 4px;
   }
-  ${tw`flex flex-col mt-2 overflow-y-scroll gap-1`}
+  ${tw`flex flex-col mt-2 overflow-y-auto gap-1`}
 `;
+
+
 
 function ChatList({ chats, myId }) {
   const scrollRef = useRef(null);
+  const before = useRef(-1);
+  const [succesive, setSeccesive] = useState([
+    false
+  ],)
   useEffect(() => {
 
     const scroll = scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
     scrollRef.current.scrollTo(0, scroll);
-
+    
+    if (before.current > 0) {
+      if (chats[before.current].userId === chats[before.current - 1].userId) {
+        setSeccesive(succesive => succesive.concat(true))
+      }
+      else {
+        setSeccesive(succesive => succesive.concat(false))
+      }
+      before.current += 1;
+    }
+    else {
+      before.current += 1;
+    }
+    
   }, [chats]);
-  var before;
+  
   return (
     <ChatListWrapper ref={scrollRef}>
       {chats.map((chat) => (
-        <Chat chat={chat} myId={myId} key={chat.id} />
+        <Chat chat={chat} myId={myId} key={chat.id} succesive={succesive[chat.id - 1] ? succesive[chat.id - 1] : false}/>
       ))}
       <div ></div>
     </ChatListWrapper>
