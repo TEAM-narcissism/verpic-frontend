@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import styled from "@emotion/styled";
 import tw from "twin.macro";
 
 const CardWrapper = styled.div`
-  ${tw` mx-10 overflow-hidden rounded-lg border shadow-sm cursor-pointer sm:flex mb-10 hover:shadow-lg duration-500`}
+  ${tw` mx-10 overflow-hidden rounded-lg border-2 shadow-sm bg-white cursor-pointer sm:flex mb-10 hover:shadow-lg duration-500`}
 `;
 
 const ImageWrapper = styled.div`
@@ -50,7 +50,7 @@ function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton }) {
       onClick={onClick}
       className={
         checkedItem === topic.id
-          ? "border ring-2 ring-yellow-400 px-2 py-6"
+          ? "border ring-4 ring-offset-2 ring-indigo-400 px-2 py-4"
           : ""
       }
     >

@@ -4,11 +4,11 @@ import styled from "@emotion/styled";
 import tw from "twin.macro";
 
 const ChatWrapper = styled.div`
-  ${tw`ml-2 py-1 px-4 bg-gray-200 text-sm rounded-br-3xl rounded-tr-3xl rounded-tl-xl`}
+  ${tw`ml-2 py-1 px-4 bg-gray-400 text-sm rounded-br-3xl font-semibold rounded-tr-3xl rounded-tl-xl`}
 `;
 
 const MyChatWrapper = styled.div`
-  ${tw`mr-2 py-1 px-4 bg-indigo-300 text-sm rounded-bl-3xl rounded-tl-3xl rounded-tr-xl `}
+  ${tw`mr-2 py-1 px-4 bg-indigo-300 text-sm rounded-bl-3xl font-semibold rounded-tl-3xl rounded-tr-xl `}
 `;
 
 const NoticeWrapper = styled.p`
@@ -20,9 +20,7 @@ const Chat = React.memo(function Chat({ chat, myId }) {
   if (myId === chat.userId) {
     return (
       <div>
-        <span class="flex justify-end mr-2 text-sm font-semibold">
-          {chat.sender}
-        </span>
+        <span class="flex justify-end mr-2 text-gray-100 text-sm">{chat.sender}</span>
         <div class="flex justify-end mb-3">
           <div class="text-right">
             <MyChatWrapper>{chat.message}</MyChatWrapper>
@@ -34,7 +32,7 @@ const Chat = React.memo(function Chat({ chat, myId }) {
   else if (0 === chat.userId) {
     return (
     <div>
-      <span class="flex justify-center mr-2 text-sm font-semibold">
+      <span class="flex justify-center mr-2 text-gray-100 text-sm font-semibold">
           {chat.sender}
         </span>
         <div class="flex justify-center mb-3">
@@ -49,7 +47,7 @@ const Chat = React.memo(function Chat({ chat, myId }) {
   }
   return (
     <div>
-      <span class="flex justify-start ml-2 text-sm font-semibold">
+      <span class="flex justify-start ml-2 text-gray-100 text-sm ">
         {chat.sender}
       </span>
       <div class="flex justify-start mb-3">
@@ -77,12 +75,12 @@ const ChatListWrapper = styled.div`
 function ChatList({ chats, myId }) {
   const scrollRef = useRef(null);
   useEffect(() => {
-    
+
     const scroll = scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
     scrollRef.current.scrollTo(0, scroll);
-    
-  }, [chats]);
 
+  }, [chats]);
+  var before;
   return (
     <ChatListWrapper ref={scrollRef}>
       {chats.map((chat) => (

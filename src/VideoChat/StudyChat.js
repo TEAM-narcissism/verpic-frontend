@@ -13,69 +13,79 @@ import Timer from './Timer';
 import { faCamera, faMicrophone, faMicrophoneAltSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import getuser from '../Api/getuser';
-import logoVerpic from '../assets/images/logoVerpic.png';
+import peopledefault from '../assets/images/peopledefault.png';
 import { useParams } from "react-router";
 
 import getRemainTime from "../Api/getRemainTime";
+import getDetailTopics from "../Api/getDetailTopics";
 import AudioRecord from "./AudioRecord";
 import ProgressBar from "./ProgressBar";
+import axios from "axios";
 
-let localStream;
-let localVideoTracks;
-let myPeerConnection;
 
 
 
 const ProgressBarWrapper = styled.div`
     font-family: 'NanumGothic-Bold';
-    ${tw`container mt-10`}
+    ${tw`pt-10`}
 `;
 
 const ChatView = styled.div`
     font-family: 'NanumGothic-Regular';
-    height: 830px;
-    width: 450px;
+    background: #262624;
+    border: 2px solid #262626;
 
-    @media screen and (max-width: 500px) {
-        height: 400px;
-        width: 200px;
-        flex-direction: column;
-    }
-    ${tw`mr-28 border rounded-lg mb-10 flex flex-col justify-between`}
+
+    ${tw`border h-80vh w-35vh rounded-lg mx-10 flex flex-col justify-between`}
 `;
 
 const VideoWrapper = styled.div`
     font-family: 'NanumGothic-Regular';
-    ${tw`container mx-auto text-center`}
+    background: #0D0D0E;
+    ${tw`text-center max-w-full h-100vh`}
 `;
 
 const UserVideo = styled.video`
-    height: 350px;   
-    width: 750px;
+    background: #0D0D0E;
+    background-image: url(${peopledefault});
+    color: #25292E;
+    border: 2px solid #262626;
+    background-size: 20%;
+    background-repeat: no-repeat;
+    background-position: center;
 
-    @media screen and (max-width: 500px) {
-        height: 200px;
-        width: 400px;
-        flex-direction: column;
-    }
-    ${tw`bg-black border ml-28  mb-3 rounded-lg`}
+
+    ${tw` w-75vh h-35vh mb-3 rounded-lg`}
 `;
 
 
-const ToggleButton = styled.div`
-    ${tw`border p-1 rounded border-gray-200 text-gray-400 w-1/6 mb-10 cursor-pointer`}
+const ToggleButton = styled.div`   
+    background: #262626;
+    &:hover {
+        color: 	#4B7DDA;
+        border: 1px solid
+    }
+    ${tw`border p-1 rounded border-gray-400 text-gray-200  w-1/6 mb-10 cursor-pointer`}
 `;
 
 const VideoUserText = styled.text`
 
-    ${tw`rounded-sm ml-28 font-semibold p-2 `}
+    ${tw`text-gray-100 font-semibold p-2 `}
 `;
 
 const ChatLabelText = styled.text`
-    ${tw`rounded-sm font-semibold p-2 `}
+    ${tw`text-gray-100 font-semibold mx-10 p-2 `}
+`;
+
+
+const StudyExitButton = styled.div`
+
+    ${tw`mt-10 mr-10 flex-row cursor-pointer rounded-lg w-1/12  font-semibold text-white bg-red-600 p-2`}
 `;
 
 function StudyChat() {
+    let localStream;
+    let myPeerConnection;
     const cookies = new Cookies();
     const token = cookies.get('vtoken');
     const localUserName = localStorage.getItem("uuid")
@@ -85,7 +95,8 @@ function StudyChat() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [localVideoState, SetLocalVideoState] = useState(true);
     const [localAudioState, SetLocalAudioState] = useState(true);
-
+    const [myId, setMyId] = useState("");
+    const [detailTopicList, setDetailTopicList] = useState();
 
     const { localRoom } = useParams();
 
@@ -113,11 +124,6 @@ function StudyChat() {
         //     id: 1,
         //     sender: 'test_sender',
         //     message: '테스트용 메세지 입니다.'
-        // },
-        // {
-        //     id: 2,
-        //     sender: 'test_sender2',
-        //     message: '두 번째 테스트용 메세지 입니다.'
         // }
     ]);
     const nextChatId = useRef(3)
@@ -209,7 +215,6 @@ function StudyChat() {
         })
     }, [message]);
 
-    const [myId, setMyId] = useState("");
 
     const chatSubscribe = () => {
         stompconn.subscribe('/sub/videochat/' + localRoom, function (message) {
@@ -454,37 +459,53 @@ function StudyChat() {
     }
 
 
-    const getUserMediaReact = async () => {
-        try {
-            console.log('get my video .');
-            localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-            myVideoRef.current.srcObject = localStream;
-            myVideoRef.current.muted = true;
-        } catch (err) {
-            console.log(err);
-        }
-    };
+    // const getUserMediaReact = async () => {
+    //     try {
+    //         console.log('get my video .');
+    //         localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    //         myVideoRef.current.srcObject = localStream;
+    //         myVideoRef.current.muted = true;
+    //     } catch (err) {
+    //         console.log(err);
+    //     }
+    // };
 
 
-    const [userObject, setUserObject] = useState(null);
+    const [user, setUser] = useState(null);
+
     useEffect(() => {
-
-        if (!userObject) {
+        if (!user) {
             getuser()
                 .then((res) => {
-                    setUserObject(res);
-
+                    console.log(res);
+                    setUser(res);
+                    axios.get('/matching/participant-check/' + localRoom + '/' + res.id)
+                        .then(
+                            res => {
+                                if (!res.data.result) {
+                                    alert('정해진 참가자가 아니에요.');
+                                    window.location.href = '/';
+                                }
+                            }
+                        )
 
                 })
                 .catch((err) => {
                     alert("로그인 세션이 만료되었어요.");
                     window.location.href = "/logout"
                 })
+
+
         }
 
         getRemainTime(cookies.get("vtoken"), localRoom)
             .then((remainTime => {
-
+                let topics = "";
+                getDetailTopics(cookies.get("vtoken"), localRoom)
+                .then((detailTopics => {
+                    console.log(detailTopics);
+                    topics += detailTopics[0].context + '\n' + detailTopics[1].context;
+                }))
                 if (remainTime >= 0) {
                     setTimeout(() => {
                         setStep(1);
@@ -495,25 +516,37 @@ function StudyChat() {
                 if (remainTime + 2000 >= 0) {
                     setTimeout(() => {
                         setStep(2);
-                        console.log("3분 뒤 실행되는 부분")
-                        audioRecordRef.current.onRecAudio(localVideoState);
+                        console.log("3분 뒤 실행되는 부분", detailTopicList)
+                        var message = "지금부터 한국어 세션이 시작합니다.\n아래 토픽에 대해 한국어로 대화해주세요.\nThe Korean session starts now.\nPlease talk about the topic below in Korean.\n\n";
+                        message += topics;
+                        //audioRecordRef.current.onRecAudio(localVideoState);
                         const notice = {
                             id: nextChatId.current,
-                            message: "지금부터 한국어 세션이 시작합니다.\n아래 토픽에 대해 한국어로 대화해주세요.\nThe Korean session starts now.\nPlease talk about the topic below in Korean.",
+                            message: message,
                             sender: 'Verpic',
                             userId: 0
                         }
                         setChats(chats => chats.concat(notice));
                         nextChatId.current += 1;
-                    }, remainTime + 4000);
+                    }, remainTime + 5000);
                 }
                 // 시작시각 + 10분 후
                 if (remainTime + 2000 >= 0) {
                     setTimeout(() => {
                         setStep(3);
+                        var message = "지금부터 영어 세션이 시작합니다.\n아래 토픽에 대해 영어로 대화해주세요.\nThe English session starts now.\nPlease talk about the topic below in English.\n\n";
+                        message += topics;
                         console.log("10분 뒤 실행되는 부분")
-                        audioRecordRef.current.offRecAudio(1, "ko");
-                        audioRecordRef.current.onRecAudio(localVideoState);
+                        const notice = {
+                            id: nextChatId.current,
+                            message: message,
+                            sender: 'Verpic',
+                            userId: 0
+                        }
+                        setChats(chats => chats.concat(notice));
+                        nextChatId.current += 1;
+                        //audioRecordRef.current.offRecAudio(1, "ko");
+                        //audioRecordRef.current.onRecAudio(localVideoState);
                     }, remainTime + 10000);
                 }
                 // 시작시각 + 17분 후
@@ -521,7 +554,16 @@ function StudyChat() {
                     setTimeout(() => {
                         setStep(4);
                         console.log("17분 뒤 실행되는 부분")
-                        audioRecordRef.current.offRecAudio(2, "en");
+                        var message = "곧 세션이 마감됩니다. 마무리 인사를 해주세요.\nThe session will be closed soon.\nPlease say goodbye to your partner."
+                        //audioRecordRef.current.offRecAudio(2, "en");
+                        const notice = {
+                            id: nextChatId.current,
+                            message: message,
+                            sender: 'Verpic',
+                            userId: 0
+                        }
+                        setChats(chats => chats.concat(notice));
+                        nextChatId.current += 1;
                     }, remainTime + 18000);
                 }
                 setIsLoaded(true);
@@ -531,8 +573,12 @@ function StudyChat() {
                 console.log("에러발생", err);
             })
         stompWithSockJS();
-        getUserMediaReact();
+        //getUserMediaReact();
     }, []);
+    
+        useEffect(() => {
+            console.log(detailTopicList)
+            }, [detailTopicList]);
 
 
     const videoButtonOff = () => {
@@ -560,31 +606,34 @@ function StudyChat() {
 
                     {/* <Timer></Timer> */}
 
-                    <div class="flex mb-3 mt-5 justify-between">
+                    <div class="container flex mt-5 justify-between mx-auto">
                         <div class="flex-col">
-                            <div class="text-left">
-                                <VideoUserText>{userObject.firstName}{userObject.lastName}의 비디오</VideoUserText>
+
+
+                            <div class="">
+                                <div class="text-left">
+                                    <VideoUserText>{user.firstName}{user.lastName}의 비디오</VideoUserText>
+                                </div>
+                                <UserVideo autoPlay playsInline ref={myVideoRef} />
+
+
+                                <div class="flex justify-between">
+                                    <ToggleButton onClick={videoButtonOff}>{localVideoState ?
+                                        <FontAwesomeIcon icon={faCamera} />
+
+                                        : <FontAwesomeIcon icon={faCamera} />}
+                                    </ToggleButton>
+                                    <ToggleButton onClick={micButtonOff}>{localAudioState ?
+                                        <FontAwesomeIcon icon={faMicrophone} />
+
+                                        : <FontAwesomeIcon icon={faMicrophoneAltSlash} />}
+                                    </ToggleButton>
+                                </div>
+                                <div class="text-left">
+                                    <VideoUserText>상대방의 비디오</VideoUserText>
+                                    <UserVideo autoPlay playsInline ref={remoteVideoRef} />
+                                </div>
                             </div>
-
-                            <UserVideo poster={logoVerpic} class="z-0" autoPlay playsInline ref={myVideoRef}>
-
-                            </UserVideo>
-                            <div class="flex justify-between">
-                                <ToggleButton className="ml-28" onClick={videoButtonOff}>{localVideoState ?
-                                    <FontAwesomeIcon icon={faCamera} />
-
-                                    : <FontAwesomeIcon icon={faCamera} />}
-                                </ToggleButton>
-                                <ToggleButton onClick={micButtonOff}>{localAudioState ?
-                                    <FontAwesomeIcon icon={faMicrophoneAltSlash} />
-
-                                    : <FontAwesomeIcon icon={faMicrophone} />}
-                                </ToggleButton>
-                            </div>
-                            <div class="text-left">
-                                <VideoUserText>상대방의 비디오</VideoUserText>
-                            </div>
-                            <UserVideo poster={logoVerpic} autoPlay playsInline ref={remoteVideoRef}></UserVideo>
                         </div>
                         <div class="flex-col">
                             <div class="text-left">
@@ -600,9 +649,13 @@ function StudyChat() {
                                 ></CreateChat>
                             </ChatView>
                         </div>
+
                     </div>
                     {/* 여기 matchId 들어가야함! */}
                     <AudioRecord matchId={localRoom} ref={audioRecordRef}></AudioRecord>
+                    <div class="flex justify-end">
+                        <StudyExitButton onClick={() => window.close()}>학습 종료</StudyExitButton>
+                    </div>
                 </ div>}
         </VideoWrapper >
 

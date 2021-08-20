@@ -4,7 +4,7 @@ import React from "react";
 import isAuthorized from "../Auth/isAuthorized";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  console.log(isAuthorized());
+
   return (
     <Route
       {...rest}
