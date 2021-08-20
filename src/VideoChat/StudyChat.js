@@ -200,21 +200,16 @@ function StudyChat() {
 
     const chatOnCreate = useCallback(() => {
         // 채팅 보내는 부분
-        const chat = {
-            id: nextChatId.current,
-            message,
-            sender,
-        };
 
-        stompconn.send('/pub/videochat/message', { Authorization: token }, JSON.stringify({ matchId: localRoom, message: message }));
+        stompconn.send('/pub/videochat/message', { Authorization: token }, JSON.stringify({ matchId: localRoom, message: message, matchUserId: myId }));
         // setChats(chats => chats.concat(chat));
 
         setChatInputs({
             message: ''
         })
-    }, [message, sender]);
+    }, [message]);
 
-    const [myName, setMyName] = useState("");
+    const [myId, setMyId] = useState("");
 
     const chatSubscribe = () => {
         stompconn.subscribe('/sub/videochat/' + localRoom, function (message) {
@@ -224,7 +219,8 @@ function StudyChat() {
             const chat = {
                 id: nextChatId.current,
                 message: content.message,
-                sender: content.senderName
+                sender: content.senderName,
+                userId: content.matchUserId
             }
             console.log(content)
             setChats(chats => chats.concat(chat))
@@ -235,8 +231,8 @@ function StudyChat() {
     const chatUserSubscribe = () => {
         stompconn.subscribe('/user/sub/videochat/' + localRoom, function (message) {
             var content = JSON.parse(message.body);
-            console.log("개인 메세지", content.name);
-            setMyName(content.name);
+            console.log("개인 메세지", content.matchUserId);
+            setMyId(content.matchUserId);
         });
     }
 
@@ -486,7 +482,7 @@ function StudyChat() {
                 })
         }
 
-        getRemainTime(cookies.get("vtoken"), 1)
+        getRemainTime(cookies.get("vtoken"), localRoom)
             .then((remainTime => {
 
                 if (remainTime >= 0) {
@@ -500,7 +496,15 @@ function StudyChat() {
                     setTimeout(() => {
                         setStep(2);
                         console.log("3분 뒤 실행되는 부분")
-                        audioRecordRef.current.onRecAudio();
+                        audioRecordRef.current.onRecAudio(localVideoState);
+                        const notice = {
+                            id: nextChatId.current,
+                            message: "지금부터 한국어 세션이 시작합니다.\n아래 토픽에 대해 한국어로 대화해주세요.\nThe Korean session starts now.\nPlease talk about the topic below in Korean.",
+                            sender: 'Verpic',
+                            userId: 0
+                        }
+                        setChats(chats => chats.concat(notice));
+                        nextChatId.current += 1;
                     }, remainTime + 4000);
                 }
                 // 시작시각 + 10분 후
@@ -509,8 +513,8 @@ function StudyChat() {
                         setStep(3);
                         console.log("10분 뒤 실행되는 부분")
                         audioRecordRef.current.offRecAudio(1, "ko");
-                        audioRecordRef.current.onRecAudio();
-                    }, remainTime + 6000);
+                        audioRecordRef.current.onRecAudio(localVideoState);
+                    }, remainTime + 10000);
                 }
                 // 시작시각 + 17분 후
                 if (remainTime + 2000 >= 0) {
@@ -518,7 +522,7 @@ function StudyChat() {
                         setStep(4);
                         console.log("17분 뒤 실행되는 부분")
                         audioRecordRef.current.offRecAudio(2, "en");
-                    }, remainTime + 8000);
+                    }, remainTime + 18000);
                 }
                 setIsLoaded(true);
 
@@ -527,7 +531,7 @@ function StudyChat() {
                 console.log("에러발생", err);
             })
         stompWithSockJS();
-        //getUserMediaReact();
+        getUserMediaReact();
     }, []);
 
 
@@ -542,7 +546,7 @@ function StudyChat() {
             track.enabled = !track.enabled;
             SetLocalAudioState(!localAudioState)
         })
-
+        audioRecordRef.current.micButtonOff();
     }
 
     return (
@@ -588,7 +592,7 @@ function StudyChat() {
                             </div>
 
                             <ChatView ref={chatRef}>
-                                <ChatList chats={chats} myName={myName} />
+                                <ChatList chats={chats} myId={myId} />
                                 <CreateChat
                                     message={message}
                                     onChange={chatOnChange}
@@ -598,7 +602,7 @@ function StudyChat() {
                         </div>
                     </div>
                     {/* 여기 matchId 들어가야함! */}
-                    <AudioRecord matchId={1} ref={audioRecordRef}></AudioRecord>
+                    <AudioRecord matchId={localRoom} ref={audioRecordRef}></AudioRecord>
                 </ div>}
         </VideoWrapper >
 

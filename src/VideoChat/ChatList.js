@@ -11,8 +11,13 @@ const MyChatWrapper = styled.div`
   ${tw`mr-2 py-1 px-4 bg-indigo-300 text-sm rounded-bl-3xl rounded-tl-3xl rounded-tr-xl `}
 `;
 
-const Chat = React.memo(function Chat({ chat, myName }) {
-  if (myName === chat.sender) {
+const NoticeWrapper = styled.p`
+  ${tw`mx-1 py-1 px-4 rounded-3xl bg-yellow-200 whitespace-pre-wrap`};
+`;
+
+const Chat = React.memo(function Chat({ chat, myId }) {
+  console.log(0 === chat.userId);
+  if (myId === chat.userId) {
     return (
       <div>
         <span class="flex justify-end mr-2 text-sm font-semibold">
@@ -25,7 +30,22 @@ const Chat = React.memo(function Chat({ chat, myName }) {
         </div>
       </div>
     );
-  } else {
+  }
+  else if (0 === chat.userId) {
+    return (
+    <div>
+      <span class="flex justify-center mr-2 text-sm font-semibold">
+          {chat.sender}
+        </span>
+        <div class="flex justify-center mb-3">
+          <div class="text-left">
+            <NoticeWrapper>{chat.message}</NoticeWrapper>
+          </div>
+        </div>
+    </div>
+    );
+  } 
+  else {
   }
   return (
     <div>
@@ -54,7 +74,7 @@ const ChatListWrapper = styled.div`
   ${tw`flex flex-col mt-2 overflow-y-scroll gap-1`}
 `;
 
-function ChatList({ chats, myName }) {
+function ChatList({ chats, myId }) {
   const scrollRef = useRef(null);
   useEffect(() => {
     
@@ -66,7 +86,7 @@ function ChatList({ chats, myName }) {
   return (
     <ChatListWrapper ref={scrollRef}>
       {chats.map((chat) => (
-        <Chat chat={chat} myName={myName} key={chat.id} />
+        <Chat chat={chat} myId={myId} key={chat.id} />
       ))}
       <div ></div>
     </ChatListWrapper>
