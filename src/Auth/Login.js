@@ -34,7 +34,7 @@ function Login() {
             /[xy]/g,
             function (c) {
               let r = (Math.random() * 16) | 0,
-                v = c == "x" ? r : (r & 0x3) | 0x8;
+                v = c === "x" ? r : (r & 0x3) | 0x8;
               return v.toString(16);
             }
           );
@@ -48,7 +48,7 @@ function Login() {
         console.log(error.response);
         if (error.response) {
           const statusCode = error.response.data.httpStatus;
-          if (statusCode == "BAD_REQUEST") {
+          if (statusCode === "BAD_REQUEST") {
             console.log("잘못된 email 또는 password입니다.");
           }
           else {
