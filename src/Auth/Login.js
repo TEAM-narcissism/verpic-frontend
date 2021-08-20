@@ -80,8 +80,8 @@ function Login() {
   const debounceFunc = debounce(onChange, 300);
 
   return (
-    <>
-      <Navigator />
+    <div class="container max-w-full h-100vh bg-gray-100">
+      <Navigator focus="로그인" />
       <AuthWrapper>
         <InputWithLabel
           label="Email"
@@ -93,6 +93,7 @@ function Login() {
         <InputWithLabel
           label="Password"
           name="password"
+          type="password"
           placeholder="비밀번호"
           onChange={debounceFunc}
           ref={passwordRef}
@@ -100,7 +101,7 @@ function Login() {
         <AuthButton onClick={postToLogin}>로그인</AuthButton>
         <AuthButton onClick="">구글로그인</AuthButton>
       </AuthWrapper>
-    </>
+    </div>
   );
 }
 

@@ -15,7 +15,7 @@ const CardListText = styled.div`
 
 const CardListWrapper = styled.div`
   font-family: "NanumGothic-Regular";
-  ${tw`container mx-auto`}
+  ${tw`container mx-auto overscroll-y-auto`}
 `;
 
 function CardList(props) {

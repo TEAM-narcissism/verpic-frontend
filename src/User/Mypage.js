@@ -22,7 +22,7 @@ const ProfileText = styled.div`
 const ReserveListWrapper = styled.div`
   font-family: 'NanumGothic-Regular';
 
-  ${tw`container w-full border`}
+  ${tw`container w-full border bg-white`}
 `;
 
 
@@ -49,7 +49,8 @@ function Mypage() {
     })
 
 
-    window.location.href = '/studychat/' + matchId;
+    window.open('/studychat/' + matchId, '_blank')
+    // window.location.href = '/studychat/' + matchId;
 
   }
 
@@ -72,7 +73,7 @@ function Mypage() {
         }
       })
 
-    await axios.get('/matching/' + id)
+    await axios.get('/matching/user/' + id)
       .then((res) => {
         if (res.data) {
           setMatchList(res.data);
@@ -85,16 +86,19 @@ function Mypage() {
   }, []);
 
   return (
-    <>
+    <div class="container max-w-full h-100vh bg-gray-100">
 
 
       {isLoading ? <div class="text-center">로딩중이에요...</div> :
         <>
-          <Navigator user={user} />
+          <Navigator user={user} focus="마이페이지" />
 
           <ProfileWrapper>
             <div class=" text-xl font-semibold mb-2"> 프로필</div>
-            <div class="text-center border rounded-lg mb-10">
+            <div class="text-center border rounded-lg mb-10 bg-white">
+              <div class="h-12 w-12 border-4 bg-gradient-to-r from-indigo-400 to-green-300 rounded-full text-white flex justify-center items-center overflow-hidden">
+                <span class="text-sm font-semibold">{user.firstName}</span>
+              </div>
               <ProfileText> 이름: {user.firstName}{user.lastName} </ProfileText>
               <ProfileText> 이메일: {user.email}</ProfileText>
               <ProfileText> {user.firstLanguage}가 자신있어요.</ProfileText>
@@ -142,7 +146,7 @@ function Mypage() {
 
         </>
       }
-    </>
+    </div>
   );
 }
 

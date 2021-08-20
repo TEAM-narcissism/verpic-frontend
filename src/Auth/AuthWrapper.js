@@ -12,7 +12,7 @@ const Positioner = styled.div`
 // 너비, 그림자 설정
 const ShadowedBox = styled.div`
   width: 400px;
-  ${tw`mx-auto border rounded-xl`}
+  ${tw`mx-auto border-2 rounded-xl p-2 bg-white`}
 `;
 
 // 로고
@@ -37,11 +37,12 @@ const LoginTeamLogo = styled.img`
   @media screen and (max-width: 500px) {
     width: 40px;
   }
-  ${tw`m-2 cursor-pointer`}
+  ${tw`m-2`}
 `;
 
 const LoginTeamText = styled.text`
-  ${tw`bg-clip-text my-auto text-3xl font-extrabold text-transparent bg-gradient-to-r from-blue-400 via-black to-gray-500`}
+    font-family: 'NotoSans-Regular';
+  ${tw`bg-clip-text my-auto text-4xl font-extrabold text-transparent bg-gradient-to-r from-blue-400 via-black to-gray-500`}
 `;
 
 const AuthWrapper = ({ children }) => (

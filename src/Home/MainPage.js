@@ -40,18 +40,18 @@ function MainPage() {
 
 
   return (
-    <>
+    <div class="container max-w-full bg-gray-100 h-200vh">
 
 
       <ModalProvider>
         {user ?
-          <Navigator user={user} /> : <Navigator />}
+          <Navigator user={user} focus="신청하기" /> : <Navigator focus="신청하기" />}
         <HomeComponentWrapper>
           <CardList />
         </HomeComponentWrapper>
       </ModalProvider>
 
-    </>
+    </div>
   );
 }
 

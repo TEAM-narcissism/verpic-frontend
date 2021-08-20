@@ -9,11 +9,11 @@ import tw from "twin.macro";
 
 const ReservationWrapper = styled.div`
   font-family: "NanumGothic-Regular";
-  ${tw`container ml-20  mr-10 mb-10`}
+  ${tw`container ml-20  mr-10 mb-10 `}
 `;
 
 const ReservationQuestionWrapper = styled.div`
-  ${tw`border rounded shadow-lg p-10`}
+  ${tw`border-2 rounded-lg shadow-lg p-10 bg-white`}
 `;
 
 const ResevationText = styled.div`
@@ -32,7 +32,7 @@ const ReservationOptionSelect = styled.select`
 `;
 
 const ReservationSendButton = styled.button`
-  ${tw`border w-full rounded-lg p-3  text-white font-bold`}
+  ${tw`border w-full rounded-lg p-3  text-white font-semibold`}
 `;
 
 const StyledModal = Modal.styled`

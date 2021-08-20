@@ -18,6 +18,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 import MatchingPost from "./Api/MatchingPost";
 import Mypage from "./User/Mypage";
+import TestPage from "./Home/TestPage";
 
 export const conn = new SockJS("http://localhost:8080/ws-stomp");
 export const stompconn = Stomp.over(conn);
@@ -37,7 +38,7 @@ function App() {
       <PrivateRoute component={MatchingPost} path="/matching" exact />
       <PrivateRoute component={Mypage} path="/profile/:id" />
       <PrivateRoute component={MainPage} path="/" exact />
-
+      <PrivateRoute component={TestPage} path="/test" exact />
 
       {/* 로그인 / 로그아웃에 관계 없이 접근 가능한 영역 */}
       {/* <Route component={MainPage} path="/" exact /> */}
