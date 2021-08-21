@@ -73,7 +73,7 @@ function Mypage() {
         }
       })
 
-    await axios.get('/matching/user/' + id)
+    await axios.get('/matching/' + id)
       .then((res) => {
         if (res.data) {
           setMatchList(res.data);

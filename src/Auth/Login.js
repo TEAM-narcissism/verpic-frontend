@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { useTranslation } from 'react-i18next';
 
 import AuthButton from "./AuthButton";
 import AuthWrapper from "./AuthWrapper";
@@ -16,6 +17,7 @@ function Login() {
 
   const emailRef = useRef();
   const passwordRef = useRef();
+  const { t, i18n } = useTranslation('login');
 
   async function postToLogin() {
     let body = inputs;
@@ -98,8 +100,8 @@ function Login() {
           onChange={debounceFunc}
           ref={passwordRef}
         />
-        <AuthButton onClick={postToLogin}>로그인</AuthButton>
-        <AuthButton onClick="">구글로그인</AuthButton>
+        <AuthButton onClick={postToLogin}>{t('login')}</AuthButton>
+        <AuthButton onClick="">{t('googlelogin')}</AuthButton>
       </AuthWrapper>
     </div>
   );

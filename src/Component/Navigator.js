@@ -3,6 +3,7 @@ import Logo from "../assets/images/logoVerpic.png";
 import isAuthorized from "../Auth/isAuthorized";
 import styled from "@emotion/styled";
 import tw from "twin.macro";
+import { useTranslation } from 'react-i18next';
 import Cookies from 'universal-cookie';
 
 import getuser from "../Api/getuser";
@@ -51,6 +52,19 @@ const NavigatorLink = styled.div`
 
 function Navigator({ user, focus }) {
 
+  const { t, i18n } = useTranslation('navigator');
+  const [isKorean, setIsKorean] = useState(false);
+
+  const changeLanguage = () => {
+    if (isKorean) {
+      i18n.changeLanguage('en');
+    }
+    else {
+      i18n.changeLanguage('ko');
+    }
+    setIsKorean(!isKorean);
+  }
+
   return (
     <>
       <NavigatorWrapper>
@@ -59,39 +73,40 @@ function Navigator({ user, focus }) {
             onClick={() => (window.location.href = "/")}
             src={Logo}
           ></NavigatorLogo>
-          <NavigatorText>Capture Your Picture</NavigatorText>
+          <NavigatorText>{t('navigatortext')}</NavigatorText>
         </div>
         <div>
           {isAuthorized() ?
             <div class="flex">
-
+              <NavigatorLink onClick={changeLanguage}>{t('languagechange')}</NavigatorLink>
               <NavigatorLink onClick={() => (window.location.href = "/")}>
 
 
-                <div class={focus === "신청하기" ? "mt-5 text-indigo-300" : "mt-5"}>신청하기</div>
+                <div class={focus === "신청하기" ? "mt-5 text-indigo-300" : "mt-5"}>{t('reservation')}</div>
               </NavigatorLink>
 
               <NavigatorLink onClick={() => window.location.href = "/topic/reservation"}>
-                <div class={focus === "신청목록" ? "mt-5 text-indigo-300" : "mt-5"}>신청목록</div>
+                <div class={focus === "신청목록" ? "mt-5 text-indigo-300" : "mt-5"}>{t('reservationlist')}</div>
               </NavigatorLink>
               <NavigatorLink>
-                <div class={focus === "피드백" ? "mt-5 text-indigo-300" : "mt-5"}>피드백</div>
+                <div class={focus === "피드백" ? "mt-5 text-indigo-300" : "mt-5"}>{t('feedback')}</div>
               </NavigatorLink>
               <NavigatorLink onClick={() => (window.location.href = "/profile/" + user.id)}>
-                <div class={focus === "마이페이지" ? "mt-5 text-indigo-300" : "mt-5"}>마이페이지</div>
+                <div class={focus === "마이페이지" ? "mt-5 text-indigo-300" : "mt-5"}>{t('mypage')}</div>
               </NavigatorLink>
               <NavigatorLink onClick={() => (window.location.href = "/logout")}>
-                <div class={focus === "로그아웃" ? "mt-5 text-indigo-300" : "mt-5"}>로그아웃</div>
+                <div class={focus === "로그아웃" ? "mt-5 text-indigo-300" : "mt-5"}>{t('logout')}</div>
               </NavigatorLink>
             </div>
             :
             <div class="flex">
+              <NavigatorLink onClick={changeLanguage}>{t('languagechange')}</NavigatorLink>
               <NavigatorLink onClick={() => (window.location.href = "/login")}>
-                <div class={focus === "로그인" ? "mt-5 text-indigo-300" : "mt-5"}>로그인</div>
+                <div class={focus === "로그인" ? "mt-5 text-indigo-300" : "mt-5"}>{t('login')}</div>
               </NavigatorLink>
 
               <NavigatorLink onClick={() => (window.location.href = "/signup")}>
-                <div class={focus === "회원가입" ? "mt-5 text-indigo-300" : "mt-5"}>회원가입</div>
+                <div class={focus === "회원가입" ? "mt-5 text-indigo-300" : "mt-5"}>{t('signup')}</div>
               </NavigatorLink>
             </div>
           }

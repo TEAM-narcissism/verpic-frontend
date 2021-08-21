@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import styled from '@emotion/styled';
 import tw from 'twin.macro';
 import Card from './Card';
@@ -7,6 +9,9 @@ import Pagination from './Pagination';
 import Navigator from './Navigator';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
+
+import getuser from "../Api/getuser";
+import isAuthorized from "../Auth/isAuthorized";
 
 const CardListText = styled.div`
 
@@ -27,9 +32,25 @@ function UserCardList(props) {
     const [currentPage, setCurrentPage] = useState(1);
     const [topicsPerPage, setTopicsPerPage] = useState(5);
     const [isLoading, setIsLoading] = useState(true);
+    const [user, setUser] = useState();
 
     const cookies = new Cookies();
     const token = cookies.get("vtoken");
+    const { t, i18n } = useTranslation('cardlist');
+
+    useEffect(async () => {
+        if (isAuthorized() && user === undefined) {
+            await getuser()
+                .then((res) => {
+                    console.log(res);
+                    setUser(res);
+                })
+                .catch((err) => {
+                    alert('로그인 세션이 만료되었어요.');
+                    window.location.href = '/logout';
+                })
+        }
+    })
 
     useEffect(() => {
         axios
@@ -85,7 +106,6 @@ function UserCardList(props) {
     const filteredFriTopicsByPaging = currentTopics(friTopics);
     const filteredSatTopicsByPaging = currentTopics(satTopics);
     const filteredSunTopicsByPaging = currentTopics(sunTopics);
-    // const filteredTopicsByPaging = currentTopics(topics);
 
     function setCurrentPageAndDay(day) {
         setToday(day);
@@ -95,24 +115,18 @@ function UserCardList(props) {
     return (
         <>
             <Navigator focus="신청목록" />
-            {isLoading ? <div className="text-center">로딩중이에요..</div> :
+            {isLoading ? <div className="text-center">{t('isloading')}</div> :
                 <div>
                     <CardListWrapper>
-                        <CardListText>토픽 목록</CardListText>
+                        <CardListText>{t('cardlisttext')}</CardListText>
                         <DaySorting dayPaginate={setCurrentPageAndDay} today={today} />
                         &nbsp;
-                        <div class="text-gray-600 mb-3 mx-10 select-none">예약된 학습의 토픽입니다. 학습하기에 앞서 예습을 원하신다면 토픽을 클릭해주세요. 예습은 학습의 효과를 4배로 늘려준다는 연구결과도 있습니다. 그러므로 Verpic은 여러분의 적극적인 예습을 권장합니다!</div>
-                        {/* {
-                    filteredTopicsByPaging.map((topic) => (
-                        <Card topic={topic} checkedItemHandler={checkedItemHandler} key={topic.id} checkedItem={checkedItem} isPreviewButton={true} />
-                    ))
-
-                } */}
+                        <div class="text-gray-600 mb-3 mx-10 select-none">{t('cardlistlongtext')}</div>
                         {
                             today === "MON" ? (
                                 monTopics.length === 0 ? (
                                     <div className="text-center font-lg font-semibold">
-                                        해당 요일에 토픽이 없어요.
+                                        {t('notopic')}
                                     </div>
                                 ) : (
                                     filteredMonTopicsByPaging.map((topic) => (
@@ -129,7 +143,7 @@ function UserCardList(props) {
                                 today === "TUES" ? (
                                     tuesTopics.length === 0 ? (
                                         <div className="text-center font-lg font-semibold">
-                                            해당 요일에 토픽이 없어요.
+                                            {t('notopic')}
                                         </div>
                                     ) : (
                                         filteredTuesTopicsByPaging.map((topic) => (
@@ -147,7 +161,7 @@ function UserCardList(props) {
                                     today === "WED" ? (
                                         wedTopics.length === 0 ? (
                                             <div className="text-center font-lg font-semibold">
-                                                해당 요일에 토픽이 없어요.
+                                                {t('notopic')}
                                             </div>
                                         ) : (
                                             filteredWedTopicsByPaging.map((topic) => (
@@ -164,7 +178,7 @@ function UserCardList(props) {
                                         today === "THUR" ? (
                                             thurTopics.length === 0 ? (
                                                 <div className="text-center font-lg font-semibold">
-                                                    해당 요일에 토픽이 없어요.
+                                                    {t('notopic')}
                                                 </div>
                                             ) : (
                                                 filteredThurTopicsByPaging.map((topic) => (
@@ -181,7 +195,7 @@ function UserCardList(props) {
                                             today === "FRI" ? (
                                                 friTopics.length === 0 ? (
                                                     <div className="text-center font-lg font-semibold">
-                                                        해당 요일에 토픽이 없어요.
+                                                        {t('notopic')}
                                                     </div>
                                                 ) : (
                                                     filteredFriTopicsByPaging.map((topic) => (
@@ -198,7 +212,7 @@ function UserCardList(props) {
                                                 today === "SAT" ? (
                                                     satTopics.length === 0 ? (
                                                         <div className="text-center font-lg font-semibold">
-                                                            해당 요일에 토픽이 없어요.
+                                                            {t('notopic')}
                                                         </div>
                                                     ) : (
                                                         filteredSatTopicsByPaging.map((topic) => (
@@ -214,7 +228,7 @@ function UserCardList(props) {
                                                 ) : (
                                                     sunTopics.length === 0 ? (
                                                         <div className="text-center font-lg font-semibold">
-                                                            해당 요일에 토픽이 없어요.
+                                                            {t('notopic')}
                                                         </div>
                                                     ) : (
                                                         filteredSunTopicsByPaging.map((topic) => (
@@ -315,7 +329,6 @@ function UserCardList(props) {
                                                     )
                                                 ))))))
                         }
-                        {/* <Pagination topicsPerPage={topicsPerPage} totalTopics={topics.length} paginate={setCurrentPage} /> */}
                     </CardListWrapper>
                 </div>
             }

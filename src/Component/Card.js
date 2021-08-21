@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from 'react-i18next';
 
 import styled from "@emotion/styled";
 import tw from "twin.macro";
@@ -37,6 +38,7 @@ const PreviewButton = styled.button`
 
 function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton }) {
   const [isSelected, setIsSelected] = useState(false);
+  const { t, i18n } = useTranslation('card');
 
   const onClick = (e) => {
     e.preventDefault();
@@ -64,14 +66,14 @@ function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton }) {
       <TopicContentWrapper>
         <TopicThemeText>{topic.theme}</TopicThemeText>
         <TopicStartTimeText>
-          Study starts at {topic.studyDate}
+          {t('studystarttimetextprefix')}{topic.studyDate}{t('studystarttimetextsuffix')}
         </TopicStartTimeText>
         <PersonCountTag>
-          총 {topic.numOfParticipant}명이 참여중이에요
+          {t('personcounttagprefix')}{topic.numOfParticipant}{t('personcounttagsuffix')}
         </PersonCountTag>
       </TopicContentWrapper>
       {
-        isPreviewButton ? <PreviewButton onClick={() => window.location.href = "/"}>Go to Preview!</PreviewButton> : ""
+        isPreviewButton ? <PreviewButton onClick={() => window.location.href = "/"}>{t('previewbutton')}</PreviewButton> : ""
       }
     </CardWrapper>
   );

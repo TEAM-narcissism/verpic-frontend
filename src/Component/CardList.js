@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
 
 import Card from "./Card";
 import Cookies from "universal-cookie";
@@ -29,6 +30,7 @@ function CardList(props) {
     },
   ]);
 
+  const { t, i18n } = useTranslation('cardlist');
   const [isLoading, setIsLoading] = useState(true);
   const [checkedItem, setCheckedItem] = useState("");
   const [today, setToday] = useState(getTodayLabel());
@@ -100,13 +102,13 @@ function CardList(props) {
 
   return (
     <>
-      {isLoading ? <div className="text-center">로딩중이에요..</div> :
+      {isLoading ? <div className="text-center">{t('isloading')}</div> :
         <>
           <CardListWrapper>
-            <CardListText>토픽 목록</CardListText>
+            <CardListText>{t('cardlisttext')}</CardListText>
 
             <div className="text-gray-600 mb-3 mx-10 select-none">
-              버픽에서 이러한 토픽을 준비했어요.
+              {t('cardlistexplanation')}
             </div>
 
             <div className="">
@@ -117,7 +119,7 @@ function CardList(props) {
               today === "MON" ? (
                 monTopics.length === 0 ? (
                   <div className="text-center font-lg font-semibold">
-                    해당 요일에 토픽이 없어요.
+                    {t('notopic')}
                   </div>
                 ) : (
                   filteredMonTopicsByPaging.map((topic) => (
@@ -134,7 +136,7 @@ function CardList(props) {
                 today === "TUES" ? (
                   tuesTopics.length === 0 ? (
                     <div className="text-center font-lg font-semibold">
-                      해당 요일에 토픽이 없어요.
+                      {t('notopic')}
                     </div>
                   ) : (
                     filteredTuesTopicsByPaging.map((topic) => (
@@ -152,7 +154,7 @@ function CardList(props) {
                   today === "WED" ? (
                     wedTopics.length === 0 ? (
                       <div className="text-center font-lg font-semibold">
-                        해당 요일에 토픽이 없어요.
+                        {t('notopic')}
                       </div>
                     ) : (
                       filteredWedTopicsByPaging.map((topic) => (
@@ -169,7 +171,7 @@ function CardList(props) {
                     today === "THUR" ? (
                       thurTopics.length === 0 ? (
                         <div className="text-center font-lg font-semibold">
-                          해당 요일에 토픽이 없어요.
+                          {t('notopic')}
                         </div>
                       ) : (
                         filteredThurTopicsByPaging.map((topic) => (
@@ -186,7 +188,7 @@ function CardList(props) {
                       today === "FRI" ? (
                         friTopics.length === 0 ? (
                           <div className="text-center font-lg font-semibold">
-                            해당 요일에 토픽이 없어요.
+                            {t('notopic')}
                           </div>
                         ) : (
                           filteredFriTopicsByPaging.map((topic) => (
@@ -203,7 +205,7 @@ function CardList(props) {
                         today === "SAT" ? (
                           satTopics.length === 0 ? (
                             <div className="text-center font-lg font-semibold">
-                              해당 요일에 토픽이 없어요.
+                              {t('notopic')}
                             </div>
                           ) : (
                             filteredSatTopicsByPaging.map((topic) => (
@@ -219,7 +221,7 @@ function CardList(props) {
                         ) : (
                           sunTopics.length === 0 ? (
                             <div className="text-center font-lg font-semibold">
-                              해당 요일에 토픽이 없어요.
+                              {t('notopic')}
                             </div>
                           ) : (
                             filteredSunTopicsByPaging.map((topic) => (

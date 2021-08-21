@@ -6,6 +6,8 @@ import tw from "twin.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import Navigator from "../Component/Navigator";
+import { useTranslation } from 'react-i18next';
 
 const SignupFormWrapper = styled.div`
   font-family: "NanumGothic-Regular";
@@ -72,6 +74,7 @@ function Signup() {
     const modalRef = useRef();
     const [isOpen, setIsOpen] = useState(false);
     const [modalContent, setModalContent] = useState("");
+    const { t, i18n } = useTranslation('signup');
 
     function toggleModal() {
         setIsOpen(!isOpen)
@@ -124,7 +127,7 @@ function Signup() {
         e.preventDefault();
 
         if (Mothertongue === Studylanguage) {
-            setModalContent("모국어와 공부할 언어는 달라야 해요.")
+            setModalContent(t('alert.languageerror'));
             setIsOpen(!isOpen);
             return;
         }
@@ -144,7 +147,7 @@ function Signup() {
             .post("/join", body)
             .then((res) => {
                 console.log(res);
-                setModalContent("Verpic의 회원이 되신 것을 환영합니다~!");
+                setModalContent(t('alert.signupcomplete'));
                 setIsOpen(!isOpen);
 
                 //회원가입에 성공하면 자동으로 로그인됨
@@ -195,11 +198,11 @@ function Signup() {
                 if (err.response) {
                     const statusCode = err.response.data.httpStatus;
                     if (statusCode === "BAD_REQUEST") {
-                        setModalContent("이미 가입된 회원입니다.")
+                        setModalContent(t('alert.alreadysignup'))
                         setIsOpen(!isOpen);
                     }
                     else {
-                        setModalContent("날짜 형식 오류입니다.")
+                        setModalContent(t('alert.anothererror'))
                         setIsOpen(!isOpen);
                     }
 
@@ -210,17 +213,18 @@ function Signup() {
 
     return (
         <ModalProvider>
+            <Navigator focus="회원가입" />
             <SignupFormWrapper>
-                <SignupText>회원 가입</SignupText>
+                <SignupText>{t('signuptext')}</SignupText>
 
 
-                <div class="text-gray-600 mb-3 select-none">아래의 항목들을 모두 작성해주세요.</div>
+                <div class="text-gray-600 mb-3 select-none">{t('signupexplanation')}</div>
 
                 <SignupQuestionWrapper>
                     <SignupInputWrapper>
                         <SignupInputText>
                             <div class="flex">
-                                <span class="mr-3">Step1. 당신의 이름을 입력해주세요.</span>
+                                <span class="mr-3">Step1. {t('step1')}</span>
                                 <span>
                                     {firstName ?
                                         <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
@@ -233,7 +237,7 @@ function Signup() {
                     <SignupInputWrapper>
                         <SignupInputText>
                             <div class="flex">
-                                <span class="mr-3">Step2. 당신의 성을 입력해주세요.</span>
+                                <span class="mr-3">Step2. {t('step2')}</span>
                                 <span>
                                     {lastName ?
                                         <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
@@ -246,7 +250,7 @@ function Signup() {
                     <SignupInputWrapper>
                         <SignupInputText>
                             <div class="flex">
-                                <span class="mr-3">Step3. 당신의 생일을 입력해주세요.</span>
+                                <span class="mr-3">Step3. {t('step3')}</span>
                                 <span>
                                     {birthDate ?
                                         <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
@@ -259,7 +263,7 @@ function Signup() {
                     <SignupInputWrapper>
                         <SignupInputText>
                             <div class="flex">
-                                <span class="mr-3">Step4. 당신의 email을 입력해주세요.</span>
+                                <span class="mr-3">Step4. {t('step4')}</span>
                                 <span>
                                     {email ?
                                         <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
@@ -272,7 +276,7 @@ function Signup() {
                     <SignupInputWrapper>
                         <SignupInputText>
                             <div class="flex">
-                                <span class="mr-3">Step5. 당신의 비밀번호를 입력해주세요.</span>
+                                <span class="mr-3">Step5. {t('step5')}</span>
                                 <span>
                                     {password ?
                                         <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
@@ -285,7 +289,7 @@ function Signup() {
                     <SignupOptionWrapper>
                         <SignupOptionText>
                             <div class="flex">
-                                <span class="mr-3">Step7. 당신의 모국어를 선택해주세요.</span>
+                                <span class="mr-3">Step7. {t('step7')}</span>
                                 <span>
                                     {Mothertongue ?
                                         <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
@@ -295,16 +299,16 @@ function Signup() {
 
                         </SignupOptionText>
                         <SignupOptionSelect name="mothertongue" value={Mothertongue} onChange={mothertongueHandler}>
-                            <option value="">선택</option>
-                            <option value="KOR">korean</option>
-                            <option value="ENG">english</option>
+                            <option value="">{t('languageselection.selection')}</option>
+                            <option value="KOR">{t('languageselection.kor')}</option>
+                            <option value="ENG">{t('languageselection.eng')}</option>
                         </SignupOptionSelect>
                     </SignupOptionWrapper>
 
                     <SignupOptionWrapper>
                         <SignupOptionText>
                             <div class="flex">
-                                <span class="mr-3">Step8. 공부하실 언어를 선택해주세요.</span>
+                                <span class="mr-3">Step8. {t('step8')}</span>
                                 <span>
                                     {Studylanguage ?
                                         <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
@@ -313,9 +317,9 @@ function Signup() {
                             </div>
                         </SignupOptionText>
                         <SignupOptionSelect name="studylanguage" value={Studylanguage} onChange={studylanguageHandler}>
-                            <option value="">선택</option>
-                            <option value="KOR">korean</option>
-                            <option value="ENG">english</option>
+                            <option value="">{t('languageselection.selection')}</option>
+                            <option value="KOR">{t('languageselection.kor')}</option>
+                            <option value="ENG">{t('languageselection.eng')}</option>
                         </SignupOptionSelect>
                     </SignupOptionWrapper>
                     <StyledModal
@@ -326,11 +330,11 @@ function Signup() {
 
                         <div class="text-center mt-28 text-xl" ref={modalRef}>{modalContent}</div>
                         <div class="text-align">
-                            <ModalButton onClick={toggleModal}>확인</ModalButton>
+                            <ModalButton onClick={toggleModal}>{t('modalbutton')}</ModalButton>
                         </div>
                     </StyledModal>
                     <SignupSendButton disabled={allAnswerFulfiled()} className={allAnswerFulfiled() ? "bg-gray-400 cursor-default" : "bg-yellow-400"} onClick={submitHandler}>
-                        {allAnswerFulfiled() ? "모든 항목을 작성해주세요." : "회원 가입"}
+                        {allAnswerFulfiled() ? t('isallanswerfulfilled.no') : t('isallanswerfulfilled.yes')}
                     </SignupSendButton>
 
                 </SignupQuestionWrapper>

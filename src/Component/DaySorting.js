@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+
 import styled from '@emotion/styled';
 import tw from 'twin.macro';
 
@@ -31,6 +33,7 @@ const PageSpan = styled.span`
 
 const DaySorting = ({ dayPaginate, today }) => {
   const dayList = ["MON", "TUES", "WED", "THUR", "FRI", "SAT", "SUN"];
+  const { t, i18n } = useTranslation('daysorting');
 
   return (
     <div className="">
@@ -39,7 +42,7 @@ const DaySorting = ({ dayPaginate, today }) => {
           {dayList.map(day => (
             <PageLi key={day} className={today === day ? "text-pink-500 font-semibold" : "page-item"}>
               <PageSpan className="page-link" onClick={() => dayPaginate(day)}>
-                {day}
+                {t(day)}
               </PageSpan>
             </PageLi>
           ))}

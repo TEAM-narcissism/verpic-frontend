@@ -6,6 +6,7 @@ import axios from "axios";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import styled from "@emotion/styled";
 import tw from "twin.macro";
+import { useTranslation } from 'react-i18next';
 
 const ReservationWrapper = styled.div`
   font-family: "NanumGothic-Regular";
@@ -48,6 +49,8 @@ const ModalButton = styled.div`
 `;
 
 function ReservationForm({ topicId }) {
+    const { t, i18n } = useTranslation('reservationform');
+
     const [Mothertongue, SetMothertongue] = useState("");
     const [Studylanguage, SetStudylanguage] = useState("");
     const [Proficiency, SetProficiency] = useState("");
@@ -101,7 +104,7 @@ function ReservationForm({ topicId }) {
         console.log(Studytime);
 
         if (Mothertongue === Studylanguage) {
-            setModalContent("모국어와 공부할 언어는 달라야 해요.")
+            setModalContent(t('alert.notproperlanguage'))
             setIsOpen(!isOpen);
             return;
         }
@@ -123,7 +126,7 @@ function ReservationForm({ topicId }) {
             })
             .then((res) => {
                 console.log(res);
-                setModalContent("스터디 예약을 완료했어요.")
+                setModalContent(t('alert.reservationcomplete'))
                 setIsOpen(!isOpen);
 
 
@@ -132,11 +135,11 @@ function ReservationForm({ topicId }) {
                 if (err.response) {
                     const statusCode = err.response.data.httpStatus;
                     if (statusCode === "UNAUTHORIZED") {
-                        setModalContent("중복된 토픽과 시간대에 이미 예약을 했어요.")
+                        setModalContent(t('alert.redundantreservation'))
                         setIsOpen(!isOpen);
                     }
                     else {
-                        setModalContent("로그인 세션이 만료되었어요.")
+                        setModalContent(t('alert.sessionexpired'))
                         setIsOpen(!isOpen);
                         window.location.href = "/logout"
                     }
@@ -153,10 +156,10 @@ function ReservationForm({ topicId }) {
     return (
 
         <ReservationWrapper>
-            <ResevationText>스터디 신청</ResevationText>
+            <ResevationText>{t('reservationtext')}</ResevationText>
 
 
-            <div className="text-gray-600 mb-3 select-none">간단한 답변만 해주시면 돼요.</div>
+            <div className="text-gray-600 mb-3 select-none">{t('explanation')}</div>
 
             <ReservationQuestionWrapper>
                 <ReservationOptionWrapper>
@@ -164,7 +167,7 @@ function ReservationForm({ topicId }) {
                     <ReservationOptionText className="mb-10">
                         <div className="flex">
                             <span className="mr-3">
-                                Step1. 원하는 토픽을 먼저 골라주세요.
+                                Step1. {t('step1')}
                             </span>
                             <span>
                                 {topicId ?
@@ -175,7 +178,7 @@ function ReservationForm({ topicId }) {
                     </ReservationOptionText>
                     <ReservationOptionText>
                         <div className="flex">
-                            <span className="mr-3">Step2. 모국어를 선택해주세요.</span>
+                            <span className="mr-3">Step2. {t('step2')}</span>
                             <span>
                                 {Mothertongue ?
                                     <FontAwesomeIcon icon={faCheckCircle} className="text-green-500 w-5 mt-1" /> : ""
@@ -185,16 +188,16 @@ function ReservationForm({ topicId }) {
 
                     </ReservationOptionText>
                     <ReservationOptionSelect name="mothertongue" value={Mothertongue} onChange={mothertongueHandler}>
-                        <option value="">선택</option>
-                        <option value="KOR">korean</option>
-                        <option value="ENG">english</option>
+                        <option value="">{t('languageselection.selection')}</option>
+                        <option value="KOR">{t('languageselection.kor')}</option>
+                        <option value="ENG">{t('languageselection.eng')}</option>
                     </ReservationOptionSelect>
                 </ReservationOptionWrapper>
 
                 <ReservationOptionWrapper>
                     <ReservationOptionText>
                         <div className="flex">
-                            <span className="mr-3">Step3. 어떤 언어를 공부하실건가요?</span>
+                            <span className="mr-3">Step3. {t('step3')}</span>
                             <span>
                                 {Studylanguage ?
                                     <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
@@ -203,16 +206,16 @@ function ReservationForm({ topicId }) {
                         </div>
                     </ReservationOptionText>
                     <ReservationOptionSelect name="studylanguage" value={Studylanguage} onChange={studylanguageHandler}>
-                        <option value="">선택</option>
-                        <option value="KOR">korean</option>
-                        <option value="ENG">english</option>
+                        <option value="">{t('languageselection.selection')}</option>
+                        <option value="KOR">{t('languageselection.kor')}</option>
+                        <option value="ENG">{t('languageselection.eng')}</option>
                     </ReservationOptionSelect>
                 </ReservationOptionWrapper>
 
                 <ReservationOptionWrapper>
                     <ReservationOptionText>
                         <div className="flex">
-                            <span className="mr-3">Step4. 배울 언어의 수준을 말해주세요.</span>
+                            <span className="mr-3">Step4. {t('step4')}</span>
                             <span>
                                 {Proficiency ?
                                     <FontAwesomeIcon icon={faCheckCircle} className="text-green-500 w-5 mt-1" /> : ""
@@ -222,17 +225,17 @@ function ReservationForm({ topicId }) {
                         </div>
                     </ReservationOptionText>
                     <ReservationOptionSelect name="proficiency" value={Proficiency} onChange={proficiencyHandler}>
-                        <option value="">선택</option>
-                        <option value="BEGINNER">beginner</option>
-                        <option value="INTERMEDIATE">intermediate</option>
-                        <option value="ADVANCED">advanced</option>
+                        <option value="">{t('levelselection.selection')}</option>
+                        <option value="BEGINNER">{t('levelselection.beg')}</option>
+                        <option value="INTERMEDIATE">{t('levelselection.int')}</option>
+                        <option value="ADVANCED">{t('levelselection.adv')}</option>
                     </ReservationOptionSelect>
                 </ReservationOptionWrapper>
 
                 <ReservationOptionWrapper>
                     <ReservationOptionText>
                         <div className="flex">
-                            <span className="mr-3">Step5. 어떤 시간대에 참여하실래요?</span>
+                            <span className="mr-3">Step5. {t('step5')}</span>
                             <span>
                                 {Studytime ?
                                     <FontAwesomeIcon icon={faCheckCircle} className="text-green-500 w-5 mt-1" /> : ""
@@ -241,10 +244,10 @@ function ReservationForm({ topicId }) {
                         </div>
                     </ReservationOptionText>
                     <ReservationOptionSelect name="studytime" value={Studytime} onChange={studytimeHandler}>
-                        <option value="">선택</option>
-                        <option value="17">17시</option>
-                        <option value="18">18시</option>
-                        <option value="19">19시</option>
+                        <option value="">{t('timeselection.selection')}</option>
+                        <option value="17">{t('timeselection.sev')}</option>
+                        <option value="18">{t('timeselection.eig')}</option>
+                        <option value="19">{t('timeselection.nin')}</option>
                     </ReservationOptionSelect>
                 </ReservationOptionWrapper>
 
@@ -256,13 +259,13 @@ function ReservationForm({ topicId }) {
 
                     <div className="text-center mt-28 text-xl" ref={modalRef}>{modalContent}</div>
                     <div className="text-align">
-                        <ModalButton onClick={toggleModal}>확인</ModalButton>
+                        <ModalButton onClick={toggleModal}>{t('modalbutton')}</ModalButton>
                     </div>
                 </StyledModal>
 
 
                 <ReservationSendButton disabled={allAnswerFulfiled()} className={allAnswerFulfiled() ? "bg-gray-400 cursor-default" : "bg-yellow-400"} onClick={submitHandler}>
-                    {allAnswerFulfiled() ? "모든 답변을 완료해주세요." : "스터디 신청"}
+                    {allAnswerFulfiled() ? t('allanswerfulfilled.no') : t('allanswerfulfilled.yes')}
                 </ReservationSendButton>
 
             </ReservationQuestionWrapper>
