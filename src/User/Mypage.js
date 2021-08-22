@@ -4,7 +4,8 @@ import axios from "axios";
 import Navigator from "../Component/Navigator";
 import tw from 'twin.macro';
 import styled from 'styled-components';
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 
 
 const ProfileWrapper = styled.div`
@@ -23,6 +24,12 @@ const ReserveListWrapper = styled.div`
   font-family: 'NanumGothic-Regular';
 
   ${tw`container w-full border bg-white`}
+`;
+
+
+export const ProfileAvatar = styled.div`
+  ${tw`h-12 w-12 border bg-gradient-to-r from-indigo-700 to-green-500 rounded-full text-white flex justify-center items-center overflow-hidden
+`}
 `;
 
 
@@ -73,7 +80,7 @@ function Mypage() {
         }
       })
 
-    await axios.get('/matching/' + id)
+    await axios.get('/matching/user/' + id)
       .then((res) => {
         if (res.data) {
           setMatchList(res.data);
@@ -96,9 +103,11 @@ function Mypage() {
           <ProfileWrapper>
             <div class=" text-xl font-semibold mb-2"> 프로필</div>
             <div class="text-center border rounded-lg mb-10 bg-white">
-              <div class="h-12 w-12 border-4 bg-gradient-to-r from-indigo-400 to-green-300 rounded-full text-white flex justify-center items-center overflow-hidden">
+              <ProfileAvatar>
                 <span class="text-sm font-semibold">{user.firstName}</span>
-              </div>
+              </ProfileAvatar>
+
+
               <ProfileText> 이름: {user.firstName}{user.lastName} </ProfileText>
               <ProfileText> 이메일: {user.email}</ProfileText>
               <ProfileText> {user.firstLanguage}가 자신있어요.</ProfileText>
@@ -122,7 +131,13 @@ function Mypage() {
 
                   {reservation.soldOut ?
                     <>
-                      <div>상대방과의 매칭이 완료되었어요.</div>
+                      <div>
+                        <span>상대방과의 매칭이 완료되었어요.</span>
+                        <span>
+                          <FontAwesomeIcon icon={faCheckCircle} className="text-green-500 w-5 ml-1 mt-1" />
+                        </span>
+                      </div>
+
                       <div class="border p-1 rounded-lg w-1/6 my-2 mx-auto cursor-pointer"
                         onClick={() => studyChatLink(reservation.id)}>
                         스터디룸 링크

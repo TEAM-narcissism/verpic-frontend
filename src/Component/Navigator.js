@@ -1,28 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Logo from "../assets/images/logoVerpic.png";
 import isAuthorized from "../Auth/isAuthorized";
 import styled from "@emotion/styled";
 import tw from "twin.macro";
 import { useTranslation } from 'react-i18next';
-import Cookies from 'universal-cookie';
-
-import getuser from "../Api/getuser";
-import { ClassNames } from "@emotion/react";
-
+import { ProfileAvatar } from "../User/Mypage";
 const NavigatorWrapper = styled.div`
   font-family: "NanumGothic-Bold";
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: #25292E;
-  ${tw` max-w-full h-5vh shadow-lg`}
+  ${tw` max-w-full h-5vh shadow-lg relative border-b-2 border-white`}
 `;
 
 const NavigatorLogo = styled.img`
   width: 50px;
-  @media screen and (max-width: 500px) {
-    width: 40px;
-  }
+
   ${tw`m-3 cursor-pointer ml-20`}
 `;
 
@@ -38,6 +32,9 @@ const NavigatorLink = styled.div`
   font-family: "NanumGothic-Regular";
 
   color: #D9DEE5;
+  @media screen and (max-width: 500px) {
+    display: none;
+  }
 
   &:hover {
     color: 	#CDDEF5;
@@ -47,13 +44,38 @@ const NavigatorLink = styled.div`
     color: 	#CDDEF5;
     border-bottom: 4px solid #CDDEF5;
   }
-  ${tw` text-base font-black h-5vh tracking-wider mx-10  duration-300 align-middle cursor-pointer`}
+  ${tw`text-sm font-semibold h-5vh overflow-hidden tracking-wider flex items-center align-middle mx-10 duration-300 cursor-pointer`}
+`;
+
+const AvatarLink = styled.div`
+  font-family: "NanumGothic-Regular";
+
+  ${tw`text-sm font-semibold h-5vh tracking-wider flex items-center align-middle mx-10 duration-300 cursor-pointer`}
+`;
+
+
+
+const DropDown = styled.div`
+  ${tw`origin-top-right absolute top-5vh right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none`}
+`;
+
+const DropDownItem = styled.div`
+  font-family: "NanumGothic-Regular";
+  &:hover {
+     background: #DCDCE0;
+  }
+
+  ${tw`text-gray-700  px-4 py-3 text-sm font-semibold`}
 `;
 
 function Navigator({ user, focus }) {
 
   const { t, i18n } = useTranslation('navigator');
   const [isKorean, setIsKorean] = useState(false);
+  const [dropDown, setDropDown] = useState(false);
+
+  const dropDownref = useRef();
+  const avatarRef = useRef();
 
   const changeLanguage = () => {
     if (isKorean) {
@@ -65,52 +87,96 @@ function Navigator({ user, focus }) {
     setIsKorean(!isKorean);
   }
 
+  const avatarOnClick = () => {
+    setDropDown(!dropDown);
+  }
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropDownref.current && !dropDownref.current.contains(event.target) && !avatarRef.current.contains(event.target)) {
+        setDropDown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+
+  }, [dropDownref])
+
   return (
     <>
       <NavigatorWrapper>
+
         <div className="flex">
           <NavigatorLogo
             onClick={() => (window.location.href = "/")}
             src={Logo}
           ></NavigatorLogo>
-          <NavigatorText>{t('navigatortext')}</NavigatorText>
+          <NavigatorText>Capture Your Picture</NavigatorText>
         </div>
         <div>
           {isAuthorized() ?
             <div class="flex">
-              <NavigatorLink onClick={changeLanguage}>{t('languagechange')}</NavigatorLink>
+
               <NavigatorLink onClick={() => (window.location.href = "/")}>
-
-
-                <div class={focus === "신청하기" ? "mt-5 text-indigo-300" : "mt-5"}>{t('reservation')}</div>
+                <span class={focus === "신청하기" ? "my-auto text-indigo-300" : ""}>{t('reservation')}</span>
               </NavigatorLink>
 
               <NavigatorLink onClick={() => window.location.href = "/topic/reservation"}>
-                <div class={focus === "신청목록" ? "mt-5 text-indigo-300" : "mt-5"}>{t('reservationlist')}</div>
+                <div class={focus === "신청목록" ? "my-auto text-indigo-300" : ""}>{t('reservationlist')}</div>
               </NavigatorLink>
               <NavigatorLink>
-                <div class={focus === "피드백" ? "mt-5 text-indigo-300" : "mt-5"}>{t('feedback')}</div>
+                <div class={focus === "피드백" ? "my-auto text-indigo-300" : ""}>{t('feedback')}</div>
               </NavigatorLink>
-              <NavigatorLink onClick={() => (window.location.href = "/profile/" + user.id)}>
-                <div class={focus === "마이페이지" ? "mt-5 text-indigo-300" : "mt-5"}>{t('mypage')}</div>
-              </NavigatorLink>
-              <NavigatorLink onClick={() => (window.location.href = "/logout")}>
-                <div class={focus === "로그아웃" ? "mt-5 text-indigo-300" : "mt-5"}>{t('logout')}</div>
-              </NavigatorLink>
+
+              {user ?
+                <AvatarLink ref={avatarRef} onClick={avatarOnClick}>
+
+
+                  <ProfileAvatar >
+                    <span class="text-sm font-semibold">{user.firstName}</span>
+                  </ProfileAvatar>
+
+                </AvatarLink>
+
+                : ""}
+              {dropDown ?
+                <DropDown ref={dropDownref}>
+                  <DropDownItem onClick={() => (window.location.href = "/profile/" + user.id)}>
+                    {t('mypage')}
+                  </DropDownItem>
+                  <DropDownItem onClick={() => (window.location.href = "/logout")}>
+                    <span class="text-red-600">
+                      {t('logout')}
+                    </span>
+                  </DropDownItem>
+                  <DropDownItem onClick={changeLanguage}>
+                    {t('languagechange')}
+                  </DropDownItem>
+
+
+                </DropDown>
+                : <></>
+              }
             </div>
             :
             <div class="flex">
-              <NavigatorLink onClick={changeLanguage}>{t('languagechange')}</NavigatorLink>
+              <NavigatorLink onClick={changeLanguage}>
+                {t('languagechange')}
+              </NavigatorLink>
               <NavigatorLink onClick={() => (window.location.href = "/login")}>
-                <div class={focus === "로그인" ? "mt-5 text-indigo-300" : "mt-5"}>{t('login')}</div>
+                <div class={focus === "로그인" ? "my-auto text-indigo-300" : ""}>{t('login')}</div>
               </NavigatorLink>
 
               <NavigatorLink onClick={() => (window.location.href = "/signup")}>
-                <div class={focus === "회원가입" ? "mt-5 text-indigo-300" : "mt-5"}>{t('signup')}</div>
+                <div class={focus === "회원가입" ? "my-auto text-indigo-300" : ""}>{t('signup')}</div>
               </NavigatorLink>
             </div>
           }
         </div>
+
+
       </NavigatorWrapper>
     </>
   );

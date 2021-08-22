@@ -71,6 +71,7 @@ function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton }) {
       </ImageWrapper>
 
       <TopicContentWrapper>
+
         <TopicThemeText>{topic.theme}</TopicThemeText>
         <div class="font-semibold">개최</div>
         <TopicStartTimeText>
@@ -78,9 +79,7 @@ function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton }) {
         </TopicStartTimeText>
 
         <div class="font-semibold">인원</div>
-        {/* <PersonCountTag>
-          총 {topic.numOfParticipant}명이 참여중이에요
-        </PersonCountTag> */}
+
         <TopicStartTimeText>
           {t('personcounttagprefix')}{topic.numOfParticipant}{t('personcounttagsuffix')}
         </TopicStartTimeText>
