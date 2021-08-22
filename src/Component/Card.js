@@ -85,7 +85,7 @@ function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton }) {
         </TopicStartTimeText>
       </TopicContentWrapper>
       {
-        isPreviewButton ? <PreviewButton onClick={() => window.location.href = "/"}>{t('previewbutton')}</PreviewButton> : ""
+        isPreviewButton ? <PreviewButton onClick={() => window.location.href = "/preview/" + topic.id}>{t('previewbutton')}</PreviewButton> : ""
       }
     </CardWrapper>
   );

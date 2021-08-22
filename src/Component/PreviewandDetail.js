@@ -29,7 +29,8 @@ import Slider from "react-slick";
 
 export default class PreviewandDetail extends Component {
   render() {
-    const { preview, detailTopicList } = this.props;
+    const { preview, detailTopicList, initialDetailTopic, changeDetailTopic } = this.props;
+    const initialId = initialDetailTopic;
 
     const settings = {
       dots: true,
@@ -44,16 +45,16 @@ export default class PreviewandDetail extends Component {
     return (
       <div>
         <Slider {...settings}>
-          <div>
-            <h2> 본문 </h2>
+          <div onClick={() => changeDetailTopic(0)} className="text-center pt-4 pb-4">
+            <div className="text-2xl"> 본문 </div>
             <h3>{preview.context}</h3>
           </div>
-          <div>
-            <h2> 한국어 상세 토픽 </h2>
+          <div onClick={() => changeDetailTopic(initialId)} className="text-center pt-4 pb-4">
+            <div className="text-2xl"> 한국어 상세 토픽 </div>
             <h3>{detailTopicList[0].context}</h3>
           </div>
-          <div>
-            <h2> 영어 상세 토픽</h2>
+          <div onClick={() => changeDetailTopic(initialId + 1)} className="text-center pt-4 pb-4">
+            <div className="text-2xl"> 영어 상세 토픽</div>
             <h3>{detailTopicList[0].context}</h3>
           </div>
         </Slider>

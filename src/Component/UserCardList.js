@@ -135,7 +135,7 @@ function UserCardList(props) {
                                             checkedItemHandler={checkedItemHandler}
                                             key={topic.id}
                                             checkedItem={checkedItem}
-                                            isPreviewButton={false}
+                                            isPreviewButton={true}
                                         />
                                     ))
                                 )
@@ -152,7 +152,7 @@ function UserCardList(props) {
                                                 checkedItemHandler={checkedItemHandler}
                                                 key={topic.id}
                                                 checkedItem={checkedItem}
-                                                isPreviewButton={false}
+                                                isPreviewButton={true}
                                             />
                                         ))
                                     )
@@ -170,7 +170,7 @@ function UserCardList(props) {
                                                     checkedItemHandler={checkedItemHandler}
                                                     key={topic.id}
                                                     checkedItem={checkedItem}
-                                                    isPreviewButton={false}
+                                                    isPreviewButton={true}
                                                 />
                                             ))
                                         )
@@ -187,7 +187,7 @@ function UserCardList(props) {
                                                         checkedItemHandler={checkedItemHandler}
                                                         key={topic.id}
                                                         checkedItem={checkedItem}
-                                                        isPreviewButton={false}
+                                                        isPreviewButton={true}
                                                     />
                                                 ))
                                             )
@@ -204,7 +204,7 @@ function UserCardList(props) {
                                                             checkedItemHandler={checkedItemHandler}
                                                             key={topic.id}
                                                             checkedItem={checkedItem}
-                                                            isPreviewButton={false}
+                                                            isPreviewButton={true}
                                                         />
                                                     ))
                                                 )
@@ -221,7 +221,7 @@ function UserCardList(props) {
                                                                 checkedItemHandler={checkedItemHandler}
                                                                 key={topic.id}
                                                                 checkedItem={checkedItem}
-                                                                isPreviewButton={false}
+                                                                isPreviewButton={true}
                                                             />
                                                         ))
                                                     )
@@ -237,7 +237,7 @@ function UserCardList(props) {
                                                                 checkedItemHandler={checkedItemHandler}
                                                                 key={topic.id}
                                                                 checkedItem={checkedItem}
-                                                                isPreviewButton={false}
+                                                                isPreviewButton={true}
                                                             />
                                                         ))
                                                     )
