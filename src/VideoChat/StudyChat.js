@@ -17,6 +17,7 @@ import peopledefault from '../assets/images/peopledefault.png';
 import { useParams } from "react-router";
 
 import getRemainTime from "../Api/getRemainTime";
+import getDetailTopics from "../Api/getDetailTopics";
 import AudioRecord from "./AudioRecord";
 import ProgressBar from "./ProgressBar";
 import axios from "axios";
@@ -94,9 +95,9 @@ function StudyChat() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [localVideoState, SetLocalVideoState] = useState(true);
     const [localAudioState, SetLocalAudioState] = useState(true);
-
-
+    const [myId, setMyId] = useState("");
     const { localRoom } = useParams();
+    const adminName = 'Verpic';
 
 
     const audioRecordRef = useRef();
@@ -118,18 +119,19 @@ function StudyChat() {
     }, []);
 
     const [chats, setChats] = useState([
-        // {
-        //     id: 1,
-        //     sender: 'test_sender',
-        //     message: '테스트용 메세지 입니다.'
-        // },
-        // {
-        //     id: 2,
-        //     sender: 'test_sender2',
-        //     message: '두 번째 테스트용 메세지 입니다.'
-        // }
     ]);
-    const nextChatId = useRef(3)
+    const nextChatId = useRef(1)
+
+    const addChat = (message, sender, userId) => {
+        const chat = {
+            id: nextChatId.current,
+            message: message,
+            sender: sender,
+            userId: userId,
+        }
+        setChats(chats => chats.concat(chat));
+        nextChatId.current += 1;
+    }
 
     const peerConnectionConfig = {
         'iceServers': [
@@ -209,43 +211,27 @@ function StudyChat() {
 
     const chatOnCreate = useCallback(() => {
         // 채팅 보내는 부분
-        const chat = {
-            id: nextChatId.current,
-            message,
-            sender,
-        };
 
-        stompconn.send('/pub/videochat/message', { Authorization: token }, JSON.stringify({ matchId: localRoom, message: message }));
+        stompconn.send('/pub/videochat/message', { Authorization: token }, JSON.stringify({ matchId: localRoom, message: message, matchUserId: myId }));
         // setChats(chats => chats.concat(chat));
 
         setChatInputs({
             message: ''
         })
-    }, [message, sender]);
-
-    const [myName, setMyName] = useState("");
+    }, [message]);
 
     const chatSubscribe = () => {
         stompconn.subscribe('/sub/videochat/' + localRoom, function (message) {
             var content = JSON.parse(message.body);
-            console.log('chat subscribe');
-
-            const chat = {
-                id: nextChatId.current,
-                message: content.message,
-                sender: content.senderName
-            }
+            addChat(content.message, content.senderName, content.matchUserId);
             console.log(content)
-            setChats(chats => chats.concat(chat))
-            nextChatId.current += 1;
         });
     }
 
     const chatUserSubscribe = () => {
         stompconn.subscribe('/user/sub/videochat/' + localRoom, function (message) {
             var content = JSON.parse(message.body);
-            console.log("개인 메세지", content.name);
-            setMyName(content.name);
+            setMyId(content.matchUserId);
         });
     }
 
@@ -508,7 +494,11 @@ function StudyChat() {
 
         getRemainTime(cookies.get("vtoken"), localRoom)
             .then((remainTime => {
-
+                let topics = "";
+                getDetailTopics(cookies.get("vtoken"), localRoom)
+                .then((detailTopics => {
+                    topics += detailTopics[0].context + '\n' + detailTopics[1].context;
+                }))
                 if (remainTime >= 0) {
                     setTimeout(() => {
                         setStep(1);
@@ -520,17 +510,23 @@ function StudyChat() {
                     setTimeout(() => {
                         setStep(2);
                         console.log("3분 뒤 실행되는 부분")
-                        audioRecordRef.current.onRecAudio();
-                    }, remainTime + 4000);
+                        var message = "지금부터 한국어 세션이 시작합니다.\n아래 토픽에 대해 한국어로 대화해주세요.\nThe Korean session starts now.\nPlease talk about the topic below in Korean.\n\n";
+                        message += topics;
+                        audioRecordRef.current.onRecAudio(localVideoState);
+                        addChat(message, adminName, 0);
+                    }, remainTime + 5000);
                 }
                 // 시작시각 + 10분 후
                 if (remainTime + 2000 >= 0) {
                     setTimeout(() => {
                         setStep(3);
+                        var message = "지금부터 영어 세션이 시작합니다.\n아래 토픽에 대해 영어로 대화해주세요.\nThe English session starts now.\nPlease talk about the topic below in English.\n\n";
+                        message += topics;
                         console.log("10분 뒤 실행되는 부분")
+                        addChat(message, adminName, 0);
                         audioRecordRef.current.offRecAudio(1, "ko");
-                        audioRecordRef.current.onRecAudio();
-                    }, remainTime + 6000);
+                        audioRecordRef.current.onRecAudio(localVideoState);
+                    }, remainTime + 10000);
                 }
                 // 시작시각 + 17분 후
                 if (remainTime + 2000 >= 0) {
@@ -538,7 +534,9 @@ function StudyChat() {
                         setStep(4);
                         console.log("17분 뒤 실행되는 부분")
                         audioRecordRef.current.offRecAudio(2, "en");
-                    }, remainTime + 8000);
+                        var message = "곧 세션이 마감됩니다. 마무리 인사를 해주세요.\nThe session will be closed soon.\nPlease say goodbye to your partner."
+                        addChat(message, adminName, 0);
+                    }, remainTime + 18000);
                 }
                 setIsLoaded(true);
 
@@ -562,7 +560,7 @@ function StudyChat() {
             track.enabled = !track.enabled;
             SetLocalAudioState(!localAudioState)
         })
-
+        audioRecordRef.current.micButtonOff();
     }
 
     return (
@@ -611,7 +609,7 @@ function StudyChat() {
                             </div>
 
                             <ChatView ref={chatRef}>
-                                <ChatList chats={chats} myName={myName} />
+                                <ChatList chats={chats} myId={myId} />
                                 <CreateChat
                                     message={message}
                                     onChange={chatOnChange}

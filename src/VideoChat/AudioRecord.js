@@ -5,6 +5,7 @@ import axios from "axios";
 
 import tw from 'twin.macro';
 import styled from '@emotion/styled';
+import Cookies from 'universal-cookie';
 
 
 const ButtonStyle = styled.button`
@@ -22,9 +23,10 @@ const AudioRecord = forwardRef(({matchId}, ref) => {
     lang: "",
     order: 0,
   });
+  const cookies = new Cookies();
 
   useImperativeHandle(ref, () => ({
-      test,
+      micButtonOff,
       onRecAudio,
       offRecAudio,
       onSubmitAudioFile
@@ -98,7 +100,7 @@ const AudioRecord = forwardRef(({matchId}, ref) => {
     });
   };
 
-  // 사용자가 음성 녹음을 중지했을 때
+  // 음성 녹음 중지
   const offRecAudio = (order, lang) => {
     // dataavailable 이벤트로 Blob 데이터에 대한 응답을 받을 수 있음
     media.ondataavailable = function (e) {
@@ -125,19 +127,31 @@ const AudioRecord = forwardRef(({matchId}, ref) => {
     source.disconnect();
   };
 
+  const micButtonOff = () => {
+    if(stream) {
+      stream.getAudioTracks().forEach(function (track) {
+        track.enabled = !track.enabled;
+    });
+    }
+    
+  }
+
   const onSubmitAudioFile = () => {
     console.log(new Date());
     if (data.audioUrl) {
         console.log(data)
         console.log(URL.createObjectURL(data.audioUrl)); // 출력된 링크에서 녹음된 오디오 확인 가능
         const sound = new File([data.audioUrl], "soundBlob", { lastModified: new Date().getTime(), type: "audio/wav" });
+        const token = cookies.get("vtoken");
         const formData = new FormData();
         formData.append("file", sound);
         formData.append("lang", data.lang);
         formData.append("order", data.order);
         formData.append("matchId", matchId);
         console.log(formData);
-        axios.post("/analysis/save", formData)
+        axios.post("/analysis/save", formData, {headers: {
+          Authorization: token
+        }})
         console.log(sound); // File 정보 출력
     }
     // File 생성자를 사용해 파일로 변환
