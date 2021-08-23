@@ -8,7 +8,7 @@ i18n
     .use(initReactI18next)
     .init({
         resources: { kr, en },
-        lng: window.localStorage.getItem("userFirstLanguage"),
+        lng: window.localStorage.getItem("i18nextLng"),
         fallbackLng: ['kr', 'en'],
         interpolation: { escapeValue: false },
         detection: { order: ['path', 'navigator'] }
