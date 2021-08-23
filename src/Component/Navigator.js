@@ -5,7 +5,6 @@ import styled from "@emotion/styled";
 import tw from "twin.macro";
 import { useTranslation } from 'react-i18next';
 import { ProfileAvatar } from "../User/Mypage";
-// import setLanguage from "../Api/setLanguage";
 
 const NavigatorWrapper = styled.div`
   font-family: "NanumGothic-Bold";
@@ -73,7 +72,6 @@ const DropDownItem = styled.div`
 function Navigator({ user, focus }) {
 
   const { t, i18n } = useTranslation('navigator');
-  const [isKorean, setIsKorean] = useState(false);
   const [pageLanguage, setPageLanguage] = useState(initPageLanguage());
   const [dropDown, setDropDown] = useState(false);
 
@@ -81,47 +79,24 @@ function Navigator({ user, focus }) {
   const avatarRef = useRef();
 
   function initPageLanguage() {
-    // let lang = (user.firstLanguage === "KOR") ? "kr" : "en";
-    if (localStorage.getItem("userFirstLanguage") === null) {
+    if (localStorage.getItem("i18nextLng") === "login") {
       if (user !== null) {
-        localStorage.setItem("userFirstLanguage", user.firstLanguage === "KOR" ? "kr" : "en");
+        localStorage.setItem("i18nextLng", user.firstLanguage === "KOR" ? "kr" : "en");
       }
-      else localStorage.setItem("userFirstLanguage", "kr");
+      else localStorage.setItem("i18nextLng", "kr");
     }
-    return localStorage.getItem("userFirstLanguage");
+    return localStorage.getItem("i18nextLng");
   }
-
-  // const setPageLanguage=()=>{
-  //   if(window.localStorage.getItem("userFirstLanguage")==="KOR") {
-  //     window.localStorage.setItem("userFirstLanguage", "ENG");
-  //     return false;
-  //   }
-  //   else{
-  //     window.localStorage.setItem("userFirstLanguage", "KOR");
-  //     return true;
-  //   }
-  // }
-
-
-  // const changeLanguage = () => {
-  //   if (isKorean) {
-  //     i18n.changeLanguage('en');
-  //   }
-  //   else {
-  //     i18n.changeLanguage('ko');
-  //   }
-  //   setIsKorean(!isKorean);
-  // }
 
   const changeLanguage = () => {
     if (pageLanguage == "KOR") {
       setPageLanguage("ENG");
-      localStorage.setItem("userFirstLanguage", "en");
+      localStorage.setItem("i18nextLng", "en");
       i18n.changeLanguage('en');
     }
     else {
       setPageLanguage("KOR");
-      localStorage.setItem("userFirstLanguage", "kr");
+      localStorage.setItem("i18nextLng", "kr");
       i18n.changeLanguage('kr');
     }
   }
@@ -129,9 +104,6 @@ function Navigator({ user, focus }) {
   const avatarOnClick = () => {
     setDropDown(!dropDown);
   }
-
-  console.log(localStorage.getItem("userFirstLanguage"));
-  console.log(i18n.language);
 
   useEffect(() => {
     function handleClickOutside(event) {
