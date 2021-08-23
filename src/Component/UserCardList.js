@@ -25,7 +25,7 @@ const CardListWrapper = styled.div`
 
 function UserCardList(props) {
     const [topics, setTopics] = useState([{
-        theme: "", numOfParticipant: 0, studyDate: "", studyDay: "", data: ""
+        korTheme: "", engTheme: "", numOfParticipant: 0, studyDate: "", studyDay: "", data: ""
     }])
     const [checkedItem, setCheckedItem] = useState("");
     const [today, setToday] = useState(getTodayLabel());
