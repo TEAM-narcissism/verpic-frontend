@@ -5,27 +5,27 @@ import React, { Component } from "react";
 
 import Slider from "react-slick";
 
-// function SampleNextArrow(props) {
-//   const { className, style, onClick } = props;
-//   return (
-//     <div
-//       className={className}
-//       style={{ ...style, display: "block", background: "black" }}
-//       onClick={onClick}
-//     />
-//   );
-// }
+function SampleNextArrow(props) {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      className={className}
+      style={{ ...style, display: "block", background: "black" }}
+      onClick={onClick}
+    />
+  );
+}
 
-// function SamplePrevArrow(props) {
-//   const { className, style, onClick } = props;
-//   return (
-//     <div
-//       className={className}
-//       style={{ ...style, display: "block", background: "black" }}
-//       onClick={onClick}
-//     />
-//   );
-// }
+function SamplePrevArrow(props) {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      className={className}
+      style={{ ...style, display: "block", background: "black" }}
+      onClick={onClick}
+    />
+  );
+}
 
 export default class PreviewandDetail extends Component {
   render() {
@@ -39,10 +39,10 @@ export default class PreviewandDetail extends Component {
       slidesToScroll: 1,
       // nextArrow: <SampleNextArrow />,
       // prevArrow: <SamplePrevArrow />,
-      arrows: false,
+      // arrows: true,
     };
     return (
-      <div>
+      <div className="border m-6 object-fill">
         <Slider {...settings}>
           <div>
             <h2> 본문 </h2>

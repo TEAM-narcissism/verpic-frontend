@@ -11,6 +11,7 @@ import Cookies from "universal-cookie";
 import CreateChat from "./CreateChat";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import getuser from "../Api/getuser";
+import logoVerpic from "../assets/images/logoVerpic.png";
 import styled from "@emotion/styled";
 import tw from "twin.macro";
 
@@ -243,6 +244,7 @@ function StudyChat() {
 
   function stop() {
     // send a message to the server to remove this client from the room clients list
+
     log("Send 'leave' message to server");
     sendToServer({
       from: localUserName,
@@ -319,8 +321,13 @@ function StudyChat() {
 
   // create peer connection, get media, start negotiating when second participant appears
   function handlePeerConnection(message) {
+    if (remoteVideoRef) {
+      remoteVideoRef.current.src = null;
+    }
     createPeerConnection();
+
     getMedia(mediaConstraints);
+
     if (message.data === "true") {
       myPeerConnection.onnegotiationneeded = handleNegotiationNeededEvent;
     }
@@ -344,6 +351,7 @@ function StudyChat() {
     localStream = mediaStream;
     if (myVideoRef.current) {
       myVideoRef.current.srcObject = mediaStream;
+      myVideoRef.current.muted = true;
     }
 
     console.log("localStream:", localStream);
@@ -472,12 +480,11 @@ function StudyChat() {
   };
 
   const [userObject, setUserObject] = useState(null);
-  useEffect(async () => {
+  useEffect(() => {
     const token = cookies.get("vtoken");
-    await getuser(token)
+    getuser(token)
       .then((res) => {
         setUserObject(res);
-        //userName.current.innerText = res.firstName + res.lastName + "의 비디오";
         setIsLoaded(true);
       })
       .catch((err) => {
@@ -486,7 +493,7 @@ function StudyChat() {
       });
 
     stompWithSockJS();
-    getUserMediaReact();
+    //getUserMediaReact();
   }, []);
 
   const videoButtonOff = () => {
@@ -529,6 +536,7 @@ function StudyChat() {
               </div>
 
               <UserVideo
+                poster={logoVerpic}
                 class="z-0"
                 autoPlay
                 playsInline
@@ -553,7 +561,12 @@ function StudyChat() {
               <div class="text-left">
                 <VideoUserText>상대방의 비디오</VideoUserText>
               </div>
-              <UserVideo autoPlay playsInline ref={remoteVideoRef}></UserVideo>
+              <UserVideo
+                poster={logoVerpic}
+                autoPlay
+                playsInline
+                ref={remoteVideoRef}
+              ></UserVideo>
             </div>
             <div class="flex-col">
               <div class="text-left">

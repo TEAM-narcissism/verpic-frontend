@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-
 import Logo from "../assets/images/logoVerpic.png";
+import React from "react";
 import isAuthorized from "../Auth/isAuthorized";
 import styled from "@emotion/styled";
 import tw from "twin.macro";
@@ -51,7 +50,10 @@ function Navigator() {
             {" "}
             신청하기{" "}
           </NavigatorLink>
-          <NavigatorLink> 예습하기 </NavigatorLink>
+          <NavigatorLink onClick={() => (window.location.href = "/preview")}>
+            {" "}
+            예습하기{" "}
+          </NavigatorLink>
           <NavigatorLink> 피드백 </NavigatorLink>
 
           {isAuthorized() ? (

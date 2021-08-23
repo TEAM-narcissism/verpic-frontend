@@ -2,13 +2,13 @@ import "./App.css";
 
 import * as SockJS from "sockjs-client";
 
-import React, { useEffect, useState } from "react";
-
 import Login from "./Auth/Login";
 import Logout from "./Auth/Logout";
 import MainPage from "./Home/MainPage";
+import Preview from "./Component/Preview";
 import PrivateRoute from "./Route/PrivateRoute";
 import PublicRoute from "./Route/PublicRoute";
+import React from "react";
 import { Route } from "react-router-dom";
 import { Stomp } from "@stomp/stompjs";
 import StudyChat from "./VideoChat/StudyChat";
@@ -30,6 +30,7 @@ function App() {
 
       {/* 로그인 / 로그아웃에 관계 없이 접근 가능한 영역 */}
       <Route component={MainPage} path="/" exact />
+      <Route component={Preview} path="/preview" exact />
     </div>
   );
 }
