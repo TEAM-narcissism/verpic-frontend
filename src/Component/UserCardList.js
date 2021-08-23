@@ -114,7 +114,7 @@ function UserCardList(props) {
 
     return (
         <>
-            <Navigator focus="신청목록" />
+            <Navigator user={user} focus="신청목록" />
             {isLoading ? <div className="text-center">{t('isloading')}</div> :
                 <div>
                     <CardListWrapper>

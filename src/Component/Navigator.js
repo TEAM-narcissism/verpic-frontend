@@ -5,6 +5,8 @@ import styled from "@emotion/styled";
 import tw from "twin.macro";
 import { useTranslation } from 'react-i18next';
 import { ProfileAvatar } from "../User/Mypage";
+// import setLanguage from "../Api/setLanguage";
+
 const NavigatorWrapper = styled.div`
   font-family: "NanumGothic-Bold";
   display: flex;
@@ -72,24 +74,64 @@ function Navigator({ user, focus }) {
 
   const { t, i18n } = useTranslation('navigator');
   const [isKorean, setIsKorean] = useState(false);
+  const [pageLanguage, setPageLanguage] = useState(initPageLanguage());
   const [dropDown, setDropDown] = useState(false);
 
   const dropDownref = useRef();
   const avatarRef = useRef();
 
+  function initPageLanguage() {
+    // let lang = (user.firstLanguage === "KOR") ? "kr" : "en";
+    if (localStorage.getItem("userFirstLanguage") === null) {
+      if (user !== null) {
+        localStorage.setItem("userFirstLanguage", user.firstLanguage === "KOR" ? "kr" : "en");
+      }
+      else localStorage.setItem("userFirstLanguage", "kr");
+    }
+    return localStorage.getItem("userFirstLanguage");
+  }
+
+  // const setPageLanguage=()=>{
+  //   if(window.localStorage.getItem("userFirstLanguage")==="KOR") {
+  //     window.localStorage.setItem("userFirstLanguage", "ENG");
+  //     return false;
+  //   }
+  //   else{
+  //     window.localStorage.setItem("userFirstLanguage", "KOR");
+  //     return true;
+  //   }
+  // }
+
+
+  // const changeLanguage = () => {
+  //   if (isKorean) {
+  //     i18n.changeLanguage('en');
+  //   }
+  //   else {
+  //     i18n.changeLanguage('ko');
+  //   }
+  //   setIsKorean(!isKorean);
+  // }
+
   const changeLanguage = () => {
-    if (isKorean) {
+    if (pageLanguage == "KOR") {
+      setPageLanguage("ENG");
+      localStorage.setItem("userFirstLanguage", "en");
       i18n.changeLanguage('en');
     }
     else {
-      i18n.changeLanguage('ko');
+      setPageLanguage("KOR");
+      localStorage.setItem("userFirstLanguage", "kr");
+      i18n.changeLanguage('kr');
     }
-    setIsKorean(!isKorean);
   }
 
   const avatarOnClick = () => {
     setDropDown(!dropDown);
   }
+
+  console.log(localStorage.getItem("userFirstLanguage"));
+  console.log(i18n.language);
 
   useEffect(() => {
     function handleClickOutside(event) {
