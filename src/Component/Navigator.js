@@ -143,6 +143,25 @@ function Navigator({ user, focus }) {
                 : ""}
               {dropDown ?
                 <DropDown ref={dropDownref}>
+                  <div class="h-5vh text-center">
+
+                    <div class="flex m-4">
+                      <ProfileAvatar >
+                        <span class="text-sm font-semibold">{user.firstName}</span>
+                      </ProfileAvatar>
+
+                      <div class="my-auto mx-2 font-medium">
+                        {user.lastName}{user.firstName}
+                      </div>
+                    </div>
+
+
+
+
+
+
+                  </div>
+
                   <DropDownItem onClick={() => (window.location.href = "/profile/" + user.id)}>
                     {t('mypage')}
                   </DropDownItem>
