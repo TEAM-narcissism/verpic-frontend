@@ -8,6 +8,12 @@ import InputWithLabel from "./InputWithLabel";
 import axios from "axios";
 import { debounce } from "lodash";
 import Navigator from "../Component/Navigator";
+import GoogleLogin from "react-google-login";
+import generateUuid from "./generateUuid";
+
+
+
+
 
 function Login() {
   const [inputs, setInputs] = useState({
@@ -19,6 +25,16 @@ function Login() {
   const passwordRef = useRef();
   const { t, i18n } = useTranslation('login');
 
+
+  function storeInfoLogin(accessToken) {
+    const cookies = new Cookies();
+    cookies.set("vtoken", accessToken, { path: "/" });
+
+    if (localStorage.getItem("uuid") === null) {
+      localStorage.setItem("uuid", generateUuid());
+    }
+  }
+
   async function postToLogin() {
     let body = inputs;
     console.log(body);
@@ -26,32 +42,7 @@ function Login() {
       .post("/login", body)
       .then(async (res) => {
         const accessToken = res.data.data.Token;
-        const cookies = new Cookies();
-        cookies.set("vtoken", accessToken, { path: "/" });
-
-        // await getuser(accessToken).then(
-        //   (res) => {
-        //     console.log(res);
-        //     cookies.set("uid", res.id, { path: "/" });
-        //   }
-        // )
-
-
-
-        function generateUuid() {
-          return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-            /[xy]/g,
-            function (c) {
-              let r = (Math.random() * 16) | 0,
-                v = c === "x" ? r : (r & 0x3) | 0x8;
-              return v.toString(16);
-            }
-          );
-        }
-
-        if (localStorage.getItem("uuid") === null) {
-          localStorage.setItem("uuid", generateUuid());
-        }
+        storeInfoLogin(accessToken);
 
         window.location = "/";
       })
@@ -68,6 +59,25 @@ function Login() {
         }
       });
   }
+
+
+  const googleOauthSuccess = async (res) => {
+
+    console.log(res.tokenId)
+    const body = {
+      "accessToken": res.tokenId
+    };
+    await axios.post("/oauth/google", body).
+      then(async (res) => {
+        const accessToken = res.data.data.Token;
+        storeInfoLogin(accessToken);
+        window.location = "/";
+      })
+      .catch((err) => console.log(err));
+  }
+
+
+
 
   const onChange = (e) => {
     const { value, name } = e.target; // 우선 e.target 에서 name 과 value 를 추출
@@ -101,7 +111,13 @@ function Login() {
           ref={passwordRef}
         />
         <AuthButton onClick={postToLogin}>{t('login')}</AuthButton>
-        <AuthButton onClick="">{t('googlelogin')}</AuthButton>
+
+        <GoogleLogin className="w-full mt-2 font-semibold border-2 border-black rounded-lg"
+          clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+          onSuccess={googleOauthSuccess}
+        ></GoogleLogin>
+
+
       </AuthWrapper>
     </div>
   );
