@@ -37,7 +37,10 @@ export const ProfileAvatar = styled.div`
 function Mypage() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoding] = useState(true);
-  const [reservationList, setReservationList] = useState();
+  const [reservationList, setReservationList] = useState([{
+    id: "", isSoldOut: "", korTheme: "", engTheme: "", studyDate: ""
+  },
+  ]);
   const [matchList, setMatchList] = useState();
 
 
@@ -73,10 +76,11 @@ function Mypage() {
 
     await axios.get("/reservation/user/" + id)
       .then((res) => {
+        // console.log(res);
         if (res.data) {
           setReservationList(res.data);
           console.log(res.data);
-
+          setIsLoding(false);
         }
       })
 
@@ -118,18 +122,18 @@ function Mypage() {
             <div class=" mb-2">{user.firstName}{user.lastName}님이 신청하신 스터디 현황이에요.</div>
 
             <ReserveListWrapper>
-              {reservationList.map((reservation) => (
-
+              {reservationList.map(reservation =>
+              (
                 <div class="text-center mb-5 mt-5" key={reservation.id}>
                   <div class="font-semibold text-xl">
-                    {reservation.topic.theme}
+                    {reservation.korTheme}
                   </div>
 
                   <div>
-                    {reservation.topic.studyDate}
+                    {reservation.studyDate}
                   </div>
 
-                  {reservation.soldOut ?
+                  {reservation.isSoldOut ?
                     <>
                       <div>
                         <span>상대방과의 매칭이 완료되었어요.</span>
@@ -151,7 +155,8 @@ function Mypage() {
 
                 </div>
 
-              ))}
+              )
+              )}
             </ReserveListWrapper>
 
 
