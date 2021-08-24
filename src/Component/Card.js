@@ -2,9 +2,10 @@ import React, { useState } from "react";
 
 import styled from "@emotion/styled";
 import tw from "twin.macro";
+import { useTranslation } from "react-i18next";
 
 const CardWrapper = styled.div`
-  ${tw` mx-10 overflow-hidden rounded-lg border shadow-sm cursor-pointer sm:flex mb-10 hover:shadow-lg duration-500`}
+  ${tw` mx-10 overflow-hidden rounded-lg border-2 shadow-sm bg-white cursor-pointer sm:flex mb-10 hover:shadow-lg duration-500`}
 `;
 
 const ImageWrapper = styled.div`
@@ -20,19 +21,28 @@ const TopicContentWrapper = styled.div`
 `;
 
 const TopicThemeText = styled.div`
-  ${tw`mb-3 text-xl font-semibold tracking-tight text-gray-800`}
+  ${tw`mb-5 mt-5 text-xl font-semibold  tracking-wider text-gray-800`}
 `;
 
 const TopicStartTimeText = styled.div`
-  ${tw`leading-normal text-gray-700 mb-5`}
+  ${tw`leading-normal text-gray-700 mb-2`}
 `;
 
 const PersonCountTag = styled.div`
   ${tw`inline-block bg-gray-200 rounded-full px-3 py-1 font-semibold text-gray-700 mr-2`}
 `;
 
-function Card({ topic, checkedItemHandler, checkedItem }) {
+const StartTimeTag = styled.div`
+  ${tw`inline-block bg-gray-200 rounded-full px-2 py-1 font-semibold text-sm text-gray-700 mr-2 mb-5`}
+`;
+
+const PreviewButton = styled.button`
+  ${tw`w-full sm:w-1/3 border text-green-400 bg-blue-200 text-4xl`}
+`;
+
+function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton }) {
   const [isSelected, setIsSelected] = useState(false);
+  const { t, i18n } = useTranslation("card");
 
   const onClick = (e) => {
     e.preventDefault();
@@ -40,13 +50,21 @@ function Card({ topic, checkedItemHandler, checkedItem }) {
     checkedItemHandler(topic.id);
   };
 
+  let studyDate = new Date(topic.studyDate);
+  const studyDateFullString =
+    studyDate.getFullYear() +
+    "년 " +
+    studyDate.getMonth() +
+    "월 " +
+    studyDate.getDay() +
+    "일";
   return (
     <CardWrapper
       value={topic.id}
       onClick={onClick}
       className={
         checkedItem === topic.id
-          ? "border ring-2 ring-yellow-400 px-2 py-6"
+          ? "border ring-4 ring-offset-2 ring-indigo-400 px-2 py-4"
           : ""
       }
     >
@@ -59,13 +77,30 @@ function Card({ topic, checkedItemHandler, checkedItem }) {
 
       <TopicContentWrapper>
         <TopicThemeText>{topic.theme}</TopicThemeText>
+        <div class="font-semibold">개최</div>
         <TopicStartTimeText>
-          Study starts at {topic.studyDate}
+          {t("studystarttimetextprefix")}
+          {topic.studyDate}
+          {t("studystarttimetextsuffix")}
         </TopicStartTimeText>
-        <PersonCountTag>
-          총 {topic.numOfParticipant}명이 참여중이에요
-        </PersonCountTag>
+
+        <div class="font-semibold">인원</div>
+
+        <TopicStartTimeText>
+          {t("personcounttagprefix")}
+          {topic.numOfParticipant}
+          {t("personcounttagsuffix")}
+        </TopicStartTimeText>
       </TopicContentWrapper>
+      {isPreviewButton ? (
+        <PreviewButton
+          onClick={() => (window.location.href = "/preview/" + topic.id)}
+        >
+          {t("previewbutton")}
+        </PreviewButton>
+      ) : (
+        ""
+      )}
     </CardWrapper>
   );
 }

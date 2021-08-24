@@ -5,31 +5,50 @@ import React, { Component, useState } from "react";
 
 import Axios from "axios";
 import Slider from "react-slick";
+import Cookies from "universal-cookie";
 
-function UserAnswer({ userAnswer }) {
+function UserAnswer({ detailTopicId }) {
   const [text, setText] = useState("");
+  const cookies = new Cookies();
+  const token = cookies.get('vtoken');
 
   const onClick = (e) => {
-    console.log(e.target.value);
+    let practice = document.getElementById('practice').value;
+    console.log(practice);
     let body = {
-      answer: e.target.value,
+      answer: practice,
     };
-    Axios.post("/detail_topics/1/user_answers", body).then((response) => {
-      console.log(response.data);
-    });
+    if (detailTopicId === 0) {
+      alert("Select detail topic and save user answer.");
+      return;
+    }
+    else {
+      Axios
+        .post("/detail_topics/" + detailTopicId + "/user_answers", body, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error => {
+          console.log(error);
+        }));
+    }
   };
 
   return (
     <div>
-      <input placeholder="예시답안 작성란"></input>
-      <button onClick={onClick}>저장</button>
+      <textarea id="practice" className="resize w-full h-48 border-black" placeholder="왼쪽의 상세 토픽 중 하나를 클릭한 후 예시답안을 작성해주세요."></textarea>
+      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={onClick}>저장</button>
     </div>
   );
 }
 
 export default class UserAnswerList extends Component {
   render() {
-    const { userAnswerList } = this.props;
+    const { userAnswerList, whichDetailTopic } = this.props;
 
     const settings = {
       dots: true,
@@ -48,7 +67,7 @@ export default class UserAnswerList extends Component {
             </div>
           ))} */}
           <div>
-            <UserAnswer userAnswer="" />
+            <UserAnswer detailTopicId={whichDetailTopic} />
           </div>
         </Slider>
       </div>

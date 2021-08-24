@@ -6,71 +6,79 @@ import {
   faMicrophoneAltSlash,
 } from "@fortawesome/free-solid-svg-icons";
 
+import AudioRecord from "./AudioRecord";
 import ChatList from "./ChatList";
 import Cookies from "universal-cookie";
 import CreateChat from "./CreateChat";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ProgressBar from "./ProgressBar";
+import Timer from "./Timer";
+import axios from "axios";
+import getDetailTopics from "../Api/getDetailTopics";
+import getRemainTime from "../Api/getRemainTime";
 import getuser from "../Api/getuser";
-import logoVerpic from "../assets/images/logoVerpic.png";
+import peopledefault from "../assets/images/peopledefault.png";
 import styled from "@emotion/styled";
 import tw from "twin.macro";
-
-let localStream;
-let localVideoTracks;
-let myPeerConnection;
-
-// 임시 변수
-const localRoom = 3;
-const cookies = new Cookies();
+import { useParams } from "react-router";
 
 const ProgressBarWrapper = styled.div`
   font-family: "NanumGothic-Bold";
-  ${tw`container mt-10`}
+  ${tw`pt-10`}
 `;
 
 const ChatView = styled.div`
   font-family: "NanumGothic-Regular";
-  height: 830px;
-  width: 450px;
+  background: #262624;
+  border: 2px solid #262626;
 
-  @media screen and (max-width: 500px) {
-    height: 400px;
-    width: 200px;
-    flex-direction: column;
-  }
-  ${tw`mr-28 border rounded-lg mb-10 flex flex-col justify-between`}
+  ${tw`border h-80vh w-35vh rounded-lg mx-10 flex flex-col justify-between`}
 `;
 
 const VideoWrapper = styled.div`
   font-family: "NanumGothic-Regular";
-  ${tw`container mx-auto text-center`}
+  background: #0d0d0e;
+  ${tw`text-center max-w-full h-100vh`}
 `;
 
 const UserVideo = styled.video`
-  height: 350px;
-  width: 750px;
+  background: #0d0d0e;
+  background-image: url(${peopledefault});
+  color: #25292e;
+  border: 2px solid #262626;
+  background-size: 20%;
+  background-repeat: no-repeat;
+  background-position: center;
 
-  @media screen and (max-width: 500px) {
-    height: 200px;
-    width: 400px;
-    flex-direction: column;
-  }
-  ${tw`bg-black border ml-28  mb-3 rounded-lg`}
+  ${tw` w-75vh h-35vh mb-3 rounded-lg`}
 `;
 
 const ToggleButton = styled.div`
-  ${tw`border p-1 rounded border-gray-200 text-gray-400 w-1/6 mb-10 cursor-pointer`}
+  background: #262626;
+  &:hover {
+    color: #4b7dda;
+    border: 1px solid;
+  }
+  ${tw`border p-1 rounded border-gray-400 text-gray-200  w-1/6 mb-10 cursor-pointer`}
 `;
 
 const VideoUserText = styled.text`
-  ${tw`rounded-sm ml-28 font-semibold p-2 `}
+  ${tw`text-gray-100 font-semibold p-2 `}
 `;
 
 const ChatLabelText = styled.text`
-  ${tw`rounded-sm font-semibold p-2 `}
+  ${tw`text-gray-100 font-semibold mx-10 p-2 `}
+`;
+
+const StudyExitButton = styled.div`
+  ${tw`mt-10 mr-10 flex-row cursor-pointer rounded-lg w-1/12  font-semibold text-white bg-red-600 p-2`}
 `;
 
 function StudyChat() {
+  let localStream;
+  let myPeerConnection;
+  const cookies = new Cookies();
+  const token = cookies.get("vtoken");
   const localUserName = localStorage.getItem("uuid");
   const myVideoRef = useRef(null);
   const remoteVideoRef = useRef(null);
@@ -78,7 +86,12 @@ function StudyChat() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [localVideoState, SetLocalVideoState] = useState(true);
   const [localAudioState, SetLocalAudioState] = useState(true);
+  const [myId, setMyId] = useState("");
+  const { localRoom } = useParams();
+  const adminName = "Verpic";
 
+  const audioRecordRef = useRef();
+  const [step, setStep] = useState(0);
   const [chatInputs, setChatInputs] = useState({
     message: "",
     sender: "testsss",
@@ -94,19 +107,19 @@ function StudyChat() {
     }));
   }, []);
 
-  const [chats, setChats] = useState([
-    {
-      id: 1,
-      sender: "test_sender",
-      message: "테스트용 메세지 입니다.",
-    },
-    {
-      id: 2,
-      sender: "test_sender2",
-      message: "두 번째 테스트용 메세지 입니다.",
-    },
-  ]);
-  const nextChatId = useRef(3);
+  const [chats, setChats] = useState([]);
+  const nextChatId = useRef(1);
+
+  const addChat = (message, sender, userId) => {
+    const chat = {
+      id: nextChatId.current,
+      message: message,
+      sender: sender,
+      userId: userId,
+    };
+    setChats((chats) => chats.concat(chat));
+    nextChatId.current += 1;
+  };
 
   const peerConnectionConfig = {
     iceServers: [
@@ -121,24 +134,21 @@ function StudyChat() {
   };
 
   function stompWithSockJS() {
-    stompconn.connect(
-      { Authorization: cookies.get("vtoken") },
-      function (frame) {
-        console.log("Websocket connection complete.");
-        subscribe();
-        chatSubscribe();
-        chatUserSubscribe();
-        stompconn.send(
-          "/pub/videochat/enter",
-          { Authorization: cookies.get("vtoken") },
-          JSON.stringify({ matchId: localRoom })
-        );
-      }
-    );
+    stompconn.connect({ Authorization: token }, function (frame) {
+      console.log("Websocket connection complete.");
+      videoSubscribe();
+      chatSubscribe();
+      chatUserSubscribe();
+      stompconn.send(
+        "/pub/videochat/enter",
+        { Authorization: token },
+        JSON.stringify({ matchId: localRoom })
+      );
+    });
   }
 
-  const subscribe = () => {
-    stompconn.subscribe("/sub/" + localUserName, function (frame) {
+  const videoSubscribe = () => {
+    stompconn.subscribe("/sub/video-signal/" + localUserName, function (frame) {
       let message = JSON.parse(frame.body);
       switch (message.type) {
         case "text":
@@ -190,55 +200,37 @@ function StudyChat() {
     };
   };
 
-  function sendToServer(msg) {
-    let msgJSON = JSON.stringify(msg);
-    console.log(msg);
-    stompconn.send("/pub/experiment", {}, msgJSON);
-  }
-
   const chatOnCreate = useCallback(() => {
     // 채팅 보내는 부분
-    const chat = {
-      id: nextChatId.current,
-      message,
-      sender,
-    };
 
     stompconn.send(
       "/pub/videochat/message",
-      { Authorization: cookies.get("vtoken") },
-      JSON.stringify({ matchId: localRoom, message: message })
+      { Authorization: token },
+      JSON.stringify({
+        matchId: localRoom,
+        message: message,
+        matchUserId: myId,
+      })
     );
     // setChats(chats => chats.concat(chat));
 
     setChatInputs({
       message: "",
     });
-  }, [message, sender]);
-
-  const [myName, setMyName] = useState("");
+  }, [message]);
 
   const chatSubscribe = () => {
     stompconn.subscribe("/sub/videochat/" + localRoom, function (message) {
       var content = JSON.parse(message.body);
-      console.log("chat subscribe");
-
-      const chat = {
-        id: nextChatId.current,
-        message: content.message,
-        sender: content.senderName,
-      };
+      addChat(content.message, content.senderName, content.matchUserId);
       console.log(content);
-      setChats((chats) => chats.concat(chat));
-      nextChatId.current += 1;
     });
   };
 
   const chatUserSubscribe = () => {
     stompconn.subscribe("/user/sub/videochat/" + localRoom, function (message) {
       var content = JSON.parse(message.body);
-      console.log("개인 메세지", content.name);
-      setMyName(content.name);
+      setMyId(content.matchUserId);
     });
   };
 
@@ -304,7 +296,7 @@ function StudyChat() {
   function sendToServer(msg) {
     let msgJSON = JSON.stringify(msg);
 
-    stompconn.send("/pub/experiment", {}, msgJSON);
+    stompconn.send("/pub/video-signal", { Authorization: token }, msgJSON);
   }
 
   const getMedia = async (constraints) => {
@@ -322,7 +314,7 @@ function StudyChat() {
   // create peer connection, get media, start negotiating when second participant appears
   function handlePeerConnection(message) {
     if (remoteVideoRef) {
-      remoteVideoRef.current.src = null;
+      remoteVideoRef.current.srcObject = null;
     }
     createPeerConnection();
 
@@ -465,33 +457,95 @@ function StudyChat() {
     myPeerConnection.addIceCandidate(candidate).catch(handleErrorMessage);
   }
 
-  const getUserMediaReact = async () => {
-    try {
-      console.log("get my video .");
-      localStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-      myVideoRef.current.srcObject = localStream;
-      myVideoRef.current.muted = true;
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const getUserMediaReact = async () => {
+  //     try {
+  //         console.log('get my video .');
+  //         localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+  //         myVideoRef.current.srcObject = localStream;
+  //         myVideoRef.current.muted = true;
+  //     } catch (err) {
+  //         console.log(err);
+  //     }
+  // };
 
-  const [userObject, setUserObject] = useState(null);
+  const [user, setUser] = useState(null);
+
   useEffect(() => {
-    const token = cookies.get("vtoken");
-    getuser(token)
-      .then((res) => {
-        setUserObject(res);
+    if (!user) {
+      getuser()
+        .then((res) => {
+          console.log(res);
+          setUser(res);
+          axios
+            .get("/matching/participant-check/" + localRoom + "/" + res.id)
+            .then((res) => {
+              if (!res.data.result) {
+                alert("정해진 참가자가 아니에요.");
+                window.location.href = "/";
+              }
+            });
+        })
+        .catch((err) => {
+          alert("로그인 세션이 만료되었어요.");
+          window.location.href = "/logout";
+        });
+    }
+
+    getRemainTime(cookies.get("vtoken"), localRoom)
+      .then((remainTime) => {
+        let topics = "";
+        getDetailTopics(cookies.get("vtoken"), localRoom).then(
+          (detailTopics) => {
+            topics += detailTopics[0].context + "\n" + detailTopics[1].context;
+          }
+        );
+        if (remainTime >= 0) {
+          setTimeout(() => {
+            setStep(1);
+            console.log("시작 직후 뒤 실행되는 부분");
+          }, remainTime);
+        }
+        // 시작시각 + 3분 후
+        if (remainTime + 2000 >= 0) {
+          setTimeout(() => {
+            setStep(2);
+            console.log("3분 뒤 실행되는 부분");
+            var message =
+              "지금부터 한국어 세션이 시작합니다.\n아래 토픽에 대해 한국어로 대화해주세요.\nThe Korean session starts now.\nPlease talk about the topic below in Korean.\n\n";
+            message += topics;
+            audioRecordRef.current.onRecAudio(localVideoState);
+            addChat(message, adminName, 0);
+          }, remainTime + 5000);
+        }
+        // 시작시각 + 10분 후
+        if (remainTime + 2000 >= 0) {
+          setTimeout(() => {
+            setStep(3);
+            var message =
+              "지금부터 영어 세션이 시작합니다.\n아래 토픽에 대해 영어로 대화해주세요.\nThe English session starts now.\nPlease talk about the topic below in English.\n\n";
+            message += topics;
+            console.log("10분 뒤 실행되는 부분");
+            addChat(message, adminName, 0);
+            audioRecordRef.current.offRecAudio(1, "ko");
+            audioRecordRef.current.onRecAudio(localVideoState);
+          }, remainTime + 10000);
+        }
+        // 시작시각 + 17분 후
+        if (remainTime + 2000 >= 0) {
+          setTimeout(() => {
+            setStep(4);
+            console.log("17분 뒤 실행되는 부분");
+            audioRecordRef.current.offRecAudio(2, "en");
+            var message =
+              "곧 세션이 마감됩니다. 마무리 인사를 해주세요.\nThe session will be closed soon.\nPlease say goodbye to your partner.";
+            addChat(message, adminName, 0);
+          }, remainTime + 18000);
+        }
         setIsLoaded(true);
       })
       .catch((err) => {
-        alert("로그인 세션이 만료되었어요.");
-        window.location.href = "/logout";
+        console.log("에러발생", err);
       });
-
     stompWithSockJS();
     //getUserMediaReact();
   }, []);
@@ -507,6 +561,7 @@ function StudyChat() {
       track.enabled = !track.enabled;
       SetLocalAudioState(!localAudioState);
     });
+    audioRecordRef.current.micButtonOff();
   };
 
   return (
@@ -516,57 +571,43 @@ function StudyChat() {
       ) : (
         <div>
           <ProgressBarWrapper>
-            <ul class="w-full steps">
-              <li class="step step-primary ">자기소개</li>
-              <li class="step step-primary">한국어세션</li>
-              <li class="step step-primary">영어세션</li>
-              <li class="step">마무리</li>
-            </ul>
+            <ProgressBar step={step}></ProgressBar>
           </ProgressBarWrapper>
 
           {/* <Timer></Timer> */}
 
-          <div class="flex mb-3 mt-5 justify-between">
+          <div class="container flex mt-5 justify-between mx-auto">
             <div class="flex-col">
-              <div class="text-left">
-                <VideoUserText>
-                  {userObject.firstName}
-                  {userObject.lastName}의 비디오
-                </VideoUserText>
-              </div>
+              <div class="">
+                <div class="text-left">
+                  <VideoUserText>
+                    {user.firstName}
+                    {user.lastName}의 비디오
+                  </VideoUserText>
+                </div>
+                <UserVideo autoPlay playsInline ref={myVideoRef} />
 
-              <UserVideo
-                poster={logoVerpic}
-                class="z-0"
-                autoPlay
-                playsInline
-                ref={myVideoRef}
-              ></UserVideo>
-              <div class="flex justify-between">
-                <ToggleButton className="ml-28" onClick={videoButtonOff}>
-                  {localVideoState ? (
-                    <FontAwesomeIcon icon={faCamera} />
-                  ) : (
-                    <FontAwesomeIcon icon={faCamera} />
-                  )}
-                </ToggleButton>
-                <ToggleButton onClick={micButtonOff}>
-                  {localAudioState ? (
-                    <FontAwesomeIcon icon={faMicrophoneAltSlash} />
-                  ) : (
-                    <FontAwesomeIcon icon={faMicrophone} />
-                  )}
-                </ToggleButton>
+                <div class="flex justify-between">
+                  <ToggleButton onClick={videoButtonOff}>
+                    {localVideoState ? (
+                      <FontAwesomeIcon icon={faCamera} />
+                    ) : (
+                      <FontAwesomeIcon icon={faCamera} />
+                    )}
+                  </ToggleButton>
+                  <ToggleButton onClick={micButtonOff}>
+                    {localAudioState ? (
+                      <FontAwesomeIcon icon={faMicrophone} />
+                    ) : (
+                      <FontAwesomeIcon icon={faMicrophoneAltSlash} />
+                    )}
+                  </ToggleButton>
+                </div>
+                <div class="text-left">
+                  <VideoUserText>상대방의 비디오</VideoUserText>
+                  <UserVideo autoPlay playsInline ref={remoteVideoRef} />
+                </div>
               </div>
-              <div class="text-left">
-                <VideoUserText>상대방의 비디오</VideoUserText>
-              </div>
-              <UserVideo
-                poster={logoVerpic}
-                autoPlay
-                playsInline
-                ref={remoteVideoRef}
-              ></UserVideo>
             </div>
             <div class="flex-col">
               <div class="text-left">
@@ -574,7 +615,7 @@ function StudyChat() {
               </div>
 
               <ChatView ref={chatRef}>
-                <ChatList chats={chats} myName={myName} />
+                <ChatList chats={chats} myId={myId} />
                 <CreateChat
                   message={message}
                   onChange={chatOnChange}
@@ -582,6 +623,13 @@ function StudyChat() {
                 ></CreateChat>
               </ChatView>
             </div>
+          </div>
+          {/* 여기 matchId 들어가야함! */}
+          <AudioRecord matchId={localRoom} ref={audioRecordRef}></AudioRecord>
+          <div class="flex justify-end">
+            <StudyExitButton onClick={() => window.close()}>
+              학습 종료
+            </StudyExitButton>
           </div>
         </div>
       )}

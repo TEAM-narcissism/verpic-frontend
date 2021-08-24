@@ -1,12 +1,11 @@
-FROM node:12.2.0-alpine
+FROM node:14.17.0 as builder
 
-WORKDIR /app
+RUN mkdir /usr/src/app
+WORKDIR /usr/src/app
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
+COPY package.json /usr/src/app/package.json
+RUN npm install --silent
+RUN npm install react-scripts@2.1.3 -g --silent
 
-ENV PATH /app/node_modules/.bin:$PATH
-
-COPY package.json /app/package.json
-RUN npm install 
-RUN npm install react-scripts@3.0.1 -g
-
-
+COPY . /usr/src/app
 CMD ["npm", "start"]

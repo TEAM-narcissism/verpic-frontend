@@ -5,23 +5,10 @@ import ExpressionList from "./ExpressionList";
 import Navigator from "../Component/Navigator";
 import PreviewandDetail from "./PreviewandDetail";
 import UserAnswerList from "./UserAnswerList";
-import styled from "@emotion/styled";
-import tw from "twin.macro";
-
-const PreviewSetText = styled.div`
-  ${tw`text-3xl font-bold mb-1 mx-10 select-none`};
-`;
-
-const PreviewSetWrapper = styled.div`
-  font-family: "NanumGothic-Regular";
-  ${tw`container mx-auto my-auto`}
-`;
-
-const PreviewandDetailWrapper = styled.div`
-  ${tw` mx-10 overflow-hidden rounded-lg border shadow-sm cursor-pointer sm:flex mb-10 hover:shadow-lg duration-500`}
-`;
+import { useParams } from "react-router";
 
 function Preview() {
+  const [detailTopicId, setDetailTopicId] = useState(0);
   const [previewset, setPreviewset] = useState({
     preview: {
       context: "",
@@ -41,8 +28,10 @@ function Preview() {
     ],
   });
 
+  const { previewId } = useParams();
+
   useEffect(() => {
-    Axios.get("/previewsets/1").then((response) => {
+    Axios.get("/previewsets/" + previewId).then((response) => {
       if (response.data) {
         console.log(response.data);
         setPreviewset(response.data);
@@ -55,32 +44,50 @@ function Preview() {
   return (
     <>
       <Navigator />
-      <PreviewSetText>예습하기</PreviewSetText>
-      <div class="text-gray-600 mb-3 mx-10 select-none">Topic 주제</div>
+      <div className="pt-4 pb-4">
+        <div className="text-3xl font-bold mb-1">예습하기</div>
+        <div className="text-gray-600 mb-3">Topic 주제</div>
+      </div>
 
-      <PreviewSetWrapper>
-        <div className="grid grid-cols-2 space-x-2">
-          <div className="border rounded-lg">
-            <PreviewandDetail
-              preview={previewset.preview}
-              detailTopicList={previewset.detailTopicList}
-            />
+      <div className="grid grid-cols-2 space-x-6">
+        <div className="border-4 border-blue-300 rounded-lg">
+          <div
+            style={{ "font-family": "NanumGothic-Bold" }}
+            className=" border-b-4 border-blue-300 text-4xl text-center pt-4 pb-4 text-indigo-400"
+          >
+            Topic or 질문사항
+          </div>
+          <PreviewandDetail
+            preview={previewset.preview}
+            detailTopicList={previewset.detailTopicList}
+            initialDetailTopic={(previewId - 1) * 2 + 1}
+            changeDetailTopic={setDetailTopicId}
+          />
+        </div>
+
+        <div className="space-y-6">
+          <div className="border-4 border-blue-300 rounded-lg">
+            <div
+              style={{ "font-family": "NanumGothic-Bold" }}
+              className="border-b-4 border-blue-300 text-4xl text-center pt-4 pb-4 text-indigo-400"
+            >
+              표현학습 List
+            </div>
+            <ExpressionList expressionList={previewset.expressionList} />
           </div>
 
-          <div className="space-y-2">
-            <div className="border rounded-lg">
-              <h1 className="border-b-2 border-black">표현학습 List</h1>
-              <ExpressionList expressionList={previewset.expressionList} />
+          <div className="border-4 border-blue-300 rounded-lg">
+            <div
+              style={{ "font-family": "NanumGothic-Bold" }}
+              className="border-b-4 border-blue-300 text-4xl text-center pt-4 pb-4 text-indigo-400"
+            >
+              질문
             </div>
-
-            <div className="border rounded-lg">
-              <h1 className="border-b-2 border-black">질문</h1>
-              {/* <input placeholder="예시답안 작성란"></input> */}
-              <UserAnswerList />
-            </div>
+            {/* <input placeholder="예시답안 작성란"></input> */}
+            <UserAnswerList whichDetailTopic={detailTopicId} />
           </div>
         </div>
-      </PreviewSetWrapper>
+      </div>
     </>
   );
 }

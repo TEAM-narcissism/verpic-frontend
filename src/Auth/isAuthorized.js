@@ -5,7 +5,6 @@ function isAuthorized() {
   const token = cookies.get("vtoken");
 
   if (!token) {
-    console.log("토큰 없어");
     return false;
   } else {
     return true;

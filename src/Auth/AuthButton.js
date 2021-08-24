@@ -7,25 +7,26 @@ const Wrapper = styled.div`
   margin-top: 1rem;
   padding-top: 0.6rem;
   padding-bottom: 0.5rem;
-
-  color: white;
+  font-family: 'NanumGothic-Regular';
+  color: #DEDEE2;
 
   text-align: center;
   font-size: 1.25rem;
-  font-weight: 500;
+  font-weight: 700;
 
   cursor: pointer;
   user-select: none;
   transition: 0.2s all;
-
+  background: #0D0D0E;
   &:hover {
-    background: ${oc.blue[5]};
+    color: #DEDEE2;
+    background: ${oc.indigo[7]};
   }
 
   &:active {
-    background: ${oc.blue[7]};
+    background: ${oc.indigo[7]};
   }
-  ${tw`bg-gray-400 rounded-lg`}
+  ${tw`rounded-lg`}
 `;
 
 const AuthButton = ({ children, onClick }) => (

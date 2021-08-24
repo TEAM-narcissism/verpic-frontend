@@ -1,11 +1,13 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+
 import styled from '@emotion/styled';
 import tw from 'twin.macro';
 
 const PageUl = styled.ul`
 
   font-family: 'NanumGothic-Regular';
-  ${tw`text-gray-400 bg-white border rounded-lg text-center mx-10 mb-5 flex-col py-1`}
+  ${tw`text-gray-400 bg-white border-2 rounded-lg text-center mx-10 mb-5 flex-col py-1`}
 `;
 
 const PageLi = styled.li`
@@ -29,17 +31,18 @@ const PageSpan = styled.span`
   ${tw`p-1 w-full mx-3`}
 `;
 
-const DaySorting = ({ dayPaginate }) => {
+const DaySorting = ({ dayPaginate, today }) => {
   const dayList = ["MON", "TUES", "WED", "THUR", "FRI", "SAT", "SUN"];
+  const { t, i18n } = useTranslation('daysorting');
 
   return (
-    <div class="">
+    <div className="">
       <nav>
         <PageUl className="pagination">
           {dayList.map(day => (
-            <PageLi key={day} className="page-item">
+            <PageLi key={day} className={today === day ? "text-pink-500 font-semibold" : "page-item"}>
               <PageSpan className="page-link" onClick={() => dayPaginate(day)}>
-                {day}
+                {t(day)}
               </PageSpan>
             </PageLi>
           ))}
