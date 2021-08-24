@@ -39,7 +39,10 @@ export const ProfileAvatar = styled.div`
 function Mypage() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoding] = useState(true);
-  const [reservationList, setReservationList] = useState();
+  const [reservationList, setReservationList] = useState([{
+    id: "", isSoldOut: "", korTheme: "", engTheme: "", studyDate: ""
+  },
+  ]);
   const [matchList, setMatchList] = useState();
   const cookies = new Cookies();
   const token = cookies.get('vtoken');
@@ -83,10 +86,11 @@ function Mypage() {
       }
     })
       .then((res) => {
+        // console.log(res);
         if (res.data) {
           setReservationList(res.data);
           console.log(res.data);
-
+          setIsLoding(false);
         }
       })
       .catch((
@@ -143,10 +147,10 @@ function Mypage() {
                   </div>
 
                   <div>
-                    {reservation.topic.studyDate}
+                    {reservation.studyDate}
                   </div>
 
-                  {reservation.soldOut ?
+                  {reservation.isSoldOut ?
                     <>
                       <div>
                         <span>상대방과의 매칭이 완료되었어요.</span>
@@ -168,7 +172,8 @@ function Mypage() {
 
                 </div>
 
-              ))}
+              )
+              )}
             </ReserveListWrapper>
 
 
