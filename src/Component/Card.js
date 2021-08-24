@@ -83,7 +83,7 @@ function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton }) {
         <div class="font-semibold">개최</div>
         <TopicStartTimeText>
           {t("studystarttimetextprefix")}
-          {topic.studyDate}
+          {studyDateFullString}
           {t("studystarttimetextsuffix")}
         </TopicStartTimeText>
 
