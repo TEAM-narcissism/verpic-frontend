@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useTranslation } from 'react-i18next';
 
+import i18next from "i18next";
 import styled from "@emotion/styled";
 import tw from "twin.macro";
-import i18next from "i18next";
+import { useTranslation } from "react-i18next";
 
 const CardWrapper = styled.div`
   ${tw` mx-10 overflow-hidden rounded-lg border-2 shadow-sm bg-white cursor-pointer sm:flex mb-10 hover:shadow-lg duration-500`}
@@ -37,14 +37,13 @@ const StartTimeTag = styled.div`
   ${tw`inline-block bg-gray-200 rounded-full px-2 py-1 font-semibold text-sm text-gray-700 mr-2 mb-5`}
 `;
 
-
 const PreviewButton = styled.button`
   ${tw`w-full sm:w-1/3 border text-green-400 bg-blue-200 text-4xl`}
-`
+`;
 
 function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton }) {
   const [isSelected, setIsSelected] = useState(false);
-  const { t, i18n } = useTranslation('card');
+  const { t, i18n } = useTranslation("card");
 
   const onClick = (e) => {
     e.preventDefault();
@@ -53,7 +52,13 @@ function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton }) {
   };
 
   let studyDate = new Date(topic.studyDate);
-  const studyDateFullString = studyDate.getFullYear() + '년 ' + studyDate.getMonth() + '월 ' + studyDate.getDay() + '일';
+  const studyDateFullString =
+    studyDate.getFullYear() +
+    "년 " +
+    studyDate.getMonth() +
+    "월 " +
+    studyDate.getDay() +
+    "일";
   return (
     <CardWrapper
       value={topic.id}
@@ -72,27 +77,35 @@ function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton }) {
       </ImageWrapper>
 
       <TopicContentWrapper>
-
         <TopicThemeText>
           {i18next.language === "kr" ? topic.korTheme : topic.engTheme}
         </TopicThemeText>
         <div class="font-semibold">개최</div>
         <TopicStartTimeText>
-          {t('studystarttimetextprefix')}{topic.studyDate}{t('studystarttimetextsuffix')}
+          {t("studystarttimetextprefix")}
+          {topic.studyDate}
+          {t("studystarttimetextsuffix")}
         </TopicStartTimeText>
 
         <div class="font-semibold">인원</div>
 
         <TopicStartTimeText>
-          {t('personcounttagprefix')}{topic.numOfParticipant}{t('personcounttagsuffix')}
+          {t("personcounttagprefix")}
+          {topic.numOfParticipant}
+          {t("personcounttagsuffix")}
         </TopicStartTimeText>
       </TopicContentWrapper>
-      {
-        isPreviewButton ? <PreviewButton onClick={() => window.location.href = "/preview/" + topic.id}>{t('previewbutton')}</PreviewButton> : ""
-      }
+      {isPreviewButton ? (
+        <PreviewButton
+          onClick={() => (window.location.href = "/preview/" + topic.id)}
+        >
+          {t("previewbutton")}
+        </PreviewButton>
+      ) : (
+        ""
+      )}
     </CardWrapper>
   );
 }
-
 
 export default React.memo(Card);

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
 
 import Axios from "axios";
 import ExpressionList from "./ExpressionList";
 import Navigator from "../Component/Navigator";
 import PreviewandDetail from "./PreviewandDetail";
 import UserAnswerList from "./UserAnswerList";
+import { useParams } from "react-router";
 
 function Preview() {
   const [detailTopicId, setDetailTopicId] = useState(0);
@@ -51,8 +51,12 @@ function Preview() {
 
       <div className="grid grid-cols-2 space-x-6">
         <div className="border-4 border-blue-300 rounded-lg">
-          <div style={{ "font-family": "NanumGothic-Bold" }}
-            className=" border-b-4 border-blue-300 text-4xl text-center pt-4 pb-4 text-indigo-400">Topic or 질문사항</div>
+          <div
+            style={{ "font-family": "NanumGothic-Bold" }}
+            className=" border-b-4 border-blue-300 text-4xl text-center pt-4 pb-4 text-indigo-400"
+          >
+            Topic or 질문사항
+          </div>
           <PreviewandDetail
             preview={previewset.preview}
             detailTopicList={previewset.detailTopicList}
@@ -63,14 +67,22 @@ function Preview() {
 
         <div className="space-y-6">
           <div className="border-4 border-blue-300 rounded-lg">
-            <div style={{ "font-family": "NanumGothic-Bold" }}
-              className="border-b-4 border-blue-300 text-4xl text-center pt-4 pb-4 text-indigo-400">표현학습 List</div>
+            <div
+              style={{ "font-family": "NanumGothic-Bold" }}
+              className="border-b-4 border-blue-300 text-4xl text-center pt-4 pb-4 text-indigo-400"
+            >
+              표현학습 List
+            </div>
             <ExpressionList expressionList={previewset.expressionList} />
           </div>
 
           <div className="border-4 border-blue-300 rounded-lg">
-            <div style={{ "font-family": "NanumGothic-Bold" }}
-              className="border-b-4 border-blue-300 text-4xl text-center pt-4 pb-4 text-indigo-400">질문</div>
+            <div
+              style={{ "font-family": "NanumGothic-Bold" }}
+              className="border-b-4 border-blue-300 text-4xl text-center pt-4 pb-4 text-indigo-400"
+            >
+              질문
+            </div>
             {/* <input placeholder="예시답안 작성란"></input> */}
             <UserAnswerList whichDetailTopic={detailTopicId} />
           </div>
