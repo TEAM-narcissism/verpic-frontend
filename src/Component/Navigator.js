@@ -5,8 +5,7 @@ import { ProfileAvatar } from "../User/Mypage";
 import isAuthorized from "../Auth/isAuthorized";
 import styled from "@emotion/styled";
 import tw from "twin.macro";
-import { useTranslation } from 'react-i18next';
-import { ProfileAvatar } from "../User/Mypage";
+import { useTranslation } from "react-i18next";
 
 const NavigatorWrapper = styled.div`
   font-family: "NanumGothic-Bold";
@@ -19,7 +18,6 @@ const NavigatorWrapper = styled.div`
 
 const NavigatorLogo = styled.img`
   width: 50px;
-
   ${tw`m-3 cursor-pointer ml-20`}
 `;
 
@@ -33,12 +31,10 @@ const NavigatorText = styled.text`
 
 const NavigatorLink = styled.div`
   font-family: "NanumGothic-Regular";
-
   color: #d9dee5;
   @media screen and (max-width: 500px) {
     display: none;
   }
-
   &:hover {
     color: #cddef5;
     border-bottom: 4px solid #cddef5;
@@ -52,7 +48,6 @@ const NavigatorLink = styled.div`
 
 const AvatarLink = styled.div`
   font-family: "NanumGothic-Regular";
-
   ${tw`text-sm font-semibold h-5vh tracking-wider flex items-center align-middle mx-10 duration-300 cursor-pointer`}
 `;
 
@@ -65,17 +60,11 @@ const DropDownItem = styled.div`
   &:hover {
     background: #dcdce0;
   }
-
   ${tw`text-gray-700  px-4 py-3 text-sm font-semibold`}
 `;
 
 function Navigator({ user, focus }) {
-<<<<<<< HEAD
   const { t, i18n } = useTranslation("navigator");
-=======
-
-  const { t, i18n } = useTranslation('navigator');
->>>>>>> 03c55fdac485fa77e90f006840b4b1ac56eecd66
   const [pageLanguage, setPageLanguage] = useState(initPageLanguage());
   const [dropDown, setDropDown] = useState(false);
 
@@ -85,17 +74,11 @@ function Navigator({ user, focus }) {
   function initPageLanguage() {
     if (localStorage.getItem("i18nextLng") === "login") {
       if (user !== null) {
-<<<<<<< HEAD
         localStorage.setItem(
           "i18nextLng",
           user.firstLanguage === "KOR" ? "kr" : "en"
         );
       } else localStorage.setItem("i18nextLng", "kr");
-=======
-        localStorage.setItem("i18nextLng", user.firstLanguage === "KOR" ? "kr" : "en");
-      }
-      else localStorage.setItem("i18nextLng", "kr");
->>>>>>> 03c55fdac485fa77e90f006840b4b1ac56eecd66
     }
     return localStorage.getItem("i18nextLng");
   }
@@ -104,30 +87,17 @@ function Navigator({ user, focus }) {
     if (pageLanguage == "KOR") {
       setPageLanguage("ENG");
       localStorage.setItem("i18nextLng", "en");
-<<<<<<< HEAD
       i18n.changeLanguage("en");
     } else {
       setPageLanguage("KOR");
       localStorage.setItem("i18nextLng", "kr");
       i18n.changeLanguage("kr");
-=======
-      i18n.changeLanguage('en');
-    }
-    else {
-      setPageLanguage("KOR");
-      localStorage.setItem("i18nextLng", "kr");
-      i18n.changeLanguage('kr');
->>>>>>> 03c55fdac485fa77e90f006840b4b1ac56eecd66
     }
   };
 
   const avatarOnClick = () => {
     setDropDown(!dropDown);
-<<<<<<< HEAD
   };
-=======
-  }
->>>>>>> 03c55fdac485fa77e90f006840b4b1ac56eecd66
 
   useEffect(() => {
     function handleClickOutside(event) {
