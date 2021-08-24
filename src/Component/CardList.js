@@ -22,7 +22,8 @@ const CardListWrapper = styled.div`
 function CardList(props) {
   const [topics, setTopics] = useState([
     {
-      theme: "",
+      korTheme: "",
+      engTheme: "",
       numOfParticipant: 0,
       studyDate: "",
       studyDay: "",

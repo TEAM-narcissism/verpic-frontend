@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import styled from "@emotion/styled";
 import tw from "twin.macro";
-import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 const CardWrapper = styled.div`
   ${tw` mx-10 overflow-hidden rounded-lg border-2 shadow-sm bg-white cursor-pointer sm:flex mb-10 hover:shadow-lg duration-500`}
@@ -76,7 +76,14 @@ function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton }) {
       </ImageWrapper>
 
       <TopicContentWrapper>
+<<<<<<< HEAD
         <TopicThemeText>{topic.theme}</TopicThemeText>
+=======
+
+        <TopicThemeText>
+          {i18next.language === "kr" ? topic.korTheme : topic.engTheme}
+        </TopicThemeText>
+>>>>>>> 03c55fdac485fa77e90f006840b4b1ac56eecd66
         <div class="font-semibold">개최</div>
         <TopicStartTimeText>
           {t("studystarttimetextprefix")}
