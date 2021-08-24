@@ -15,24 +15,25 @@ import isAuthorized from "../Auth/isAuthorized";
 
 const CardListText = styled.div`
 
-    ${tw`text-3xl font-bold mb-1 mx-10 select-none`};
+    ${tw`text-3xl font-bold mb-1 mt-10 mx-10 select-none`};
 `;
 
 const CardListWrapper = styled.div`
     font-family: "NanumGothic-Regular";
-    ${tw`container mx-auto`}
+    ${tw`container mx-auto w-75vh`}
 `;
 
 function UserCardList(props) {
-    const [topics, setTopics] = useState([{
-        korTheme: "", engTheme: "", numOfParticipant: 0, studyDate: "", studyDay: "", data: ""
-    }])
+    const [reservation, setReservation] = useState();
     const [checkedItem, setCheckedItem] = useState("");
+    const [filteredReservList, setFilteredReservList] = useState();
     const [today, setToday] = useState(getTodayLabel());
     const [currentPage, setCurrentPage] = useState(1);
     const [topicsPerPage, setTopicsPerPage] = useState(5);
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState();
+
+
 
     const cookies = new Cookies();
     const token = cookies.get("vtoken");
@@ -53,35 +54,34 @@ function UserCardList(props) {
     })
 
     useEffect(() => {
-        axios
-            .get("/topic/reservationList", {
-                headers: {
-                    Authorization: token,
-                },
+        axios.get("/reservation/user/", {
+            headers: {
+                Authorization: token,
+            }
+        })
+            .then((res) => {
+                if (res.data) {
+                    console.log(res.data);
+                    setReservation(res.data);
+                    setFilteredReservList(
+                        res.data.filter(
+                            reserv => reserv.topic.studyDay === today
+                        )
+                    );
+
+                    setIsLoading(false);
+                }
             })
-            .then(response => {
-                console.log("rendering");
-                setIsLoading(false);
-                setTopics(response.data);
-            })
-            .catch((err) => {
-                window.location.ref = "/logout";
-            })
+            .catch((
+                err => {
+                    window.location.href = '/logout';
+                }
+            ))
+
     }, []);
 
-    const monTopics = topics.filter(topic => { return topic.studyDay === "MON" });
-    const tuesTopics = topics.filter(topic => { return topic.studyDay === "TUES" });
-    const wedTopics = topics.filter(topic => { return topic.studyDay === "WED" });
-    const thurTopics = topics.filter(topic => { return topic.studyDay === "THUR" });
-    const friTopics = topics.filter(topic => { return topic.studyDay === "FRI" });
-    const satTopics = topics.filter(topic => { return topic.studyDay === "SAT" });
-    const sunTopics = topics.filter(topic => { return topic.studyDay === "SUN" });
 
-    const checkedItemHandler = (id) => {
-        setCheckedItem(id);
 
-        console.log(checkedItem);
-    };
 
     function getTodayLabel() {
         let week = new Array('SUN', 'MON', 'TUES', 'WED', 'THUR', 'FRI', 'SAT');
@@ -93,22 +93,23 @@ function UserCardList(props) {
 
     const indexOfLast = currentPage * topicsPerPage;
     const indexOfFirst = indexOfLast - topicsPerPage;
+
     function currentTopics(tmp) {
         let currentTopics = 0;
         currentTopics = tmp.slice(indexOfFirst, indexOfLast);
+
         return currentTopics;
     }
 
-    const filteredMonTopicsByPaging = currentTopics(monTopics);
-    const filteredTuesTopicsByPaging = currentTopics(tuesTopics);
-    const filteredWedTopicsByPaging = currentTopics(wedTopics);
-    const filteredThurTopicsByPaging = currentTopics(thurTopics);
-    const filteredFriTopicsByPaging = currentTopics(friTopics);
-    const filteredSatTopicsByPaging = currentTopics(satTopics);
-    const filteredSunTopicsByPaging = currentTopics(sunTopics);
+
 
     function setCurrentPageAndDay(day) {
         setToday(day);
+        setFilteredReservList(
+            reservation.filter(
+                reserv => reserv.topic.studyDay === day
+            )
+        );
         setCurrentPage(1);
     }
 
@@ -118,217 +119,34 @@ function UserCardList(props) {
             {isLoading ? <div className="text-center">{t('isloading')}</div> :
                 <div>
                     <CardListWrapper>
-                        <CardListText>{t('cardlisttext')}</CardListText>
-                        <DaySorting dayPaginate={setCurrentPageAndDay} today={today} />
-                        &nbsp;
+                        <CardListText>{t('reservListText')}</CardListText>
                         <div class="text-gray-600 mb-3 mx-10 select-none">{t('cardlistlongtext')}</div>
+                        <DaySorting dayPaginate={setCurrentPageAndDay} today={today} />
                         {
-                            today === "MON" ? (
-                                monTopics.length === 0 ? (
-                                    <div className="text-center font-lg font-semibold">
-                                        {t('notopic')}
-                                    </div>
-                                ) : (
-                                    filteredMonTopicsByPaging.map((topic) => (
-                                        <Card
-                                            topic={topic}
-                                            checkedItemHandler={checkedItemHandler}
-                                            key={topic.id}
-                                            checkedItem={checkedItem}
-                                            isPreviewButton={true}
-                                        />
-                                    ))
-                                )
-                            ) : (
-                                today === "TUES" ? (
-                                    tuesTopics.length === 0 ? (
-                                        <div className="text-center font-lg font-semibold">
-                                            {t('notopic')}
-                                        </div>
-                                    ) : (
-                                        filteredTuesTopicsByPaging.map((topic) => (
-                                            <Card
-                                                topic={topic}
-                                                checkedItemHandler={checkedItemHandler}
-                                                key={topic.id}
-                                                checkedItem={checkedItem}
-                                                isPreviewButton={true}
-                                            />
-                                        ))
-                                    )
+                            filteredReservList.length === 0 ?
+                                <div class="text-center p-2">
+                                    해당 요일에 예약한 토픽이 없어요.
 
-                                ) : (
-                                    today === "WED" ? (
-                                        wedTopics.length === 0 ? (
-                                            <div className="text-center font-lg font-semibold">
-                                                {t('notopic')}
-                                            </div>
-                                        ) : (
-                                            filteredWedTopicsByPaging.map((topic) => (
+                                </div> :
+                                <>
+
+                                    {
+                                        filteredReservList.map(
+                                            reserv => (
                                                 <Card
-                                                    topic={topic}
-                                                    checkedItemHandler={checkedItemHandler}
-                                                    key={topic.id}
+                                                    topic={reserv.topic}
+                                                    key={reserv.topic.id}
                                                     checkedItem={checkedItem}
                                                     isPreviewButton={true}
+                                                    isOnclickActivate={false}
                                                 />
-                                            ))
-                                        )
-                                    ) : (
-                                        today === "THUR" ? (
-                                            thurTopics.length === 0 ? (
-                                                <div className="text-center font-lg font-semibold">
-                                                    {t('notopic')}
-                                                </div>
-                                            ) : (
-                                                filteredThurTopicsByPaging.map((topic) => (
-                                                    <Card
-                                                        topic={topic}
-                                                        checkedItemHandler={checkedItemHandler}
-                                                        key={topic.id}
-                                                        checkedItem={checkedItem}
-                                                        isPreviewButton={true}
-                                                    />
-                                                ))
                                             )
-                                        ) : (
-                                            today === "FRI" ? (
-                                                friTopics.length === 0 ? (
-                                                    <div className="text-center font-lg font-semibold">
-                                                        {t('notopic')}
-                                                    </div>
-                                                ) : (
-                                                    filteredFriTopicsByPaging.map((topic) => (
-                                                        <Card
-                                                            topic={topic}
-                                                            checkedItemHandler={checkedItemHandler}
-                                                            key={topic.id}
-                                                            checkedItem={checkedItem}
-                                                            isPreviewButton={true}
-                                                        />
-                                                    ))
-                                                )
-                                            ) : (
-                                                today === "SAT" ? (
-                                                    satTopics.length === 0 ? (
-                                                        <div className="text-center font-lg font-semibold">
-                                                            {t('notopic')}
-                                                        </div>
-                                                    ) : (
-                                                        filteredSatTopicsByPaging.map((topic) => (
-                                                            <Card
-                                                                topic={topic}
-                                                                checkedItemHandler={checkedItemHandler}
-                                                                key={topic.id}
-                                                                checkedItem={checkedItem}
-                                                                isPreviewButton={true}
-                                                            />
-                                                        ))
-                                                    )
-                                                ) : (
-                                                    sunTopics.length === 0 ? (
-                                                        <div className="text-center font-lg font-semibold">
-                                                            {t('notopic')}
-                                                        </div>
-                                                    ) : (
-                                                        filteredSunTopicsByPaging.map((topic) => (
-                                                            <Card
-                                                                topic={topic}
-                                                                checkedItemHandler={checkedItemHandler}
-                                                                key={topic.id}
-                                                                checkedItem={checkedItem}
-                                                                isPreviewButton={true}
-                                                            />
-                                                        ))
-                                                    )
-                                                ))))))
-                        }
-                        {
-                            today === "MON" ? (
-                                monTopics.length === 0 ? (<div></div>) : (
-                                    <div className="">
-                                        <Pagination
-                                            topicsPerPage={topicsPerPage}
-                                            totalTopics={monTopics.length}
-                                            paginate={setCurrentPage}
-                                            currentPage={currentPage}
-                                        />
-                                    </div>
-                                )
+                                        )
+                                    }
 
-                            ) : (
-                                today === "TUES" ? (
-                                    tuesTopics.length === 0 ? (<div></div>) : (
-                                        <div className="">
-                                            <Pagination
-                                                topicsPerPage={topicsPerPage}
-                                                totalTopics={tuesTopics.length}
-                                                paginate={setCurrentPage}
-                                                currentPage={currentPage}
-                                            />
-                                        </div>
-                                    )
-                                ) : (
-                                    today === "WED" ? (
-                                        wedTopics.length === 0 ? (<div></div>) : (
-                                            <div className="">
-                                                <Pagination
-                                                    topicsPerPage={topicsPerPage}
-                                                    totalTopics={wedTopics.length}
-                                                    paginate={setCurrentPage}
-                                                    currentPage={currentPage}
-                                                />
-                                            </div>
-                                        )
-                                    ) : (
-                                        today === "THUR" ? (
-                                            thurTopics.length === 0 ? (<div></div>) : (
-                                                <div className="">
-                                                    <Pagination
-                                                        topicsPerPage={topicsPerPage}
-                                                        totalTopics={thurTopics.length}
-                                                        paginate={setCurrentPage}
-                                                        currentPage={currentPage}
-                                                    />
-                                                </div>
-                                            )
-                                        ) : (
-                                            today === "FRI" ? (
-                                                friTopics.length === 0 ? (<div></div>) : (
-                                                    <div className="">
-                                                        <Pagination
-                                                            topicsPerPage={topicsPerPage}
-                                                            totalTopics={friTopics.length}
-                                                            paginate={setCurrentPage}
-                                                            currentPage={currentPage}
-                                                        />
-                                                    </div>
-                                                )
-                                            ) : (
-                                                today === "SAT" ? (
-                                                    satTopics.length === 0 ? (<div></div>) : (
-                                                        <div className="">
-                                                            <Pagination
-                                                                topicsPerPage={topicsPerPage}
-                                                                totalTopics={satTopics.length}
-                                                                paginate={setCurrentPage}
-                                                                currentPage={currentPage}
-                                                            />
-                                                        </div>
-                                                    )
-                                                ) : (
-                                                    satTopics.length === 0 ? (<div></div>) : (
-                                                        <div className="">
-                                                            <Pagination
-                                                                topicsPerPage={topicsPerPage}
-                                                                totalTopics={sunTopics.length}
-                                                                paginate={setCurrentPage}
-                                                                currentPage={currentPage}
-                                                            />
-                                                        </div>
-                                                    )
-                                                ))))))
+                                </>
                         }
+
                     </CardListWrapper>
                 </div>
             }

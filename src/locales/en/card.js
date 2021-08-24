@@ -3,5 +3,5 @@ export default {
     studystarttimetextsuffix: "",
     personcounttagprefix: "A total of ",
     personcounttagsuffix: " people will participate in the study.",
-    previewbutton: "Go to preview!",
+    previewbutton: "Preview",
 }
