@@ -38,10 +38,11 @@ const StartTimeTag = styled.div`
 `;
 
 const PreviewButton = styled.button`
-  ${tw`w-full sm:w-1/3 border text-green-400 bg-blue-200 text-4xl`}
+    font-family: 'NanumGothic-ExtraBold';
+  ${tw`w-1/6 h-1/2 sm:w-1/3 border text-black bg-gray-100 m-3 p-1 text-lg rounded-lg`}
 `;
 
-function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton }) {
+function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton, isOnclickActivate }) {
   const [isSelected, setIsSelected] = useState(false);
   const { t, i18n } = useTranslation("card");
 
@@ -49,6 +50,9 @@ function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton }) {
     e.preventDefault();
     setIsSelected(!isSelected);
     checkedItemHandler(topic.id);
+  };
+  const onClickNothing = (e) => {
+
   };
 
   let studyDate = new Date(topic.studyDate);
@@ -62,7 +66,7 @@ function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton }) {
   return (
     <CardWrapper
       value={topic.id}
-      onClick={onClick}
+      onClick={isOnclickActivate ? onClick : onClickNothing}
       className={
         checkedItem === topic.id
           ? "border ring-4 ring-offset-2 ring-indigo-400 px-2 py-4"
@@ -82,9 +86,7 @@ function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton }) {
         </TopicThemeText>
         <div class="font-semibold">개최</div>
         <TopicStartTimeText>
-          {t("studystarttimetextprefix")}
-          {topic.studyDate}
-          {t("studystarttimetextsuffix")}
+          {i18next.language === "kr" ? studyDateFullString : studyDate.toDateString()}
         </TopicStartTimeText>
 
         <div class="font-semibold">인원</div>
@@ -109,3 +111,7 @@ function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton }) {
 }
 
 export default React.memo(Card);
+
+Card.defaultProps = {
+  isOnclickActivate: true
+};

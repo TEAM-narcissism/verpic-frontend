@@ -40,8 +40,8 @@ const DaySorting = ({ dayPaginate, today }) => {
       <nav>
         <PageUl className="pagination">
           {dayList.map(day => (
-            <PageLi key={day} className={today === day ? "text-pink-500 font-semibold" : "page-item"}>
-              <PageSpan className="page-link" onClick={() => dayPaginate(day)}>
+            <PageLi key={day} onClick={() => dayPaginate(day)} className={today === day ? "text-indigo-700 font-semibold" : "page-item"}>
+              <PageSpan className="page-link" >
                 {t(day)}
               </PageSpan>
             </PageLi>
