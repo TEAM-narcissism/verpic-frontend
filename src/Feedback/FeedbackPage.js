@@ -3,17 +3,15 @@ import { useTranslation } from 'react-i18next';
 
 import styled from '@emotion/styled';
 import tw from 'twin.macro';
-import Navigator from '../Component/Navigator';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 
+import Navigator from "../Common/Navigator";
 import getuser from "../Api/getuser";
 import isAuthorized from "../Auth/isAuthorized";
 import getFeedbackScript from "../Api/getFeedbackScript"
 import ChatList from '../VideoChat/ChatList';
 import { useParams } from 'react-router-dom';
-import { resolve } from 'q';
-import { getSupportedCodeFixes } from 'typescript';
 
 const FeedbackContentWrapper = styled.div`
     font-family: 'NanumGothic-Regular';
@@ -22,9 +20,6 @@ const FeedbackContentWrapper = styled.div`
     ${tw `justify-self-center mx-auto border-2 border-gray-300 w-full h-3/5 flex`}
 `;
 
-function FeedbackContent({tab}) {
-    
-}
 
 function RepeatedWord({word}) {
     return (

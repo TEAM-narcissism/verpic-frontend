@@ -17,6 +17,7 @@ import { Stomp } from "@stomp/stompjs";
 import StudyChat from "./VideoChat/StudyChat";
 import TestPage from "./Home/TestPage";
 import ReservationCardList from "./ReservationList/ReservationCardList";
+import FeedbackPage from "./Feedback/FeedbackPage"
 
 export const conn = new SockJS("http://localhost:8080/ws-stomp");
 export const stompconn = Stomp.over(conn);
