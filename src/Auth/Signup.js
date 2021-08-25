@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import Modal, { ModalProvider } from 'styled-react-modal';
 import Cookies from 'universal-cookie';
 import styled from "@emotion/styled";
@@ -9,17 +9,19 @@ import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import Navigator from "../Common/Navigator";
 import { useTranslation } from 'react-i18next';
 import generateUuid from './generateUuid';
+
 const SignupFormWrapper = styled.div`
   font-family: "NanumGothic-Regular";
-  ${tw`container ml-20  mr-10 mb-10`}
+  ${tw`container w-50vh mx-auto mb-10 bg-white`}
 `;
 
 const SignupText = styled.div`
-  ${tw`text-3xl font-bold mb-1 select-none`}
+    font-family: "NanumGothic-Regular";
+  ${tw`text-3xl font-bold pb-1 bg-gray-100 select-none`}
 `;
 
 const SignupQuestionWrapper = styled.div`
-  ${tw`border rounded shadow-lg p-10`}
+  ${tw`border rounded-lg shadow-lg p-10`}
 `;
 
 const SignupInputWrapper = styled.div`
@@ -27,7 +29,7 @@ const SignupInputWrapper = styled.div`
 `
 
 const SignupInputText = styled.div`
-    ${tw`font-semibold text-xl `}
+    ${tw`font-semibold text-lg `}
 `
 
 const SignupInput = styled.input`
@@ -38,7 +40,7 @@ const SignupOptionText = styled.div`
   ${tw`font-semibold text-xl `}
 `;
 const SignupOptionWrapper = styled.div`
-  ${tw`mx-auto mb-10`}
+  ${tw`mx-auto text-sm mb-10`}
 `;
 
 const SignupOptionSelect = styled.select`
@@ -50,10 +52,10 @@ const SignupSendButton = styled.button`
 `;
 
 const StyledModal = Modal.styled`
-font-family: "NanumGothic-Regular";
-width: 500px;
-height: 300px;
-${tw`bg-gray-100 rounded-lg `}
+    font-family: "NanumGothic-Regular";
+    width: 500px;
+    height: 300px;
+    ${tw`bg-gray-100 rounded-lg `}
 `;
 
 const ModalButton = styled.div`
@@ -62,15 +64,19 @@ const ModalButton = styled.div`
 `;
 
 function Signup() {
+    const [inputs, setInputs] = useState({
+        firstName: "",
+        lastName: "",
+        birthDate: "",
+        email: "",
+        password: "",
+        motherTongue: "",
+        studyLanguage: ""
+    });
 
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [birthDate, setBirthDate] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [Mothertongue, SetMothertongue] = useState("");
-    const [Studylanguage, SetStudylanguage] = useState("");
-
+    const { firstName, lastName, birthDate, email, password, motherTongue, studyLanguage } = inputs;
+    const [emailValid, setEmailValid] = useState(false);
+    const [passwordValid, setPasswordValid] = useState(false);
     const modalRef = useRef();
     const [isOpen, setIsOpen] = useState(false);
     const [modalContent, setModalContent] = useState("");
@@ -80,53 +86,64 @@ function Signup() {
         setIsOpen(!isOpen)
     }
 
-    const firstNameHandler = (e) => {
-        e.preventDefault();
-        setFirstName(e.target.value);
-    }
+    const onChange = (e) => {
+        const { value, name } = e.target; // 우선 e.target 에서 name 과 value 를 추출
 
-    const lastNameHandler = (e) => {
-        e.preventDefault();
-        setLastName(e.target.value);
-    }
+        if (name === "email") {
+            checkEmail(e);
+        } else if (name === "password") {
+            checkPassword(e);
+        }
 
-    const birthDateHandler = (e) => {
-        e.preventDefault();
-        setBirthDate(e.target.value);
-    }
-
-    const emailHandler = (e) => {
-        e.preventDefault();
-        setEmail(e.target.value);
-    }
-
-    const passwordHandler = (e) => {
-        e.preventDefault();
-        setPassword(e.target.value);
-    }
-
-    const mothertongueHandler = (e) => {
-        e.preventDefault();
-        SetMothertongue(e.target.value);
+        setInputs({
+            ...inputs,
+            [name]: value,
+        });
     };
 
-    const studylanguageHandler = (e) => {
-        e.preventDefault();
-        SetStudylanguage(e.target.value);
-    };
+
+    const checkPassword = (e) => {
+        var regExp = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+        const result = regExp.test(e.target.value);
+        console.log('비밀번호 유효성 검사 :: ', result);
+        setPasswordValid(result);
+
+        if (!result && e.target.value) {
+            setModalContent('비밀번호는 8자 이상이어야 하며, 숫자/대문자/소문자/특수문자를 모두 포함해야해요.');
+            e.target.value = '';
+            setIsOpen(!isOpen);
+        }
+    }
+
+    // 이메일 유효성 검사
+    const checkEmail = (e) => {
+        var regExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i
+        const result = regExp.test(e.target.value);
+        console.log('이메일 유효성 검사 :: ', result)
+        setEmailValid(result);
+
+        if (!result && e.target.value) {
+            setModalContent("이메일 형식이 유효하지 않아요.");
+            e.target.value = '';
+            setIsOpen(!isOpen);
+        }
+    }
+
 
     const allAnswerFulfiled = () => {
-        if (firstName && lastName && birthDate && email && password &&
-            Mothertongue && Studylanguage) {
+
+        if (firstName && lastName && birthDate && emailValid && password && motherTongue && studyLanguage) {
             return false;
         }
-        else { return true };
+        else {
+            return true;
+        }
     }
 
     const submitHandler = (e) => {
         e.preventDefault();
 
-        if (Mothertongue === Studylanguage) {
+        if (motherTongue === studyLanguage) {
             setModalContent(t('alert.languageerror'));
             setIsOpen(!isOpen);
             return;
@@ -138,9 +155,8 @@ function Signup() {
             birthDate: birthDate,
             email: email,
             password: password,
-            picture: "picture",
-            firstLanguage: Mothertongue,
-            learnLanguage: Studylanguage,
+            firstLanguage: motherTongue,
+            learnLanguage: studyLanguage,
         };
 
         axios
@@ -202,133 +218,142 @@ function Signup() {
 
     return (
         <ModalProvider>
+
             <Navigator focus="회원가입" />
-            <SignupFormWrapper>
-                <SignupText>{t('signuptext')}</SignupText>
+            <div class="pt-10 container h-200vh bg-gray-100 max-w-full">
 
+                <SignupFormWrapper>
+                    <SignupText>{t('signuptext')}</SignupText>
+                    <div class="text-gray-600 pb-3 bg-gray-100 select-none">{t('signupexplanation')}</div>
+                    <SignupQuestionWrapper>
+                        <SignupInputWrapper>
+                            <SignupInputText>
+                                <div class="flex">
+                                    <span class="mr-3">{t('step4')}</span>
+                                    <span>
+                                        {emailValid ?
+                                            <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
+                                        }
+                                    </span>
+                                </div>
+                            </SignupInputText>
+                            <SignupInput type="email" name="email" onBlur={onChange} required />
+                        </SignupInputWrapper>
 
-                <div class="text-gray-600 mb-3 select-none">{t('signupexplanation')}</div>
+                        <SignupInputWrapper>
+                            <SignupInputText>
+                                <div class="flex">
+                                    <span class="mr-3">{t('step5')}</span>
+                                    <span>
+                                        {passwordValid ?
+                                            <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
+                                        }
+                                    </span>
+                                </div>
+                            </SignupInputText>
+                            <SignupInput type="password" name="password" onBlur={onChange} required />
+                        </SignupInputWrapper>
 
-                <SignupQuestionWrapper>
-                    <SignupInputWrapper>
-                        <SignupInputText>
-                            <div class="flex">
-                                <span class="mr-3">Step1. {t('step1')}</span>
-                                <span>
-                                    {firstName ?
-                                        <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
-                                    }
-                                </span>
+                        <SignupInputWrapper>
+                            <SignupInputText>
+                                <div class="flex">
+                                    <span class="mr-3">{t('step1')}</span>
+                                    <span>
+                                        {firstName ?
+                                            <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
+                                        }
+                                    </span>
+                                </div>
+                            </SignupInputText>
+                            <SignupInput
+                                type="text"
+                                name="firstName"
+                                value={firstName}
+                                label="이름"
+                                onChange={onChange} required />
+                        </SignupInputWrapper>
+                        <SignupInputWrapper>
+                            <SignupInputText>
+                                <div class="flex">
+                                    <span class="mr-3">{t('step2')}</span>
+                                    <span>
+                                        {lastName ?
+                                            <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
+                                        }
+                                    </span>
+                                </div>
+                            </SignupInputText>
+                            <SignupInput type="text" name="lastName" value={lastName} onChange={onChange} required />
+                        </SignupInputWrapper>
+                        <SignupInputWrapper>
+                            <SignupInputText>
+                                <div class="flex">
+                                    <span class="mr-3">{t('step3')}</span>
+                                    <span>
+                                        {birthDate ?
+                                            <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
+                                        }
+                                    </span>
+                                </div>
+                            </SignupInputText>
+                            <SignupInput type="date" name="birthDate" onChange={onChange} required />
+                        </SignupInputWrapper>
+
+                        <SignupOptionWrapper>
+                            <SignupOptionText>
+                                <div class="flex">
+                                    <span class="mr-3">{t('step7')}</span>
+                                    <span>
+                                        {motherTongue ?
+                                            <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
+                                        }
+                                    </span>
+                                </div>
+
+                            </SignupOptionText>
+                            <SignupOptionSelect name="motherTongue" onChange={onChange}>
+                                <option value="">{t('languageselection.selection')}</option>
+                                <option value="KOR">{t('languageselection.kor')}</option>
+                                <option value="ENG">{t('languageselection.eng')}</option>
+                            </SignupOptionSelect>
+                        </SignupOptionWrapper>
+
+                        <SignupOptionWrapper>
+                            <SignupOptionText>
+                                <div class="flex">
+                                    <span class="mr-3">{t('step8')}</span>
+                                    <span>
+                                        {studyLanguage ?
+                                            <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
+                                        }
+                                    </span>
+                                </div>
+                            </SignupOptionText>
+                            <SignupOptionSelect name="studyLanguage" onChange={onChange}>
+                                <option value="">{t('languageselection.selection')}</option>
+                                <option value="KOR">{t('languageselection.kor')}</option>
+                                <option value="ENG">{t('languageselection.eng')}</option>
+                            </SignupOptionSelect>
+                        </SignupOptionWrapper>
+                        <StyledModal
+                            isOpen={isOpen}
+                            onBackgroundClick={toggleModal}
+                            onEscapeKeydown={toggleModal}
+                        >
+
+                            <div class="text-center mt-28 text-xl mx-3" ref={modalRef}>{modalContent}</div>
+                            <div class="text-align">
+                                <ModalButton onClick={toggleModal}>{t('modalbutton')}</ModalButton>
                             </div>
-                        </SignupInputText>
-                        <SignupInput type="text" name="firstName" value={firstName} onChange={firstNameHandler} required />
-                    </SignupInputWrapper>
-                    <SignupInputWrapper>
-                        <SignupInputText>
-                            <div class="flex">
-                                <span class="mr-3">Step2. {t('step2')}</span>
-                                <span>
-                                    {lastName ?
-                                        <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
-                                    }
-                                </span>
-                            </div>
-                        </SignupInputText>
-                        <SignupInput type="text" name="lastName" value={lastName} onChange={lastNameHandler} required />
-                    </SignupInputWrapper>
-                    <SignupInputWrapper>
-                        <SignupInputText>
-                            <div class="flex">
-                                <span class="mr-3">Step3. {t('step3')}</span>
-                                <span>
-                                    {birthDate ?
-                                        <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
-                                    }
-                                </span>
-                            </div>
-                        </SignupInputText>
-                        <SignupInput type="date" name="birthDate" value={birthDate} onChange={birthDateHandler} required />
-                    </SignupInputWrapper>
-                    <SignupInputWrapper>
-                        <SignupInputText>
-                            <div class="flex">
-                                <span class="mr-3">Step4. {t('step4')}</span>
-                                <span>
-                                    {email ?
-                                        <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
-                                    }
-                                </span>
-                            </div>
-                        </SignupInputText>
-                        <SignupInput type="email" name="email" value={email} onChange={emailHandler} required />
-                    </SignupInputWrapper>
-                    <SignupInputWrapper>
-                        <SignupInputText>
-                            <div class="flex">
-                                <span class="mr-3">Step5. {t('step5')}</span>
-                                <span>
-                                    {password ?
-                                        <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
-                                    }
-                                </span>
-                            </div>
-                        </SignupInputText>
-                        <SignupInput type="password" name="password" value={password} onChange={passwordHandler} required />
-                    </SignupInputWrapper>
-                    <SignupOptionWrapper>
-                        <SignupOptionText>
-                            <div class="flex">
-                                <span class="mr-3">Step7. {t('step7')}</span>
-                                <span>
-                                    {Mothertongue ?
-                                        <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
-                                    }
-                                </span>
-                            </div>
+                        </StyledModal>
+                        <SignupSendButton disabled={allAnswerFulfiled()} className={allAnswerFulfiled() ? "bg-gray-400 cursor-default" : "bg-yellow-400"} onClick={submitHandler}>
+                            {allAnswerFulfiled() ? t('isallanswerfulfilled.no') : t('isallanswerfulfilled.yes')}
+                        </SignupSendButton>
 
-                        </SignupOptionText>
-                        <SignupOptionSelect name="mothertongue" value={Mothertongue} onChange={mothertongueHandler}>
-                            <option value="">{t('languageselection.selection')}</option>
-                            <option value="KOR">{t('languageselection.kor')}</option>
-                            <option value="ENG">{t('languageselection.eng')}</option>
-                        </SignupOptionSelect>
-                    </SignupOptionWrapper>
+                    </SignupQuestionWrapper>
 
-                    <SignupOptionWrapper>
-                        <SignupOptionText>
-                            <div class="flex">
-                                <span class="mr-3">Step8. {t('step8')}</span>
-                                <span>
-                                    {Studylanguage ?
-                                        <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
-                                    }
-                                </span>
-                            </div>
-                        </SignupOptionText>
-                        <SignupOptionSelect name="studylanguage" value={Studylanguage} onChange={studylanguageHandler}>
-                            <option value="">{t('languageselection.selection')}</option>
-                            <option value="KOR">{t('languageselection.kor')}</option>
-                            <option value="ENG">{t('languageselection.eng')}</option>
-                        </SignupOptionSelect>
-                    </SignupOptionWrapper>
-                    <StyledModal
-                        isOpen={isOpen}
-                        onBackgroundClick={toggleModal}
-                        onEscapeKeydown={toggleModal}
-                    >
-
-                        <div class="text-center mt-28 text-xl" ref={modalRef}>{modalContent}</div>
-                        <div class="text-align">
-                            <ModalButton onClick={toggleModal}>{t('modalbutton')}</ModalButton>
-                        </div>
-                    </StyledModal>
-                    <SignupSendButton disabled={allAnswerFulfiled()} className={allAnswerFulfiled() ? "bg-gray-400 cursor-default" : "bg-yellow-400"} onClick={submitHandler}>
-                        {allAnswerFulfiled() ? t('isallanswerfulfilled.no') : t('isallanswerfulfilled.yes')}
-                    </SignupSendButton>
-
-                </SignupQuestionWrapper>
-
-            </SignupFormWrapper >
+                </SignupFormWrapper >
+            </div>
         </ModalProvider>
     );
 }

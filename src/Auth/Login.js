@@ -89,6 +89,18 @@ function Login() {
     });
   };
 
+  const allAnswerFulfiled = () => {
+    if (inputs.email && inputs.password) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+  const nothing = () => {
+
+  }
+
   const debounceFunc = debounce(onChange, 300);
 
   return (
@@ -100,7 +112,7 @@ function Login() {
           name="email"
           placeholder="이메일"
           onChange={debounceFunc}
-          ref={emailRef}
+
         />
         <InputWithLabel
           label="Password"
@@ -108,9 +120,9 @@ function Login() {
           type="password"
           placeholder="비밀번호"
           onChange={debounceFunc}
-          ref={passwordRef}
+
         />
-        <AuthButton onClick={postToLogin}>{t('login')}</AuthButton>
+        <AuthButton onClick={allAnswerFulfiled() ? postToLogin : nothing}>{t('login')}</AuthButton>
 
         <GoogleLogin className="w-full mt-2 font-semibold border-2 border-black rounded-lg"
           clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
