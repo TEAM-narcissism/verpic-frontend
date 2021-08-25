@@ -10,43 +10,43 @@ import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import Navigator from "../Common/Navigator";
 import { useTranslation } from 'react-i18next';
 
-const SignupFormWrapper = styled.div`
+const EditUserInfoWrapper = styled.div`
   font-family: "NanumGothic-Regular";
   ${tw`container ml-20  mr-10 mb-10`}
 `;
 
-const SignupText = styled.div`
+const EditUserInfoText = styled.div`
   ${tw`text-3xl font-bold mb-1 select-none`}
 `;
 
-const SignupQuestionWrapper = styled.div`
+const EditUserInfoQuestionWrapper = styled.div`
   ${tw`border rounded shadow-lg p-10`}
 `;
 
-const SignupInputWrapper = styled.div`
+const EditUserInfoInputWrapper = styled.div`
     ${tw`mx-auto mb-10`}
 `
 
-const SignupInputText = styled.div`
+const EditUserInfoInputText = styled.div`
     ${tw`font-semibold text-xl `}
 `
 
-const SignupInput = styled.input`
+const EditUserInfoInput = styled.input`
     ${tw`ml-10 border rounded mt-4`}
 `
 
-const SignupOptionText = styled.div`
+const EditUserInfoOptionText = styled.div`
   ${tw`font-semibold text-xl `}
 `;
-const SignupOptionWrapper = styled.div`
+const EditUserInfoOptionWrapper = styled.div`
   ${tw`mx-auto mb-10`}
 `;
 
-const SignupOptionSelect = styled.select`
+const EditUserInfoOptionSelect = styled.select`
   ${tw`ml-10 border p-3 rounded mt-4`}
 `;
 
-const SignupSendButton = styled.button`
+const EditUserInfoSendButton = styled.button`
   ${tw`border w-full rounded-lg p-3  text-white font-bold`}
 `;
 
@@ -201,15 +201,15 @@ function EditUserInfo() {
     return (
         <ModalProvider>
             <Navigator />
-            <SignupFormWrapper>
-                <SignupText>회원 정보 수정</SignupText>
+            <EditUserInfoWrapper>
+                <EditUserInfoText>회원 정보 수정</EditUserInfoText>
 
 
                 <div class="text-gray-600 mb-3 select-none">회원님의 성, 이름, 생일, 모국어, 학습 언어를 수정하실 수 있습니다.</div>
 
-                <SignupQuestionWrapper>
-                    <SignupInputWrapper>
-                        <SignupInputText>
+                <EditUserInfoQuestionWrapper>
+                    <EditUserInfoInputWrapper>
+                        <EditUserInfoInputText>
                             <div class="flex">
                                 <span class="mr-3">Step1</span>
                                 <span>
@@ -218,11 +218,11 @@ function EditUserInfo() {
                                     }
                                 </span>
                             </div>
-                        </SignupInputText>
-                        <SignupInput type="text" name="firstName" value={firstName} onChange={firstNameHandler} required />
-                    </SignupInputWrapper>
-                    <SignupInputWrapper>
-                        <SignupInputText>
+                        </EditUserInfoInputText>
+                        <EditUserInfoInput type="text" name="firstName" value={firstName} onChange={firstNameHandler} required />
+                    </EditUserInfoInputWrapper>
+                    <EditUserInfoInputWrapper>
+                        <EditUserInfoInputText>
                             <div class="flex">
                                 <span class="mr-3">Step2</span>
                                 <span>
@@ -231,11 +231,11 @@ function EditUserInfo() {
                                     }
                                 </span>
                             </div>
-                        </SignupInputText>
-                        <SignupInput type="text" name="lastName" value={lastName} onChange={lastNameHandler} required />
-                    </SignupInputWrapper>
-                    <SignupInputWrapper>
-                        <SignupInputText>
+                        </EditUserInfoInputText>
+                        <EditUserInfoInput type="text" name="lastName" value={lastName} onChange={lastNameHandler} required />
+                    </EditUserInfoInputWrapper>
+                    <EditUserInfoInputWrapper>
+                        <EditUserInfoInputText>
                             <div class="flex">
                                 <span class="mr-3">Step3</span>
                                 <span>
@@ -244,11 +244,11 @@ function EditUserInfo() {
                                     }
                                 </span>
                             </div>
-                        </SignupInputText>
-                        <SignupInput type="date" name="birthDate" value={birthDate} onChange={birthDateHandler} required />
-                    </SignupInputWrapper>
-                    {/* <SignupInputWrapper>
-                        <SignupInputText>
+                        </EditUserInfoInputText>
+                        <EditUserInfoInput type="date" name="birthDate" value={birthDate} onChange={birthDateHandler} required />
+                    </EditUserInfoInputWrapper>
+                    {/* <EditUserInfoInputWrapper>
+                        <EditUserInfoInputText>
                             <div class="flex">
                                 <span class="mr-3">Step4. {t('step4')}</span>
                                 <span>
@@ -257,11 +257,11 @@ function EditUserInfo() {
                                     }
                                 </span>
                             </div>
-                        </SignupInputText>
-                        <SignupInput type="email" name="email" value={email} onChange={emailHandler} required />
-                    </SignupInputWrapper> */}
-                    {/* <SignupInputWrapper>
-                        <SignupInputText>
+                        </EditUserInfoInputText>
+                        <EditUserInfoInput type="email" name="email" value={email} onChange={emailHandler} required />
+                    </EditUserInfoInputWrapper> */}
+                    {/* <EditUserInfoInputWrapper>
+                        <EditUserInfoInputText>
                             <div class="flex">
                                 <span class="mr-3">Step5. {t('step5')}</span>
                                 <span>
@@ -270,11 +270,11 @@ function EditUserInfo() {
                                     }
                                 </span>
                             </div>
-                        </SignupInputText>
-                        <SignupInput type="password" name="password" value={password} onChange={passwordHandler} required />
-                    </SignupInputWrapper> */}
-                    <SignupOptionWrapper>
-                        <SignupOptionText>
+                        </EditUserInfoInputText>
+                        <EditUserInfoInput type="password" name="password" value={password} onChange={passwordHandler} required />
+                    </EditUserInfoInputWrapper> */}
+                    <EditUserInfoOptionWrapper>
+                        <EditUserInfoOptionText>
                             <div class="flex">
                                 <span class="mr-3">Step7</span>
                                 <span>
@@ -284,16 +284,16 @@ function EditUserInfo() {
                                 </span>
                             </div>
 
-                        </SignupOptionText>
-                        <SignupOptionSelect name="mothertongue" value={Mothertongue} onChange={mothertongueHandler}>
+                        </EditUserInfoOptionText>
+                        <EditUserInfoOptionSelect name="mothertongue" value={Mothertongue} onChange={mothertongueHandler}>
                             <option value="">selection</option>
                             <option value="KOR">korean</option>
                             <option value="ENG">english</option>
-                        </SignupOptionSelect>
-                    </SignupOptionWrapper>
+                        </EditUserInfoOptionSelect>
+                    </EditUserInfoOptionWrapper>
 
-                    <SignupOptionWrapper>
-                        <SignupOptionText>
+                    <EditUserInfoOptionWrapper>
+                        <EditUserInfoOptionText>
                             <div class="flex">
                                 <span class="mr-3">Step8.</span>
                                 <span>
@@ -302,13 +302,13 @@ function EditUserInfo() {
                                     }
                                 </span>
                             </div>
-                        </SignupOptionText>
-                        <SignupOptionSelect name="studylanguage" value={Studylanguage} onChange={studylanguageHandler}>
+                        </EditUserInfoOptionText>
+                        <EditUserInfoOptionSelect name="studylanguage" value={Studylanguage} onChange={studylanguageHandler}>
                             <option value="">selection</option>
                             <option value="KOR">korean</option>
                             <option value="ENG">english</option>
-                        </SignupOptionSelect>
-                    </SignupOptionWrapper>
+                        </EditUserInfoOptionSelect>
+                    </EditUserInfoOptionWrapper>
                     <StyledModal
                         isOpen={isOpen}
                         onBackgroundClick={toggleModal}
@@ -320,13 +320,13 @@ function EditUserInfo() {
                             <ModalButton onClick={toggleModal}>OK</ModalButton>
                         </div>
                     </StyledModal>
-                    <SignupSendButton disabled={allAnswerFulfiled()} className={allAnswerFulfiled() ? "bg-gray-400 cursor-default" : "bg-yellow-400"} onClick={submitHandler}>
+                    <EditUserInfoSendButton disabled={allAnswerFulfiled()} className={allAnswerFulfiled() ? "bg-gray-400 cursor-default" : "bg-yellow-400"} onClick={submitHandler}>
                         {allAnswerFulfiled() ? "Fill out all the information" : "Edit"}
-                    </SignupSendButton>
+                    </EditUserInfoSendButton>
 
-                </SignupQuestionWrapper>
+                </EditUserInfoQuestionWrapper>
 
-            </SignupFormWrapper >
+            </EditUserInfoWrapper >
         </ModalProvider>
     );
 }
