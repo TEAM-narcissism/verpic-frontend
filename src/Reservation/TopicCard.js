@@ -29,20 +29,8 @@ const TopicStartTimeText = styled.div`
   ${tw`leading-normal text-gray-700 mb-2`}
 `;
 
-const PersonCountTag = styled.div`
-  ${tw`inline-block bg-gray-200 rounded-full px-3 py-1 font-semibold text-gray-700 mr-2`}
-`;
 
-const StartTimeTag = styled.div`
-  ${tw`inline-block bg-gray-200 rounded-full px-2 py-1 font-semibold text-sm text-gray-700 mr-2 mb-5`}
-`;
-
-const PreviewButton = styled.button`
-    font-family: 'NanumGothic-ExtraBold';
-  ${tw`w-1/6 h-1/2 sm:w-1/3 border text-black bg-gray-100 m-3 p-1 text-lg rounded-lg`}
-`;
-
-function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton, isOnclickActivate }) {
+function Card({ topic, checkedItemHandler, checkedItem }) {
   const [isSelected, setIsSelected] = useState(false);
   const { t, i18n } = useTranslation("card");
 
@@ -50,9 +38,6 @@ function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton, isOncli
     e.preventDefault();
     setIsSelected(!isSelected);
     checkedItemHandler(topic.id);
-  };
-  const onClickNothing = (e) => {
-
   };
 
   let studyDate = new Date(topic.studyDate);
@@ -66,7 +51,7 @@ function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton, isOncli
   return (
     <CardWrapper
       value={topic.id}
-      onClick={isOnclickActivate ? onClick : onClickNothing}
+      onClick={onClick}
       className={
         checkedItem === topic.id
           ? "border ring-4 ring-offset-2 ring-indigo-400 px-2 py-4"
@@ -97,15 +82,7 @@ function Card({ topic, checkedItemHandler, checkedItem, isPreviewButton, isOncli
           {t("personcounttagsuffix")}
         </TopicStartTimeText>
       </TopicContentWrapper>
-      {isPreviewButton ? (
-        <PreviewButton
-          onClick={() => (window.location.href = "/preview/" + topic.id)}
-        >
-          {t("previewbutton")}
-        </PreviewButton>
-      ) : (
-        ""
-      )}
+
     </CardWrapper>
   );
 }

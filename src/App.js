@@ -7,7 +7,7 @@ import Logout from "./Auth/Logout";
 import MainPage from "./Home/MainPage";
 import MatchingPost from "./Api/MatchingPost";
 import Mypage from "./User/Mypage";
-import Preview from "./Component/Preview";
+import Preview from "./Preview/Preview";
 import PrivateRoute from "./Route/PrivateRoute";
 import PublicRoute from "./Route/PublicRoute";
 import React from "react";
@@ -15,7 +15,7 @@ import Signup from "./Auth/Signup";
 import { Stomp } from "@stomp/stompjs";
 import StudyChat from "./VideoChat/StudyChat";
 import TestPage from "./Home/TestPage";
-import UserCardList from "./Component/UserCardList";
+import ReservationCardList from "./ReservationList/ReservationCardList";
 
 export const conn = new SockJS("http://localhost:8080/ws-stomp");
 export const stompconn = Stomp.over(conn);
@@ -27,7 +27,7 @@ function App() {
 
       <PrivateRoute component={Logout} path="/logout" exact />
       <PrivateRoute component={StudyChat} path="/studychat/:localRoom" />
-      <PrivateRoute component={UserCardList} path="/topic/reservation" exact />
+      <PrivateRoute component={ReservationCardList} path="/topic/reservation" exact />
       <PrivateRoute component={MatchingPost} path="/matching" exact />
       <PrivateRoute component={Mypage} path="/profile/:id" />
       <PrivateRoute component={MainPage} path="/" exact />

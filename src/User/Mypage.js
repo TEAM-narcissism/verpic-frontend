@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
-import Navigator from "../Component/Navigator";
+import Navigator from "../Common/Navigator";
 import tw from 'twin.macro';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -150,7 +150,7 @@ function Mypage() {
                     {reservation.studyDate}
                   </div>
 
-                  {reservation.isSoldOut ?
+                  {reservation.soldOut ?
                     <>
                       <div>
                         <span>상대방과의 매칭이 완료되었어요.</span>

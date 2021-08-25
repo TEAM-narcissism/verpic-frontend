@@ -6,7 +6,7 @@ import tw from "twin.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-import Navigator from "../Component/Navigator";
+import Navigator from "../Common/Navigator";
 import { useTranslation } from 'react-i18next';
 import generateUuid from './generateUuid';
 const SignupFormWrapper = styled.div`
