@@ -1,6 +1,6 @@
-import CardList from "../Component/CardList";
+import CardList from "../Reservation/TopicCardList";
 import { ModalProvider } from "styled-react-modal";
-import Navigator from "../Component/Navigator";
+import Navigator from "../Common/Navigator";
 import React, { useState, useEffect, createContext } from "react";
 import styled from "@emotion/styled";
 import tw from "twin.macro";

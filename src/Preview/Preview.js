@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import Axios from "axios";
 import ExpressionList from "./ExpressionList";
-import Navigator from "../Component/Navigator";
+import Navigator from "../Common/Navigator";
 import PreviewandDetail from "./PreviewandDetail";
 import UserAnswerList from "./UserAnswerList";
 import { useParams } from "react-router";

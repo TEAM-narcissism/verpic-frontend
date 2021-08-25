@@ -7,7 +7,7 @@ import Cookies from "universal-cookie";
 import InputWithLabel from "./InputWithLabel";
 import axios from "axios";
 import { debounce } from "lodash";
-import Navigator from "../Component/Navigator";
+import Navigator from "../Common/Navigator";
 import GoogleLogin from "react-google-login";
 import generateUuid from "./generateUuid";
 
