@@ -3,15 +3,16 @@ import { useTranslation } from 'react-i18next';
 
 import styled from '@emotion/styled';
 import tw from 'twin.macro';
-import Card from './Card';
-import DaySorting from './DaySorting';
-import Pagination from './Pagination';
-import Navigator from './Navigator';
+
+import DaySorting from '../Common/DaySorting';
+
+import Navigator from '../Common/Navigator';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 
 import getuser from "../Api/getuser";
 import isAuthorized from "../Auth/isAuthorized";
+import ReservationCard from './ReservationCard';
 
 const CardListText = styled.div`
 
@@ -23,18 +24,15 @@ const CardListWrapper = styled.div`
     ${tw`container mx-auto w-75vh`}
 `;
 
-function UserCardList(props) {
+function ReservationCardList(props) {
     const [reservation, setReservation] = useState();
-    const [checkedItem, setCheckedItem] = useState("");
     const [filteredReservList, setFilteredReservList] = useState();
     const [today, setToday] = useState(getTodayLabel());
     const [currentPage, setCurrentPage] = useState(1);
     const [topicsPerPage, setTopicsPerPage] = useState(5);
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState();
-
-
-
+    const [matchList, setMatchList] = useState();
     const cookies = new Cookies();
     const token = cookies.get("vtoken");
     const { t, i18n } = useTranslation('cardlist');
@@ -53,8 +51,8 @@ function UserCardList(props) {
         }
     })
 
-    useEffect(() => {
-        axios.get("/reservation/user/", {
+    useEffect(async () => {
+        await axios.get("/reservation/user/", {
             headers: {
                 Authorization: token,
             }
@@ -68,8 +66,8 @@ function UserCardList(props) {
                             reserv => reserv.topic.studyDay === today
                         )
                     );
-
                     setIsLoading(false);
+
                 }
             })
             .catch((
@@ -80,6 +78,27 @@ function UserCardList(props) {
 
     }, []);
 
+    useEffect(async () => {
+
+        await axios.get('/matching/login-user/', {
+            headers: {
+                Authorization: token,
+            }
+        })
+            .then((res) => {
+                if (res.data) {
+                    setMatchList(res.data);
+                    console.log(res.data);
+
+                }
+            })
+            .catch((
+                err => {
+                    window.location.href = '/logout';
+                }
+            ))
+
+    }, []);
 
 
 
@@ -102,7 +121,6 @@ function UserCardList(props) {
     }
 
 
-
     function setCurrentPageAndDay(day) {
         setToday(day);
         setFilteredReservList(
@@ -114,7 +132,7 @@ function UserCardList(props) {
     }
 
     return (
-        <>
+        <div class="container max-w-full h-200vh bg-gray-100">
             <Navigator user={user} focus="신청목록" />
             {isLoading ? <div className="text-center">{t('isloading')}</div> :
                 <div>
@@ -124,7 +142,7 @@ function UserCardList(props) {
                         <DaySorting dayPaginate={setCurrentPageAndDay} today={today} />
                         {
                             filteredReservList.length === 0 ?
-                                <div class="text-center p-2">
+                                <div class="text-center font-semibold p-2">
                                     해당 요일에 예약한 토픽이 없어요.
 
                                 </div> :
@@ -133,15 +151,17 @@ function UserCardList(props) {
                                     {
                                         filteredReservList.map(
                                             reserv => (
-                                                <Card
-                                                    topic={reserv.topic}
-                                                    key={reserv.topic.id}
-                                                    checkedItem={checkedItem}
-                                                    isPreviewButton={true}
-                                                    isOnclickActivate={false}
-                                                />
-                                            )
-                                        )
+                                                <>
+                                                    <ReservationCard
+                                                        topic={reserv.topic}
+                                                        reservation={reserv}
+                                                        matchList={matchList}
+                                                        key={reserv.id}
+
+                                                    />
+
+                                                </>
+                                            ))
                                     }
 
                                 </>
@@ -150,8 +170,8 @@ function UserCardList(props) {
                     </CardListWrapper>
                 </div>
             }
-        </>
+        </div>
     );
 }
 
-export default React.memo(UserCardList);
+export default React.memo(ReservationCardList);
