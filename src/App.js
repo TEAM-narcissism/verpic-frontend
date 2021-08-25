@@ -11,6 +11,7 @@ import MainPage from './Home/MainPage';
 import Logout from './Auth/Logout';
 import Signup from './Auth/Signup';
 import Preview from './Component/Preview';
+import FeedbackPage from './Feedback/FeedbackPage'
 
 import { Stomp } from '@stomp/stompjs';
 import * as SockJS from "sockjs-client";
@@ -41,6 +42,7 @@ function App() {
       <PrivateRoute component={MainPage} path="/" exact />
       <PrivateRoute component={TestPage} path="/test" exact />
       <PrivateRoute component={Preview} path="/preview/:previewId" exact />
+      <PrivateRoute component={FeedbackPage} path="/feedback/:matchId" excat/>
 
       {/* 로그인 / 로그아웃에 관계 없이 접근 가능한 영역 */}
       {/* <Route component={MainPage} path="/" exact /> */}

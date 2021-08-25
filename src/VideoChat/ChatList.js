@@ -4,11 +4,11 @@ import styled from "@emotion/styled";
 import tw from "twin.macro";
 
 const ChatWrapper = styled.div`
-  ${tw`ml-2 py-1 px-4 bg-gray-400 text-sm rounded-br-3xl font-semibold rounded-tr-3xl rounded-tl-xl`}
+  ${tw`mx-2 py-1 px-4 bg-gray-400 text-sm rounded-br-3xl font-semibold rounded-tr-3xl rounded-tl-xl`}
 `;
 
 const MyChatWrapper = styled.div`
-  ${tw`mr-2 py-1 px-4 bg-indigo-300 text-sm rounded-bl-3xl font-semibold rounded-tl-3xl rounded-tr-xl `}
+  ${tw`mx-2 py-1 px-4 bg-indigo-300 text-sm rounded-bl-3xl font-semibold rounded-tl-3xl rounded-tr-xl `}
 `;
 
 const NoticeWrapper = styled.p`
@@ -64,7 +64,7 @@ const ChatListWrapper = styled.div`
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 4px;
   }
-  ${tw`flex flex-col mt-2 overflow-y-auto gap-1`}
+  ${tw`flex flex-col mt-2 overflow-y-auto gap-1 w-full`}
 `;
 
 
@@ -79,27 +79,30 @@ function ChatList({ chats, myId }) {
 
     const scroll = scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
     scrollRef.current.scrollTo(0, scroll);
-    
-    if (before.current > 0) {
-      if (chats[before.current].userId === chats[before.current - 1].userId) {
-        setSeccesive(succesive => succesive.concat(true))
+    console.log("ggggg", before.current, chats.length)
+    while (before.current < chats.length) {
+      if (before.current > 0) {
+        if (chats[before.current] && chats[before.current].userId === chats[before.current - 1].userId) {
+          setSeccesive(succesive => succesive.concat(true))
+        }
+        else {
+          setSeccesive(succesive => succesive.concat(false))
+        }
+        before.current += 1;
       }
       else {
-        setSeccesive(succesive => succesive.concat(false))
+        before.current += 1;
       }
-      before.current += 1;
     }
-    else {
-      before.current += 1;
-    }
+    
     
   }, [chats]);
   
   return (
     <ChatListWrapper ref={scrollRef}>
-      {chats.map((chat) => (
+      {chats ? chats.map((chat) => (
         <Chat chat={chat} myId={myId} key={chat.id} succesive={succesive[chat.id - 1] ? succesive[chat.id - 1] : false}/>
-      ))}
+      )) : null}
       <div ></div>
     </ChatListWrapper>
   );
