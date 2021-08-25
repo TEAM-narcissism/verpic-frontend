@@ -43,19 +43,19 @@ export default class PreviewandDetail extends Component {
       // arrows: true,
     };
     return (
-      <div className="border m-6 object-fill">
+      <div className="border m-6 object-fill h-96 mt-20 rounded-lg">
         <Slider {...settings}>
           <div onClick={() => changeDetailTopic(0)} className="text-center pt-4 pb-4">
-            <div className="text-2xl"> 본문 </div>
-            <h3>{preview.context}</h3>
+            <div className="text-3xl mt-16 font-bold"> 본문 </div>
+            <div className="text-xl mt-10">{preview.context}</div>
           </div>
           <div onClick={() => changeDetailTopic(initialId)} className="text-center pt-4 pb-4">
-            <div className="text-2xl"> 한국어 상세 토픽 </div>
-            <h3>{detailTopicList[0].context}</h3>
+            <div className="text-3xl mt-16 font-bold"> 한국어 상세 토픽 </div>
+            <div className="text-xl mt-10">{detailTopicList[0].context}</div>
           </div>
           <div onClick={() => changeDetailTopic(initialId + 1)} className="text-center pt-4 pb-4">
-            <div className="text-2xl"> 영어 상세 토픽</div>
-            <h3>{detailTopicList[0].context}</h3>
+            <div className="text-3xl mt-16 font-bold"> 영어 상세 토픽</div>
+            <div className="text-xl mt-10">{detailTopicList[0].context}</div>
           </div>
         </Slider>
       </div>
