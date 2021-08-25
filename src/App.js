@@ -8,6 +8,7 @@ import MainPage from "./Home/MainPage";
 import MatchingPost from "./Api/MatchingPost";
 import Mypage from "./User/Mypage";
 import Preview from "./Preview/Preview";
+import EditUserInfo from "./User/EditUserInfo";
 import PrivateRoute from "./Route/PrivateRoute";
 import PublicRoute from "./Route/PublicRoute";
 import React from "react";
@@ -33,6 +34,7 @@ function App() {
       <PrivateRoute component={MainPage} path="/" exact />
       <PrivateRoute component={TestPage} path="/test" exact />
       <PrivateRoute component={Preview} path="/preview/:previewId" exact />
+      <PrivateRoute component={EditUserInfo} path="/edit/:userId" exact />
 
       {/* 로그인 / 로그아웃에 관계 없이 접근 가능한 영역 */}
       {/* <Route component={MainPage} path="/" exact /> */}

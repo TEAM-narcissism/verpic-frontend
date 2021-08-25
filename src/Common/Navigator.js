@@ -180,6 +180,9 @@ function Navigator({ user, focus }) {
                   <DropDownItem onClick={() => (window.location.href = "/profile/" + user.id)}>
                     {t('mypage')}
                   </DropDownItem>
+                  <DropDownItem onClick={() => { window.location.href = "/edit/" + user.id }}>
+                    {t('editUser')}
+                  </DropDownItem>
                   <DropDownItem
                     onClick={() => (window.location.href = "/logout")}
                   >
