@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
-import Navigator from "../Component/Navigator";
+import Navigator from "../Common/Navigator";
 import tw from 'twin.macro';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import Cookies from "universal-cookie";
+import getuser from "../Api/getuser";
 
 
 const ProfileWrapper = styled.div`
@@ -37,8 +39,13 @@ export const ProfileAvatar = styled.div`
 function Mypage() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoding] = useState(true);
-  const [reservationList, setReservationList] = useState();
+  const [reservationList, setReservationList] = useState([{
+    id: "", isSoldOut: "", korTheme: "", engTheme: "", studyDate: ""
+  },
+  ]);
   const [matchList, setMatchList] = useState();
+  const cookies = new Cookies();
+  const token = cookies.get('vtoken');
 
 
   const { id } = useParams();
@@ -55,30 +62,42 @@ function Mypage() {
       }
     })
 
-
     window.open('/studychat/' + matchId, '_blank')
-    // window.location.href = '/studychat/' + matchId;
 
   }
 
   useEffect(async () => {
-    await axios.get("/users/" + id)
+    await getuser()
       .then((res) => {
-        if (res.data) {
-          console.log(res.data);
-          setUser(res.data)
+        if (res) {
+          console.log(res);
+          setUser(res)
+
+          if (res.id != id) {
+            window.location.href = '/';
+          }
 
         }
       });
 
-    await axios.get("/reservation/user/" + id)
+    await axios.get("/reservation/user/", {
+      headers: {
+        Authorization: token,
+      }
+    })
       .then((res) => {
+        // console.log(res);
         if (res.data) {
           setReservationList(res.data);
           console.log(res.data);
-
+          setIsLoding(false);
         }
       })
+      .catch((
+        err => {
+          window.location.href = '/logout';
+        }
+      ))
 
     await axios.get('/matching/user/' + id)
       .then((res) => {
@@ -118,15 +137,17 @@ function Mypage() {
             <div class=" mb-2">{user.firstName}{user.lastName}님이 신청하신 스터디 현황이에요.</div>
 
             <ReserveListWrapper>
+              {reservationList.length === 0 ? <div class="text-center p-2">예약한 스터디가 없어요.</div> : <></>}
+
               {reservationList.map((reservation) => (
 
                 <div class="text-center mb-5 mt-5" key={reservation.id}>
                   <div class="font-semibold text-xl">
-                    {reservation.topic.theme}
+                    {reservation.topic.korTheme}
                   </div>
 
                   <div>
-                    {reservation.topic.studyDate}
+                    {reservation.studyDate}
                   </div>
 
                   {reservation.soldOut ?
@@ -151,7 +172,8 @@ function Mypage() {
 
                 </div>
 
-              ))}
+              )
+              )}
             </ReserveListWrapper>
 
 

@@ -7,12 +7,12 @@ import Slider from "react-slick";
 
 function Expression({ expression }) {
   return (
-    <div className="pt-4 pb-4 text-xl">
-      <div className="pt-2 pb-2">단어: {expression.word}</div>
-      <div className="pt-2 pb-2">뜻: {expression.meaning}</div>
-      <div className="pt-2 pb-2">예문: {expression.example}</div>
-      <div className="pt-2 pb-2">
-        발음:
+    <div className="pt-4 pb-4 pl-2 text-xl">
+      <div className="pt-2 pb-2 pl-2"><strong>단어: </strong>{expression.word}</div>
+      <div className="pt-2 pb-2 pl-2"><strong>뜻: </strong>{expression.meaning}</div>
+      <div className="pt-2 pb-2 pl-2"><strong>예문: </strong>{expression.example}</div>
+      <div className="pt-2 pb-2 pl-2">
+        <strong>발음:</strong>
         <audio controls className="pt-2 pb-2">
           <source src={"data:audio/mpeg;base64," + expression.pronounce} type="audio/mpeg" />
           <p>Your browser does not support the audio element.!</p>

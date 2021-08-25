@@ -6,9 +6,9 @@ import tw from "twin.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-import Navigator from "../Component/Navigator";
+import Navigator from "../Common/Navigator";
 import { useTranslation } from 'react-i18next';
-
+import generateUuid from './generateUuid';
 const SignupFormWrapper = styled.div`
   font-family: "NanumGothic-Regular";
   ${tw`container ml-20  mr-10 mb-10`}
@@ -163,17 +163,6 @@ function Signup() {
                         const cookies = new Cookies();
                         cookies.set("vtoken", accessToken, { path: "/" });
                         window.location = "/";
-
-                        function generateUuid() {
-                            return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-                                /[xy]/g,
-                                function (c) {
-                                    let r = (Math.random() * 16) | 0,
-                                        v = c === "x" ? r : (r & 0x3) | 0x8;
-                                    return v.toString(16);
-                                }
-                            );
-                        }
 
                         if (localStorage.getItem("uuid") === null) {
                             localStorage.setItem("uuid", generateUuid());

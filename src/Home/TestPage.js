@@ -1,5 +1,5 @@
 
-import Navigator from "../Component/Navigator";
+import Navigator from "../Common/Navigator";
 
 
 function TestPage() {

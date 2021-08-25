@@ -1,6 +1,6 @@
 import axios from "axios";
 import Cookies from 'universal-cookie';
-function getuser(token) {
+function getuser() {
   return new Promise((resolve, reject) => {
     const cookies = new Cookies();
     const token = cookies.get('vtoken');

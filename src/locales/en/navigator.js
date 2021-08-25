@@ -5,6 +5,7 @@ export default {
     reservationlist: 'Reservation list',
     feedback: 'Feedback',
     mypage: 'Profile',
+    editUser: 'Edit user info',
     logout: 'Logout',
     login: 'Login',
     signup: 'Sign up',
