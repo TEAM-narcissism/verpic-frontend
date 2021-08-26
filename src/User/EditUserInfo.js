@@ -76,7 +76,7 @@ function EditUserInfo() {
     const modalRef = useRef();
     const [isOpen, setIsOpen] = useState(false);
     const [modalContent, setModalContent] = useState("");
-    // const { t, i18n } = useTranslation('edituserinfo');
+    const { t, i18n } = useTranslation('edituserinfo');
 
     const { userId } = useParams();
 
@@ -106,9 +106,6 @@ function EditUserInfo() {
             })
     }, [])
 
-
-
-
     function toggleModal() {
         setIsOpen(!isOpen)
     }
@@ -133,11 +130,6 @@ function EditUserInfo() {
     //     setEmail(e.target.value);
     // }
 
-    // const passwordHandler = (e) => {
-    //     e.preventDefault();
-    //     setPassword(e.target.value);
-    // }
-
     const mothertongueHandler = (e) => {
         e.preventDefault();
         SetMothertongue(e.target.value);
@@ -159,7 +151,7 @@ function EditUserInfo() {
         e.preventDefault();
 
         if (Mothertongue === Studylanguage) {
-            setModalContent("Mothertongue and StudyLanguage should be different!");
+            setModalContent(t('alert.languagedifferent'));
             setIsOpen(!isOpen);
             return;
         }
@@ -187,7 +179,7 @@ function EditUserInfo() {
         axios
             .put("/users/" + userId, body)
             .then((response) => {
-                setModalContent("User Info Edit Complete!");
+                setModalContent(t('alert.editcomplete'));
                 setIsOpen(!isOpen);
                 console.log(response);
                 window.location.href = "http://localhost:3000/";
@@ -200,18 +192,18 @@ function EditUserInfo() {
 
     return (
         <ModalProvider>
-            <Navigator />
+            <Navigator user={user} />
             <EditUserInfoWrapper>
-                <EditUserInfoText>회원 정보 수정</EditUserInfoText>
+                <EditUserInfoText>{t('title')}</EditUserInfoText>
 
 
-                <div class="text-gray-600 mb-3 select-none">회원님의 성, 이름, 생일, 모국어, 학습 언어를 수정하실 수 있습니다.</div>
+                <div class="text-gray-600 mb-3 select-none">{t('explanation')}</div>
 
                 <EditUserInfoQuestionWrapper>
                     <EditUserInfoInputWrapper>
                         <EditUserInfoInputText>
                             <div class="flex">
-                                <span class="mr-3">Step1</span>
+                                <span class="mr-3">{t('firstname')}</span>
                                 <span>
                                     {firstName ?
                                         <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
@@ -224,7 +216,7 @@ function EditUserInfo() {
                     <EditUserInfoInputWrapper>
                         <EditUserInfoInputText>
                             <div class="flex">
-                                <span class="mr-3">Step2</span>
+                                <span class="mr-3">{t('lastname')}</span>
                                 <span>
                                     {lastName ?
                                         <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
@@ -237,7 +229,7 @@ function EditUserInfo() {
                     <EditUserInfoInputWrapper>
                         <EditUserInfoInputText>
                             <div class="flex">
-                                <span class="mr-3">Step3</span>
+                                <span class="mr-3">{t('birthdate')}</span>
                                 <span>
                                     {birthDate ?
                                         <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
@@ -260,23 +252,10 @@ function EditUserInfo() {
                         </EditUserInfoInputText>
                         <EditUserInfoInput type="email" name="email" value={email} onChange={emailHandler} required />
                     </EditUserInfoInputWrapper> */}
-                    {/* <EditUserInfoInputWrapper>
-                        <EditUserInfoInputText>
-                            <div class="flex">
-                                <span class="mr-3">Step5. {t('step5')}</span>
-                                <span>
-                                    {password ?
-                                        <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
-                                    }
-                                </span>
-                            </div>
-                        </EditUserInfoInputText>
-                        <EditUserInfoInput type="password" name="password" value={password} onChange={passwordHandler} required />
-                    </EditUserInfoInputWrapper> */}
                     <EditUserInfoOptionWrapper>
                         <EditUserInfoOptionText>
                             <div class="flex">
-                                <span class="mr-3">Step7</span>
+                                <span class="mr-3">{t('mothertongue')}</span>
                                 <span>
                                     {Mothertongue ?
                                         <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
@@ -286,16 +265,16 @@ function EditUserInfo() {
 
                         </EditUserInfoOptionText>
                         <EditUserInfoOptionSelect name="mothertongue" value={Mothertongue} onChange={mothertongueHandler}>
-                            <option value="">selection</option>
-                            <option value="KOR">korean</option>
-                            <option value="ENG">english</option>
+                            <option value="">{t('languageselection.selection')}</option>
+                            <option value="KOR">{t('languageselection.korean')}</option>
+                            <option value="ENG">{t('languageselection.english')}</option>
                         </EditUserInfoOptionSelect>
                     </EditUserInfoOptionWrapper>
 
                     <EditUserInfoOptionWrapper>
                         <EditUserInfoOptionText>
                             <div class="flex">
-                                <span class="mr-3">Step8.</span>
+                                <span class="mr-3">{t('learnlanguage')}</span>
                                 <span>
                                     {Studylanguage ?
                                         <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
@@ -304,9 +283,9 @@ function EditUserInfo() {
                             </div>
                         </EditUserInfoOptionText>
                         <EditUserInfoOptionSelect name="studylanguage" value={Studylanguage} onChange={studylanguageHandler}>
-                            <option value="">selection</option>
-                            <option value="KOR">korean</option>
-                            <option value="ENG">english</option>
+                            <option value="">{t('languageselection.selection')}</option>
+                            <option value="KOR">{t('languageselection.korean')}</option>
+                            <option value="ENG">{t('languageselection.english')}</option>
                         </EditUserInfoOptionSelect>
                     </EditUserInfoOptionWrapper>
                     <StyledModal
@@ -317,11 +296,11 @@ function EditUserInfo() {
 
                         <div class="text-center mt-28 text-xl" ref={modalRef}>{modalContent}</div>
                         <div class="text-align">
-                            <ModalButton onClick={toggleModal}>OK</ModalButton>
+                            <ModalButton onClick={toggleModal}>{t('modalbutton')}</ModalButton>
                         </div>
                     </StyledModal>
                     <EditUserInfoSendButton disabled={allAnswerFulfiled()} className={allAnswerFulfiled() ? "bg-gray-400 cursor-default" : "bg-yellow-400"} onClick={submitHandler}>
-                        {allAnswerFulfiled() ? "Fill out all the information" : "Edit"}
+                        {allAnswerFulfiled() ? t('isallanswerfulfilled.no') : t('isallanswerfulfilled.yes')}
                     </EditUserInfoSendButton>
 
                 </EditUserInfoQuestionWrapper>

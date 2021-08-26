@@ -8,7 +8,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import Cookies from "universal-cookie";
 import getuser from "../Api/getuser";
-
+import { useTranslation } from 'react-i18next';
+import i18next from "i18next";
 
 const ProfileWrapper = styled.div`
   font-family: 'NanumGothic-Regular';
@@ -46,7 +47,7 @@ function Mypage() {
   const [matchList, setMatchList] = useState();
   const cookies = new Cookies();
   const token = cookies.get('vtoken');
-
+  const { t, i18n } = useTranslation('mypage');
 
   const { id } = useParams();
 
@@ -115,35 +116,48 @@ function Mypage() {
     <div class="container max-w-full h-100vh bg-gray-100">
 
 
-      {isLoading ? <div class="text-center">로딩중이에요...</div> :
+      {isLoading ? <div class="text-center">{t('loading')}</div> :
         <>
           <Navigator user={user} focus="마이페이지" />
 
           <ProfileWrapper>
-            <div class=" text-xl font-semibold mb-2"> 프로필</div>
+            <div class=" text-xl font-semibold mb-2">{t('title')}</div>
             <div class="text-center border rounded-lg mb-10 bg-white">
               <ProfileAvatar>
                 <span class="text-sm font-semibold">{user.firstName}</span>
               </ProfileAvatar>
 
 
-              <ProfileText> 이름: {user.firstName}{user.lastName} </ProfileText>
-              <ProfileText> 이메일: {user.email}</ProfileText>
-              <ProfileText> {user.firstLanguage}가 자신있어요.</ProfileText>
-              <ProfileText> {user.learnLanguage}를 배우고 싶어요.</ProfileText>
+              <ProfileText> {t('name')} {user.firstName}{user.lastName} </ProfileText>
+              <ProfileText> {t('email')} {user.email}</ProfileText>
+              <ProfileText>
+                {t('firstlanguageprefix')}
+                {user.firstLanguage === "KOR" ? t('korean') : t('english')}
+                {t('firstlanguagesuffix')}
+              </ProfileText>
+              <ProfileText>
+                {t('learnlanguageprefix')}
+                {user.learnLanguage === "KOR" ? t('korean') : t('english')}
+                {t('learnlanguagesuffix')}
+              </ProfileText>
 
             </div>
-            <div class=" text-xl font-semibold mb-1">스터디 예약 현황</div>
-            <div class=" mb-2">{user.firstName}{user.lastName}님이 신청하신 스터디 현황이에요.</div>
+            <div class=" text-xl font-semibold mb-1">{t('reservationtitle')}</div>
+            <div class=" mb-2">
+              {t('reservationdescriptionprefix')}
+              {user.firstName}{user.lastName}
+              {t('reservationdescriptionsuffix')}
+            </div>
 
             <ReserveListWrapper>
-              {reservationList.length === 0 ? <div class="text-center p-2">예약한 스터디가 없어요.</div> : <></>}
+              {reservationList.length === 0 ? <div class="text-center p-2">{t('noreservedstudy')}</div> : <></>}
 
               {reservationList.map((reservation) => (
 
                 <div class="text-center mb-5 mt-5" key={reservation.id}>
                   <div class="font-semibold text-xl">
-                    {reservation.topic.korTheme}
+                    {i18next.language === "kr" ? reservation.topic.korTheme : reservation.topic.engTheme}
+                    {/* {reservation.topic.korTheme} */}
                   </div>
 
                   <div>
@@ -153,7 +167,7 @@ function Mypage() {
                   {reservation.soldOut ?
                     <>
                       <div>
-                        <span>상대방과의 매칭이 완료되었어요.</span>
+                        <span>{t('issoldout')}</span>
                         <span>
                           <FontAwesomeIcon icon={faCheckCircle} className="text-green-500 w-5 ml-1 mt-1" />
                         </span>
@@ -161,12 +175,12 @@ function Mypage() {
 
                       <div class="border p-1 rounded-lg w-1/6 my-2 mx-auto cursor-pointer"
                         onClick={() => studyChatLink(reservation.id)}>
-                        스터디룸 링크
+                        {t('studyroomlink')}
                       </div>
                     </>
                     :
                     <>
-                      <div>적절한 상대를 찾고 있어요.</div>
+                      <div>{t('notsoldout')}</div>
                     </>
                   }
 
@@ -175,12 +189,7 @@ function Mypage() {
               )
               )}
             </ReserveListWrapper>
-
-
-
-
           </ProfileWrapper>
-
         </>
       }
     </div>

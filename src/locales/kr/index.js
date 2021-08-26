@@ -5,3 +5,5 @@ export { default as daysorting } from './daysorting';
 export { default as card } from './card';
 export { default as signup } from './signup';
 export { default as login } from './login';
+export { default as edituserinfo } from './edituserinfo';
+export { default as mypage } from './mypage';
