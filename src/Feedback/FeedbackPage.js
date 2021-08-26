@@ -10,8 +10,12 @@ import Navigator from "../Common/Navigator";
 import getuser from "../Api/getuser";
 import isAuthorized from "../Auth/isAuthorized";
 import getFeedbackScript from "../Api/getFeedbackScript"
+import getParticipatedMatches from "../Api/getParticipatedMatches"
+
 import ChatList from '../VideoChat/ChatList';
 import { useParams } from 'react-router-dom';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 
 const FeedbackContentWrapper = styled.div`
     font-family: 'NanumGothic-Regular';
@@ -25,7 +29,7 @@ function RepeatedWord({word}) {
     return (
     <div class="rounded-2xl bg-indigo-300 h-16 w-1/2 flex justify-between">
         <span class="flex m-2 my-auto text-lg">{word.key}. {word.word}</span>
-        <span class="flex m-2 my-auto text-lg">{word.num}번</span>
+        <span class="flex m-2 my-auto text-lg">{word.count}번</span>
     </div>
     );
 }
@@ -41,6 +45,16 @@ function Vocabulary({repeatedWords}) {
     );
 }
 
+function MatchList({match}) {
+    return (
+    <a href={"http://localhost:3000/feedback/" + match.id}>
+        <li class="btn btn-ghost border-gray-700 w-full mt-2 relative">
+            <p>{match.korTheme}</p>
+            <p class="absolute bottom-0 right-1 text-xs">{match.date}</p>
+        </li>
+    </a>
+    );
+}
 
 function TabBox({tabList, selectedTab, setSelectedTab}) {
 
@@ -61,38 +75,14 @@ function Feedback() {
     const token = cookies.get('vtoken');
     const [user, setUser] = useState();
     const [selectedTab, setSelectedTab] = useState(1);
-    const matchId = useParams();
+    const { matchId } = useParams();
     const [script, setScript] = useState([]);
     const [myId, setMyId] = useState();
+    const [matchList, setMatchList] = useState([]);
     const nextChatId = useRef(1);
     const nextWordId = useRef(1);
     const [menu, setMenu] = useState(false)
     const [repeatedWords, setRepeatedWords] = useState([
-        // {
-        //     key: 1,
-        //     word: "apple",
-        //     num: 10
-        // },
-        // {
-        //     key: 2,
-        //     word: "apple",
-        //     num: 20
-        // },
-        // {
-        //     key: 3,
-        //     word: "apple",
-        //     num: 30
-        // },
-        // {
-        //     key: 4,
-        //     word: "apple",
-        //     num: 40
-        // },
-        // {
-        //     key: 5,
-        //     word: "apple",
-        //     num: 50
-        // }
     ]);
     const tabList = [
         {
@@ -130,6 +120,17 @@ function Feedback() {
         nextWordId.current += 1;
     }
 
+    const addFeedback = (match) => {
+        const date = new Date(match.date)
+        const m = {
+            id: match.matchId,
+            korTheme: match.korTheme,
+            engTheme: match.engTheme,
+            date: date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+        }
+        setMatchList(matchList => matchList.concat(m));
+    }
+
     const downloadScript = () => {
         const element = document.createElement("a");
         const file = new Blob([s.current], {type: 'text/plain'});
@@ -153,7 +154,7 @@ function Feedback() {
                 });
         }
         getFeedbackScript(token, matchId)
-        .then((content => {
+        .then((content) => {
             setMyId(content.requestUserId);
             content.messages.forEach((message) => {
                 addChat(message.message, message.sender, message.userId)
@@ -164,7 +165,13 @@ function Feedback() {
                 addRepeatedWord(w.word, w.count);
             })
             console.log("rerer", content.messages)
-        }))
+        })
+        getParticipatedMatches(token)
+        .then((content) => {
+            content.data.forEach(match => {
+                addFeedback(match);
+            })
+        })
     }, [])
 
     
@@ -173,23 +180,33 @@ function Feedback() {
     <div class="container max-w-full h-screen">
         <Navigator user={user} focus="신청목록" />
         
-        <span class="text-2xl">피드백</span>
-        <div class="flex flex-col items-center justify-center drawer-content" onClick={() => setMenu(!menu)}>
-            <label for="my-drawer" class="btn btn-neutral drawer-button">open menu</label>
-        </div>
-        <button onClick={downloadScript}>다운로드</button>
-        <div class={"rounded-lg shadow drawer drawer h-full fixed z-10" + (menu ? "" : " hidden ")}>
+        
+        <div class={"rounded-lg drawer absolute h-4/5 z-10" + (menu ? "" : " hidden ")}>
             <input id="my-drawer" type="checkbox" class="drawer-toggle"></input>
             
             <div class="drawer-side h-full">
+                
                 <label for="my-drawer" class="drawer-overlay"></label> 
-                <ul class="p-4 overflow-y-auto w-80 bg-gray-300 bg-opacity-25 text-base-content">
-                <li class="btn btn-ghost border-gray-500 w-full mt-2"><a href="#">Menu Item</a></li>
-                <li class="btn btn-ghost border-gray-500 w-full mt-2"><a href="#">Menu Item</a></li>
+                <ul class="p-4 overflow-y-auto w-80 h-full bg-black bg-opacity-30 text-base-content">
+                {matchList ? matchList.map((match) => (
+                    <MatchList match={match}></MatchList>
+                )) : null}
+               
+                <li class="btn btn-ghost border-gray-700 w-full mt-2"><a href="#">Menu Item</a></li>
             </ul>
         </div>
         </div>
         <div class="flex flex-col mx-auto w-3/5 h-4/5">
+            <span class="flex text-2xl">피드백</span>
+            <div class="flex gap-4 my-2 text-center">
+                <div class="flex drawer-content " onClick={() => setMenu(!menu)}>   
+                    <label for="my-drawer" class="btn btn-outline drawer-button">
+                    <FontAwesomeIcon icon={faBars}></FontAwesomeIcon>
+                    </label>
+                </div>
+                
+                <button class="btn btn-outline" onClick={downloadScript}>다운로드</button>
+            </div>
             <TabBox tabList={tabList} selectedTab={selectedTab} setSelectedTab={setSelectedTab} ></TabBox>
             <FeedbackContentWrapper>
                 {selectedTab === 1 ? <ChatList chats={script} myId={myId}/> 

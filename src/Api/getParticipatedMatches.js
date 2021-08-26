@@ -1,16 +1,15 @@
 import axios from "axios";
 
-function getFeedbackScript(token, matchId) {
-  console.log(matchId)
+function getParticipatedMatches(token) {
     return new Promise((resolve, reject) => {
       axios
-      .post("http://localhost:3000/analysis/getscript/" + matchId, {}, {
+      .get("http://localhost:3000/matching/participated-matches", {
             headers: {
                 Authorization: token,
             },
         })
         .then((res) => {
-            resolve(res.data);
+            resolve(res);
         })
         .catch((err) => {
           reject(err);
@@ -18,4 +17,4 @@ function getFeedbackScript(token, matchId) {
       });
 }
 
-export default getFeedbackScript;
+export default getParticipatedMatches;
