@@ -40,13 +40,14 @@ function Card({ topic, checkedItemHandler, checkedItem }) {
     checkedItemHandler(topic.id);
   };
 
+  console.log(topic.studyDate);
   let studyDate = new Date(topic.studyDate);
   const studyDateFullString =
     studyDate.getFullYear() +
     "년 " +
-    studyDate.getMonth() +
+    (parseInt(studyDate.getMonth()) + 1) +
     "월 " +
-    studyDate.getDay() +
+    studyDate.getDate() +
     "일";
   return (
     <CardWrapper
@@ -69,12 +70,12 @@ function Card({ topic, checkedItemHandler, checkedItem }) {
         <TopicThemeText>
           {i18next.language === "kr" ? topic.korTheme : topic.engTheme}
         </TopicThemeText>
-        <div class="font-semibold">개최</div>
+        <div class="font-semibold">{t('starttime')}</div>
         <TopicStartTimeText>
           {i18next.language === "kr" ? studyDateFullString : studyDate.toDateString()}
         </TopicStartTimeText>
 
-        <div class="font-semibold">인원</div>
+        <div class="font-semibold">{t('numofparticipant')}</div>
 
         <TopicStartTimeText>
           {t("personcounttagprefix")}
