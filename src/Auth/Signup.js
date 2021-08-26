@@ -149,15 +149,7 @@ function Signup() {
             return;
         }
 
-        let body = {
-            firstName: firstName,
-            lastName: lastName,
-            birthDate: birthDate,
-            email: email,
-            password: password,
-            firstLanguage: motherTongue,
-            learnLanguage: studyLanguage,
-        };
+        let body = inputs;
 
         axios
             .post("/join", body)
