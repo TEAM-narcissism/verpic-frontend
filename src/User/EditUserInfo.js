@@ -12,11 +12,11 @@ import { useTranslation } from 'react-i18next';
 
 const EditUserInfoWrapper = styled.div`
   font-family: "NanumGothic-Regular";
-  ${tw`container ml-20  mr-10 mb-10`}
+  ${tw`container w-50vh mx-auto bg-white`}
 `;
 
 const EditUserInfoText = styled.div`
-  ${tw`text-3xl font-bold mb-1 select-none`}
+  ${tw`text-3xl font-bold pb-1 select-none pt-10 bg-gray-100`}
 `;
 
 const EditUserInfoQuestionWrapper = styled.div`
@@ -196,54 +196,55 @@ function EditUserInfo() {
 
     return (
         <ModalProvider>
-            <Navigator user={user} />
-            <EditUserInfoWrapper>
-                <EditUserInfoText>{t('title')}</EditUserInfoText>
+            <Navigator user={user} focus="유저 정보 수정" />
+            <div class="container max-w-full bg-gray-100 h-200vh">
+                <EditUserInfoWrapper>
+                    <EditUserInfoText>{t('title')}</EditUserInfoText>
 
 
-                <div class="text-gray-600 mb-3 select-none">{t('explanation')}</div>
+                    <div class="text-gray-600 pb-3 select-none bg-gray-100">{t('explanation')}</div>
 
-                <EditUserInfoQuestionWrapper>
-                    <EditUserInfoInputWrapper>
-                        <EditUserInfoInputText>
-                            <div class="flex">
-                                <span class="mr-3">{t('firstname')}</span>
-                                <span>
-                                    {firstName ?
-                                        <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
-                                    }
-                                </span>
-                            </div>
-                        </EditUserInfoInputText>
-                        <EditUserInfoInput type="text" name="firstName" value={firstName} onChange={firstNameHandler} required />
-                    </EditUserInfoInputWrapper>
-                    <EditUserInfoInputWrapper>
-                        <EditUserInfoInputText>
-                            <div class="flex">
-                                <span class="mr-3">{t('lastname')}</span>
-                                <span>
-                                    {lastName ?
-                                        <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
-                                    }
-                                </span>
-                            </div>
-                        </EditUserInfoInputText>
-                        <EditUserInfoInput type="text" name="lastName" value={lastName} onChange={lastNameHandler} required />
-                    </EditUserInfoInputWrapper>
-                    <EditUserInfoInputWrapper>
-                        <EditUserInfoInputText>
-                            <div class="flex">
-                                <span class="mr-3">{t('birthdate')}</span>
-                                <span>
-                                    {birthDate ?
-                                        <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
-                                    }
-                                </span>
-                            </div>
-                        </EditUserInfoInputText>
-                        <EditUserInfoInput type="date" name="birthDate" value={birthDate} onChange={birthDateHandler} required />
-                    </EditUserInfoInputWrapper>
-                    {/* <EditUserInfoInputWrapper>
+                    <EditUserInfoQuestionWrapper>
+                        <EditUserInfoInputWrapper>
+                            <EditUserInfoInputText>
+                                <div class="flex">
+                                    <span class="mr-3">{t('firstname')}</span>
+                                    <span>
+                                        {firstName ?
+                                            <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
+                                        }
+                                    </span>
+                                </div>
+                            </EditUserInfoInputText>
+                            <EditUserInfoInput type="text" name="firstName" value={firstName} onChange={firstNameHandler} required />
+                        </EditUserInfoInputWrapper>
+                        <EditUserInfoInputWrapper>
+                            <EditUserInfoInputText>
+                                <div class="flex">
+                                    <span class="mr-3">{t('lastname')}</span>
+                                    <span>
+                                        {lastName ?
+                                            <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
+                                        }
+                                    </span>
+                                </div>
+                            </EditUserInfoInputText>
+                            <EditUserInfoInput type="text" name="lastName" value={lastName} onChange={lastNameHandler} required />
+                        </EditUserInfoInputWrapper>
+                        <EditUserInfoInputWrapper>
+                            <EditUserInfoInputText>
+                                <div class="flex">
+                                    <span class="mr-3">{t('birthdate')}</span>
+                                    <span>
+                                        {birthDate ?
+                                            <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
+                                        }
+                                    </span>
+                                </div>
+                            </EditUserInfoInputText>
+                            <EditUserInfoInput type="date" name="birthDate" value={birthDate} onChange={birthDateHandler} required />
+                        </EditUserInfoInputWrapper>
+                        {/* <EditUserInfoInputWrapper>
                         <EditUserInfoInputText>
                             <div class="flex">
                                 <span class="mr-3">Step4. {t('step4')}</span>
@@ -256,60 +257,61 @@ function EditUserInfo() {
                         </EditUserInfoInputText>
                         <EditUserInfoInput type="email" name="email" value={email} onChange={emailHandler} required />
                     </EditUserInfoInputWrapper> */}
-                    <EditUserInfoOptionWrapper>
-                        <EditUserInfoOptionText>
-                            <div class="flex">
-                                <span class="mr-3">{t('mothertongue')}</span>
-                                <span>
-                                    {Mothertongue ?
-                                        <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
-                                    }
-                                </span>
+                        <EditUserInfoOptionWrapper>
+                            <EditUserInfoOptionText>
+                                <div class="flex">
+                                    <span class="mr-3">{t('mothertongue')}</span>
+                                    <span>
+                                        {Mothertongue ?
+                                            <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
+                                        }
+                                    </span>
+                                </div>
+
+                            </EditUserInfoOptionText>
+                            <EditUserInfoOptionSelect name="mothertongue" value={Mothertongue} onChange={mothertongueHandler}>
+                                <option value="">{t('languageselection.selection')}</option>
+                                <option value="KOR">{t('languageselection.korean')}</option>
+                                <option value="ENG">{t('languageselection.english')}</option>
+                            </EditUserInfoOptionSelect>
+                        </EditUserInfoOptionWrapper>
+
+                        <EditUserInfoOptionWrapper>
+                            <EditUserInfoOptionText>
+                                <div class="flex">
+                                    <span class="mr-3">{t('learnlanguage')}</span>
+                                    <span>
+                                        {Studylanguage ?
+                                            <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
+                                        }
+                                    </span>
+                                </div>
+                            </EditUserInfoOptionText>
+                            <EditUserInfoOptionSelect name="studylanguage" value={Studylanguage} onChange={studylanguageHandler}>
+                                <option value="">{t('languageselection.selection')}</option>
+                                <option value="KOR">{t('languageselection.korean')}</option>
+                                <option value="ENG">{t('languageselection.english')}</option>
+                            </EditUserInfoOptionSelect>
+                        </EditUserInfoOptionWrapper>
+                        <StyledModal
+                            isOpen={isOpen}
+                            onBackgroundClick={toggleModal}
+                            onEscapeKeydown={toggleModal}
+                        >
+
+                            <div class="text-center mt-28 text-xl" ref={modalRef}>{modalContent}</div>
+                            <div class="text-align">
+                                <ModalButton onClick={toggleModal}>{t('modalbutton')}</ModalButton>
                             </div>
+                        </StyledModal>
+                        <EditUserInfoSendButton disabled={allAnswerFulfiled()} className={allAnswerFulfiled() ? "bg-gray-400 cursor-default" : "bg-yellow-400"} onClick={submitHandler}>
+                            {allAnswerFulfiled() ? t('isallanswerfulfilled.no') : t('isallanswerfulfilled.yes')}
+                        </EditUserInfoSendButton>
 
-                        </EditUserInfoOptionText>
-                        <EditUserInfoOptionSelect name="mothertongue" value={Mothertongue} onChange={mothertongueHandler}>
-                            <option value="">{t('languageselection.selection')}</option>
-                            <option value="KOR">{t('languageselection.korean')}</option>
-                            <option value="ENG">{t('languageselection.english')}</option>
-                        </EditUserInfoOptionSelect>
-                    </EditUserInfoOptionWrapper>
+                    </EditUserInfoQuestionWrapper>
 
-                    <EditUserInfoOptionWrapper>
-                        <EditUserInfoOptionText>
-                            <div class="flex">
-                                <span class="mr-3">{t('learnlanguage')}</span>
-                                <span>
-                                    {Studylanguage ?
-                                        <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
-                                    }
-                                </span>
-                            </div>
-                        </EditUserInfoOptionText>
-                        <EditUserInfoOptionSelect name="studylanguage" value={Studylanguage} onChange={studylanguageHandler}>
-                            <option value="">{t('languageselection.selection')}</option>
-                            <option value="KOR">{t('languageselection.korean')}</option>
-                            <option value="ENG">{t('languageselection.english')}</option>
-                        </EditUserInfoOptionSelect>
-                    </EditUserInfoOptionWrapper>
-                    <StyledModal
-                        isOpen={isOpen}
-                        onBackgroundClick={toggleModal}
-                        onEscapeKeydown={toggleModal}
-                    >
-
-                        <div class="text-center mt-28 text-xl" ref={modalRef}>{modalContent}</div>
-                        <div class="text-align">
-                            <ModalButton onClick={toggleModal}>{t('modalbutton')}</ModalButton>
-                        </div>
-                    </StyledModal>
-                    <EditUserInfoSendButton disabled={allAnswerFulfiled()} className={allAnswerFulfiled() ? "bg-gray-400 cursor-default" : "bg-yellow-400"} onClick={submitHandler}>
-                        {allAnswerFulfiled() ? t('isallanswerfulfilled.no') : t('isallanswerfulfilled.yes')}
-                    </EditUserInfoSendButton>
-
-                </EditUserInfoQuestionWrapper>
-
-            </EditUserInfoWrapper >
+                </EditUserInfoWrapper >
+            </div>
         </ModalProvider>
     );
 }
