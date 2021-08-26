@@ -55,9 +55,9 @@ function ReservationCard({ topic, reservation, matchList }) {
     const studyDateFullString =
         studyDate.getFullYear() +
         "년 " +
-        studyDate.getMonth() +
+        (parseInt(studyDate.getMonth()) + 1) +
         "월 " +
-        studyDate.getDay() +
+        studyDate.getDate() +
         "일 " +
         reservation.startTime +
         "시";

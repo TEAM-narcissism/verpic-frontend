@@ -40,7 +40,7 @@ export default class ExpressionList extends Component {
         <Slider {...settings}>
           {expressionList.map((expression) => (
             <div>
-              <Expression expression={expression} />
+              <Expression expression={expression} key={expression.id} />
             </div>
           ))}
         </Slider>
