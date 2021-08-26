@@ -5,15 +5,15 @@ export default {
         alreadysignup: "Already registered email",
         anothererror: "Date format incorrect.",
     },
-    signuptext: "Signup",
+    signuptext: "SignUp",
     signupexplanation: "Fill out all the questions below",
     step1: "What is your first name?",
     step2: "What is your last name?",
     step3: "When is your birthday?",
-    step4: "Write down your email",
-    step5: "Write down your password",
+    step4: "Write down your email.",
+    step5: "Write down your password.",
     step7: "What is your mothertongue?",
-    step8: "Choose language you're gonna study",
+    step8: "Choose language you're gonna study.",
     languageselection: {
         selection: "selection",
         kor: "korean",
@@ -21,7 +21,7 @@ export default {
     },
     modalbutton: "OK",
     isallanswerfulfilled: {
-        yes: "Signup",
+        yes: "Sign Up",
         no: "Fill out all the questions",
     }
 }
