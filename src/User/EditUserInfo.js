@@ -83,24 +83,28 @@ function EditUserInfo() {
     useEffect(() => {
         axios.get("/users/" + userId)
             .then((response) => {
-                const birth = response.data.birthDate.split('T');
-                let splitBirth = birth[0].split('-');
-                let filteredBirthDate;
-                if (splitBirth[1] === "12" && splitBirth[2] === "31") {
-                    splitBirth[0] = parseInt(splitBirth[0]) + 1;
-                    splitBirth[1] = "01";
-                    splitBirth[2] = "01";
-                    filteredBirthDate = splitBirth[0] + '-' + splitBirth[1] + '-' + splitBirth[2];
-                }
-                else {
-                    filteredBirthDate = splitBirth[0] + '-' + splitBirth[1] + '-' + (parseInt(splitBirth[2]) + 1);
+
+                if (response.data.birthDate) {
+                    const birth = response.data.birthDate.split('T');
+                    let splitBirth = birth[0].split('-');
+                    let filteredBirthDate;
+                    if (splitBirth[1] === "12" && splitBirth[2] === "31") {
+                        splitBirth[0] = parseInt(splitBirth[0]) + 1;
+                        splitBirth[1] = "01";
+                        splitBirth[2] = "01";
+                        filteredBirthDate = splitBirth[0] + '-' + splitBirth[1] + '-' + splitBirth[2];
+                    }
+                    else {
+                        filteredBirthDate = splitBirth[0] + '-' + splitBirth[1] + '-' + (parseInt(splitBirth[2]) + 1);
+                    }
+                    setBirthDate(filteredBirthDate);
                 }
                 console.log(response.data);
                 console.log(response.data.birthDate);
                 setUser(response.data);
                 setFirstName(response.data.firstName);
                 setLastName(response.data.lastName);
-                setBirthDate(filteredBirthDate);
+
                 SetMothertongue(response.data.firstLanguage);
                 SetStudylanguage(response.data.learnLanguage);
             })
