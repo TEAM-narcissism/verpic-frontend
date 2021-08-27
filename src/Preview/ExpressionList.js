@@ -18,7 +18,7 @@ function Expression({ expression }) {
           <p>Your browser does not support the audio element.!</p>
         </audio>
       </div>
-      {console.log(expression.pronounce)}
+      {/* {console.log(expression.pronounce)} */}
     </div>
   );
 }
