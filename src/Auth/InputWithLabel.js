@@ -22,7 +22,7 @@ const Input = styled.input`
   padding-left: 0.5rem;
   padding-right: 0.5rem;
 
-  ${tw`border rounded-md mb-3`}
+  ${tw`border rounded-md mb-3 text-black`}
 `;
 
 const InputWithLabel = ({ label, ...rest }) => (

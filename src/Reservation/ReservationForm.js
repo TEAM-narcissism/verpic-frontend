@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 
 const ReservationWrapper = styled.div`
   font-family: "NanumGothic-Regular";
-  ${tw`container ml-20  mr-10 mb-10 `}
+  ${tw`container w-1/2 ml-20 mb-10 `}
 `;
 
 const ReservationQuestionWrapper = styled.div`
@@ -18,18 +18,18 @@ const ReservationQuestionWrapper = styled.div`
 `;
 
 const ResevationText = styled.div`
-  ${tw`text-3xl font-bold mb-1 select-none`}
+  ${tw`text-3xl text-black font-bold mb-1 select-none`}
 `;
 
 const ReservationOptionText = styled.div`
-  ${tw`font-semibold text-xl `}
+  ${tw`font-semibold text-black text-xl `}
 `;
 const ReservationOptionWrapper = styled.div`
-  ${tw`mx-auto mb-10`}
+  ${tw`mx-auto mb-10 text-black`}
 `;
 
 const ReservationOptionSelect = styled.select`
-  ${tw`ml-10 border p-3 rounded mt-4`}
+  ${tw`ml-10 border p-3 rounded mt-4 `}
 `;
 
 const ReservationSendButton = styled.button`

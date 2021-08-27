@@ -16,12 +16,12 @@ import ReservationCard from './ReservationCard';
 
 const CardListText = styled.div`
 
-    ${tw`text-3xl font-bold mb-1 mt-10 mx-10 select-none`};
+    ${tw`text-3xl font-bold mb-1 mt-10 text-black select-none`};
 `;
 
 const CardListWrapper = styled.div`
     font-family: "NanumGothic-Regular";
-    ${tw`container mx-auto w-75vh`}
+    ${tw`container mx-auto w-45vw`}
 `;
 
 function ReservationCardList(props) {
@@ -138,11 +138,11 @@ function ReservationCardList(props) {
                 <div>
                     <CardListWrapper>
                         <CardListText>{t('reservListText')}</CardListText>
-                        <div class="text-gray-600 mb-3 mx-10 select-none">{t('cardlistlongtext')}</div>
+                        <div class="text-gray-600 mb-3 select-none">{t('cardlistlongtext')}</div>
                         <DaySorting dayPaginate={setCurrentPageAndDay} today={today} />
                         {
                             filteredReservList.length === 0 ?
-                                <div class="text-center font-semibold p-2">
+                                <div class="text-center text-black font-semibold p-2">
                                     해당 요일에 예약한 토픽이 없어요.
 
                                 </div> :

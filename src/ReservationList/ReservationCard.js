@@ -8,11 +8,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 
 const CardWrapper = styled.div`
-  ${tw`mx-10 overflow-hidden rounded-lg border-2 shadow-sm bg-white sm:flex mb-10 hover:shadow-lg duration-500`}
+  ${tw`w-full overflow-hidden rounded-lg text-black border-2 shadow-sm bg-white sm:flex mb-10 hover:shadow-lg duration-500`}
 `;
 
 const ImageWrapper = styled.div`
-  ${tw`w-1/2 sm:w-1/3`}
+  ${tw`w-1/2`}
 `;
 
 const TopicImage = styled.img`
@@ -36,13 +36,13 @@ const TopicStartTimeText = styled.div`
 const PreviewButton = styled.div`
     background: #25292e;
     font-family: 'NanumGothic-Regular';
-  ${tw`absolute w-full right-0 top-0 sm:w-1/3 border m-2 text-center font-semibold text-white p-1 text-sm rounded-lg cursor-pointer`}
+  ${tw`absolute w-full right-0 top-0 border m-2 text-center font-semibold text-white p-1 text-sm rounded-lg cursor-pointer`}
 `;
 
 const StudyRoomButton = styled.div`
 
     font-family: 'NanumGothic-Regular';
-  ${tw`absolute w-full right-0 top-20 sm:w-1/3 border m-2 text-center font-semibold text-black p-1 text-sm rounded-lg cursor-pointer`}
+  ${tw`absolute w-full right-0 top-9  border m-2 text-center font-semibold text-black p-1 text-sm rounded-lg cursor-pointer`}
 `;
 
 
@@ -122,7 +122,7 @@ function ReservationCard({ topic, reservation, matchList }) {
                 </TopicStartTimeText>
             </TopicContentWrapper>
 
-            <div class="relative w-full flex-col">
+            <div class="relative w-1/2 flex-col">
                 <PreviewButton
                     onClick={() => (window.location.href = "/preview/" + topic.id)}
                 >

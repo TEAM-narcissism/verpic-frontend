@@ -45,7 +45,7 @@ function Preview() {
 
   return (
     <div className="bg-gray-200">
-      <Navigator />
+      <Navigator focus="신청목록"/>
       {isLoading ? <div className="text-center">Loading...</div> :
         <div>
           <div className="pt-4 pb-4 pl-12">

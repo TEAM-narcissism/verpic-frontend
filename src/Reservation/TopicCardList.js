@@ -11,12 +11,12 @@ import tw from "twin.macro";
 import { useTranslation } from "react-i18next";
 
 const CardListText = styled.div`
-  ${tw`text-3xl font-bold mb-1 mx-10 select-none`};
+  ${tw`text-3xl font-bold mb-1 text-black select-none`};
 `;
 
 const CardListWrapper = styled.div`
   font-family: "NanumGothic-Regular";
-  ${tw`container mx-auto overscroll-y-auto`}
+  ${tw`container w-35vw mx-auto text-black overscroll-y-auto`}
 `;
 
 function CardList(props) {
@@ -126,7 +126,7 @@ function CardList(props) {
           <CardListWrapper>
             <CardListText>{t("cardlisttext")}</CardListText>
 
-            <div className="text-gray-600 mb-3 mx-10 select-none">
+            <div className="text-gray-600 mb-3 select-none">
               {t("cardlistexplanation")}
             </div>
 

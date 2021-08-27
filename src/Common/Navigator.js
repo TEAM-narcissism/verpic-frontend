@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import Logo from "../assets/images/logoVerpic.png";
-import { ProfileAvatar } from "../User/Mypage";
 import isAuthorized from "../Auth/isAuthorized";
 import styled from "@emotion/styled";
 import tw from "twin.macro";
@@ -13,12 +12,12 @@ const NavigatorWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   background: #25292e;
-  ${tw` max-w-full h-5vh shadow-lg relative border-b-2 border-white`}
+  ${tw` max-w-full h-7vh shadow-lg relative border-b-2 border-white`}
 `;
 
 const NavigatorLogo = styled.img`
-  width: 50px;
-  ${tw`m-3 cursor-pointer ml-20`}
+  
+  ${tw`m-3 w-5vh cursor-pointer ml-20`}
 `;
 
 const NavigatorText = styled.text`
@@ -43,16 +42,16 @@ const NavigatorLink = styled.div`
     color: #cddef5;
     border-bottom: 4px solid #cddef5;
   }
-  ${tw`text-sm font-semibold h-5vh overflow-hidden tracking-wider flex items-center align-middle mx-10 duration-300 cursor-pointer`}
+  ${tw`text-sm font-semibold h-7vh overflow-hidden tracking-wider flex items-center align-middle mx-10 duration-300 cursor-pointer`}
 `;
 
 const AvatarLink = styled.div`
   font-family: "NanumGothic-Regular";
-  ${tw`text-sm font-semibold h-5vh tracking-wider flex items-center align-middle mx-10 duration-300 cursor-pointer`}
+  ${tw`text-sm font-semibold h-5vh tracking-wider flex items-center align-middle my-auto mx-10 duration-300 cursor-pointer`}
 `;
 
 const DropDown = styled.div`
-  ${tw`origin-top-right absolute top-5vh right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none`}
+  ${tw`origin-top-right absolute top-5vh right-0 mt-2 w-56 text-black rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none`}
 `;
 
 const DropDownItem = styled.div`
@@ -61,6 +60,11 @@ const DropDownItem = styled.div`
     background: #dcdce0;
   }
   ${tw`text-gray-700  px-4 py-3 text-sm font-semibold`}
+`;
+
+const ProfileAvatar = styled.div`
+  ${tw`h-12 w-12 border bg-gradient-to-r from-indigo-700 to-green-500 rounded-full text-white flex justify-center items-center overflow-hidden
+`}
 `;
 
 function Navigator({ user, focus }) {
@@ -164,9 +168,9 @@ function Navigator({ user, focus }) {
               )}
               {dropDown ? (
                 <DropDown ref={dropDownref}>
-                  <div className="h-5vh text-center">
+                  <div className="text-center">
 
-                    <div className="flex m-4">
+                    <div className="flex m-auto p-4">
                       <ProfileAvatar >
                         <span className="text-sm font-semibold">{user.firstName}</span>
                       </ProfileAvatar>
