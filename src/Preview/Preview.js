@@ -51,9 +51,7 @@ function Preview() {
 
       <div className="grid grid-cols-2 space-x-6">
         <div className="border-4 border-white bg-white rounded-lg ml-8 mb-8 shadow-lg">
-          <div
-            style={{ "font-family": "NanumGothic-Bold" }}
-            className="border-b-4 text-4xl text-center pt-4 pb-4"
+          <div className="border-b-4 text-4xl text-center pt-4 pb-4"
           >
             Topic or 질문사항
           </div>
@@ -67,9 +65,7 @@ function Preview() {
 
         <div className="space-y-6 mb-8">
           <div className="border-4 border-white bg-white rounded-lg mr-8 shadow-lg">
-            <div
-              style={{ "font-family": "NanumGothic-Bold" }}
-              className="border-b-4 text-4xl text-center pt-4 pb-4"
+            <div className="border-b-4 text-4xl text-center pt-4 pb-4"
             >
               표현학습 List
             </div>
@@ -77,9 +73,7 @@ function Preview() {
           </div>
 
           <div className="border-4 border-white bg-white rounded-lg mr-8 shadow-lg">
-            <div
-              style={{ "font-family": "NanumGothic-Bold" }}
-              className="border-b-4 text-4xl text-center pt-4 pb-4"
+            <div className="border-b-4 text-4xl text-center pt-4 pb-4"
             >
               질문
             </div>
