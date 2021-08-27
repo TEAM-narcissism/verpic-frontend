@@ -42,7 +42,7 @@ const PreviewButton = styled.div`
 const StudyRoomButton = styled.div`
 
     font-family: 'NanumGothic-Regular';
-  ${tw`absolute w-full right-0 top-9   sm:w-1/3 border m-2 text-center font-semibold text-black p-1 text-sm rounded-lg cursor-pointer`}
+  ${tw`absolute w-full right-0 top-20 sm:w-1/3 border m-2 text-center font-semibold text-black p-1 text-sm rounded-lg cursor-pointer`}
 `;
 
 
@@ -128,7 +128,6 @@ function ReservationCard({ topic, reservation, matchList }) {
                 >
                     {t("previewbutton")}
                 </PreviewButton>
-
                 {reservation.soldOut ?
                     <StudyRoomButton
                         onClick={() => studyChatLink(reservation.id)}
