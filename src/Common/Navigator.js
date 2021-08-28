@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import Logo from "../assets/images/logoVerpic.png";
-import { ProfileAvatar } from "../User/Mypage";
 import isAuthorized from "../Auth/isAuthorized";
 import styled from "@emotion/styled";
 import tw from "twin.macro";
@@ -13,12 +12,12 @@ const NavigatorWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   background: #25292e;
-  ${tw` max-w-full h-5vh shadow-lg relative border-b-2 border-white`}
+  ${tw` max-w-full h-7vh shadow-lg relative border-b-2 border-white`}
 `;
 
 const NavigatorLogo = styled.img`
-  width: 50px;
-  ${tw`m-3 cursor-pointer ml-20`}
+  
+  ${tw`m-3 w-5vh cursor-pointer ml-20`}
 `;
 
 const NavigatorText = styled.text`
@@ -43,16 +42,16 @@ const NavigatorLink = styled.div`
     color: #cddef5;
     border-bottom: 4px solid #cddef5;
   }
-  ${tw`text-sm font-semibold h-5vh overflow-hidden tracking-wider flex items-center align-middle mx-10 duration-300 cursor-pointer`}
+  ${tw`text-sm font-semibold h-7vh overflow-hidden tracking-wider flex items-center align-middle mx-10 duration-300 cursor-pointer`}
 `;
 
 const AvatarLink = styled.div`
   font-family: "NanumGothic-Regular";
-  ${tw`text-sm font-semibold h-5vh tracking-wider flex items-center align-middle mx-10 duration-300 cursor-pointer`}
+  ${tw`text-sm font-semibold h-5vh tracking-wider flex items-center align-middle my-auto mx-10 duration-300 cursor-pointer`}
 `;
 
 const DropDown = styled.div`
-  ${tw`origin-top-right absolute top-5vh right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none`}
+  ${tw`origin-top-right absolute top-5vh right-0 mt-2 w-56 text-black rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none`}
 `;
 
 const DropDownItem = styled.div`
@@ -61,6 +60,11 @@ const DropDownItem = styled.div`
     background: #dcdce0;
   }
   ${tw`text-gray-700  px-4 py-3 text-sm font-semibold`}
+`;
+
+const ProfileAvatar = styled.div`
+  ${tw`h-12 w-12 border bg-gradient-to-r from-indigo-700 to-green-500 rounded-full text-white flex justify-center items-center overflow-hidden
+`}
 `;
 
 function Navigator({ user, focus }) {
@@ -127,10 +131,10 @@ function Navigator({ user, focus }) {
         </div>
         <div>
           {isAuthorized() ? (
-            <div class="flex">
+            <div className="flex">
               <NavigatorLink onClick={() => (window.location.href = "/")}>
                 <span
-                  class={focus === "신청하기" ? "my-auto text-indigo-300" : ""}
+                  className={focus === "신청하기" ? "my-auto text-indigo-300" : ""}
                 >
                   {t("reservation")}
                 </span>
@@ -140,14 +144,14 @@ function Navigator({ user, focus }) {
                 onClick={() => (window.location.href = "/topic/reservation")}
               >
                 <div
-                  class={focus === "신청목록" ? "my-auto text-indigo-300" : ""}
+                  className={focus === "신청목록" ? "my-auto text-indigo-300" : ""}
                 >
                   {t("reservationlist")}
                 </div>
               </NavigatorLink>
               <NavigatorLink>
                 <div
-                  class={focus === "피드백" ? "my-auto text-indigo-300" : ""}
+                  className={focus === "피드백" ? "my-auto text-indigo-300" : ""}
                 >
                   {t("feedback")}
                 </div>
@@ -156,7 +160,7 @@ function Navigator({ user, focus }) {
               {user ? (
                 <AvatarLink ref={avatarRef} onClick={avatarOnClick}>
                   <ProfileAvatar>
-                    <span class="text-sm font-semibold">{user.firstName}</span>
+                    <span className="text-sm font-semibold">{user.firstName}</span>
                   </ProfileAvatar>
                 </AvatarLink>
               ) : (
@@ -164,14 +168,14 @@ function Navigator({ user, focus }) {
               )}
               {dropDown ? (
                 <DropDown ref={dropDownref}>
-                  <div class="h-5vh text-center">
+                  <div className="text-center">
 
-                    <div class="flex m-4">
+                    <div className="flex m-auto p-4">
                       <ProfileAvatar >
-                        <span class="text-sm font-semibold">{user.firstName}</span>
+                        <span className="text-sm font-semibold">{user.firstName}</span>
                       </ProfileAvatar>
 
-                      <div class="my-auto mx-2 font-medium">
+                      <div className="my-auto mx-2 font-medium">
                         {user.lastName}{user.firstName}
                       </div>
                     </div>
@@ -186,7 +190,7 @@ function Navigator({ user, focus }) {
                   <DropDownItem
                     onClick={() => (window.location.href = "/logout")}
                   >
-                    <span class="text-red-600">{t("logout")}</span>
+                    <span className="text-red-600">{t("logout")}</span>
                   </DropDownItem>
                   <DropDownItem onClick={changeLanguage}>
                     {t("languagechange")}
@@ -197,13 +201,13 @@ function Navigator({ user, focus }) {
               )}
             </div>
           ) : (
-            <div class="flex">
+            <div className="flex">
               <NavigatorLink onClick={changeLanguage}>
                 {t("languagechange")}
               </NavigatorLink>
               <NavigatorLink onClick={() => (window.location.href = "/login")}>
                 <div
-                  class={focus === "로그인" ? "my-auto text-indigo-300" : ""}
+                  className={focus === "로그인" ? "my-auto text-indigo-300" : ""}
                 >
                   {t("login")}
                 </div>
@@ -211,7 +215,7 @@ function Navigator({ user, focus }) {
 
               <NavigatorLink onClick={() => (window.location.href = "/signup")}>
                 <div
-                  class={focus === "회원가입" ? "my-auto text-indigo-300" : ""}
+                  className={focus === "회원가입" ? "my-auto text-indigo-300" : ""}
                 >
                   {t("signup")}
                 </div>

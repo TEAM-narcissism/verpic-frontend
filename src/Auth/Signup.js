@@ -12,7 +12,7 @@ import generateUuid from './generateUuid';
 
 const SignupFormWrapper = styled.div`
   font-family: "NanumGothic-Regular";
-  ${tw`container w-50vh mx-auto mb-10 bg-white`}
+  ${tw`container w-30vw mx-auto mb-10 bg-white text-black`}
 `;
 
 const SignupText = styled.div`
@@ -55,7 +55,7 @@ const StyledModal = Modal.styled`
     font-family: "NanumGothic-Regular";
     width: 500px;
     height: 300px;
-    ${tw`bg-gray-100 rounded-lg `}
+    ${tw`bg-gray-100 rounded-lg text-black `}
 `;
 
 const ModalButton = styled.div`

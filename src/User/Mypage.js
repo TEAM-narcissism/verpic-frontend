@@ -13,8 +13,7 @@ import i18next from "i18next";
 
 const ProfileWrapper = styled.div`
   font-family: 'NanumGothic-Regular';
-  height: 500px;
-  ${tw`container w-1/2  mx-auto mt-28`}
+  ${tw`container w-1/2  mx-auto mt-10vh text-black`}
 `;
 
 const ProfileText = styled.div`
@@ -30,8 +29,8 @@ const ReserveListWrapper = styled.div`
 `;
 
 
-export const ProfileAvatar = styled.div`
-  ${tw`h-12 w-12 border bg-gradient-to-r from-indigo-700 to-green-500 rounded-full text-white flex justify-center items-center overflow-hidden
+const ProfileAvatar = styled.div`
+  ${tw`h-10vh w-10vh border mx-auto my-4 bg-gray-400 rounded-full text-white flex justify-center items-center overflow-hidden
 `}
 `;
 
@@ -113,7 +112,7 @@ function Mypage() {
   }, []);
 
   return (
-    <div class="container max-w-full h-100vh bg-gray-100">
+    <div class="container max-w-full h-120vh bg-gray-100">
 
 
       {isLoading ? <div class="text-center">{t('loading')}</div> :
@@ -124,20 +123,20 @@ function Mypage() {
             <div class=" text-xl font-semibold mb-2">{t('title')}</div>
             <div class="text-center border rounded-lg mb-10 bg-white">
               <ProfileAvatar>
-                <span class="text-sm font-semibold">{user.firstName}</span>
+                <span class="text-2xl font-semibold">{user.firstName}</span>
               </ProfileAvatar>
 
 
-              <ProfileText> {t('name')} {user.firstName}{user.lastName} </ProfileText>
-              <ProfileText> {t('email')} {user.email}</ProfileText>
+              <ProfileText> {t('name')} <span className="font-semibold">{user.lastName} {user.firstName}</span></ProfileText>
+              <ProfileText> {t('email')} <span className="font-semibold">{user.email}</span></ProfileText>
               <ProfileText>
                 {t('firstlanguageprefix')}
-                {user.firstLanguage === "KOR" ? t('korean') : t('english')}
+                <span className="font-semibold">{user.firstLanguage === "KOR" ? t('korean') : t('english')}</span>
                 {t('firstlanguagesuffix')}
               </ProfileText>
               <ProfileText>
                 {t('learnlanguageprefix')}
-                {user.learnLanguage === "KOR" ? t('korean') : t('english')}
+                <span className="font-semibold">{user.learnLanguage === "KOR" ? t('korean') : t('english')}</span>
                 {t('learnlanguagesuffix')}
               </ProfileText>
 
@@ -145,7 +144,7 @@ function Mypage() {
             <div class=" text-xl font-semibold mb-1">{t('reservationtitle')}</div>
             <div class=" mb-2">
               {t('reservationdescriptionprefix')}
-              {user.firstName}{user.lastName}
+              {user.lastName}{user.firstName}
               {t('reservationdescriptionsuffix')}
             </div>
 
@@ -157,7 +156,7 @@ function Mypage() {
                 <div class="text-center mb-5 mt-5" key={reservation.id}>
                   <div class="font-semibold text-xl">
                     {i18next.language === "kr" ? reservation.topic.korTheme : reservation.topic.engTheme}
-                    {/* {reservation.topic.korTheme} */}
+            
                   </div>
 
                   <div>

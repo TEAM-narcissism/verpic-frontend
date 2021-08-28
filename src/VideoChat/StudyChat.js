@@ -3,7 +3,9 @@ import { conn, stompconn } from "../App";
 import {
   faCamera,
   faMicrophone,
-  faMicrophoneAltSlash,
+  faMicrophoneSlash,
+  faVideo,
+  faVideoSlash
 } from "@fortawesome/free-solid-svg-icons";
 
 import AudioRecord from "./AudioRecord";
@@ -24,7 +26,7 @@ import { useParams } from "react-router";
 
 const ProgressBarWrapper = styled.div`
   font-family: "NanumGothic-Bold";
-  ${tw`pt-10`}
+  ${tw`pt-3`}
 `;
 
 const ChatView = styled.div`
@@ -32,13 +34,13 @@ const ChatView = styled.div`
   background: #262624;
   border: 2px solid #262626;
 
-  ${tw`border h-80vh w-35vh rounded-lg mx-10 flex flex-col justify-between`}
+  ${tw`border h-80vh w-30vw rounded-lg mx-10 text-black flex flex-col justify-between`}
 `;
 
 const VideoWrapper = styled.div`
   font-family: "NanumGothic-Regular";
   background: #0d0d0e;
-  ${tw`text-center max-w-full h-100vh`}
+  ${tw`text-center max-w-full h-120vh`}
 `;
 
 const UserVideo = styled.video`
@@ -49,8 +51,13 @@ const UserVideo = styled.video`
   background-size: 20%;
   background-repeat: no-repeat;
   background-position: center;
+  transform: rotateY(180deg);         
+  -webkit-transform:rotateY(180deg);    
+  -moz-transform:rotateY(180deg);
 
-  ${tw` w-75vh h-35vh mb-3 rounded-lg`}
+
+
+  ${tw` w-75vw h-35vh mb-3 rounded-lg`}
 `;
 
 const ToggleButton = styled.div`
@@ -457,17 +464,6 @@ function StudyChat() {
     myPeerConnection.addIceCandidate(candidate).catch(handleErrorMessage);
   }
 
-  // const getUserMediaReact = async () => {
-  //     try {
-  //         console.log('get my video .');
-  //         localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-  //         myVideoRef.current.srcObject = localStream;
-  //         myVideoRef.current.muted = true;
-  //     } catch (err) {
-  //         console.log(err);
-  //     }
-  // };
-
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -511,10 +507,13 @@ function StudyChat() {
             setStep(2);
             console.log("3분 뒤 실행되는 부분");
             var message =
-              "지금부터 한국어 세션이 시작합니다.\n아래 토픽에 대해 한국어로 대화해주세요.\nThe Korean session starts now.\nPlease talk about the topic below in Korean.\n\n";
-            message += topics;
-            audioRecordRef.current.onRecAudio(localVideoState);
+              "지금부터 한국어 세션이 시작합니다.\n아래 토픽에 대해 한국어로 대화해주세요.\nThe Korean session starts now.\nPlease talk about the topic below in Korean.";
             addChat(message, adminName, 0);
+            message = topics;
+            addChat(message, adminName, 0);
+  
+            audioRecordRef.current.onRecAudio(localVideoState);
+      
           }, remainTime + 5000);
         }
         // 시작시각 + 10분 후
@@ -523,9 +522,11 @@ function StudyChat() {
             setStep(3);
             var message =
               "지금부터 영어 세션이 시작합니다.\n아래 토픽에 대해 영어로 대화해주세요.\nThe English session starts now.\nPlease talk about the topic below in English.\n\n";
-            message += topics;
-            console.log("10분 뒤 실행되는 부분");
             addChat(message, adminName, 0);
+            message = topics;
+            addChat(message, adminName, 0);
+           
+            console.log("10분 뒤 실행되는 부분");
             audioRecordRef.current.offRecAudio(1, "ko");
             audioRecordRef.current.onRecAudio(localVideoState);
           }, remainTime + 10000);
@@ -579,10 +580,17 @@ function StudyChat() {
           <div class="container flex mt-5 justify-between mx-auto">
             <div class="flex-col">
               <div class="">
+    
+                <div class="text-left">
+                  <VideoUserText>상대방의 비디오</VideoUserText>
+                  <UserVideo autoPlay playsInline ref={remoteVideoRef} />
+                </div>
+
                 <div class="text-left">
                   <VideoUserText>
+                  {user.lastName}
                     {user.firstName}
-                    {user.lastName}의 비디오
+                  의 비디오
                   </VideoUserText>
                 </div>
                 <UserVideo autoPlay playsInline ref={myVideoRef} />
@@ -590,22 +598,18 @@ function StudyChat() {
                 <div class="flex justify-between">
                   <ToggleButton onClick={videoButtonOff}>
                     {localVideoState ? (
-                      <FontAwesomeIcon icon={faCamera} />
+                      <FontAwesomeIcon icon={faVideo} />
                     ) : (
-                      <FontAwesomeIcon icon={faCamera} />
+                      <FontAwesomeIcon icon={faVideoSlash} />
                     )}
                   </ToggleButton>
                   <ToggleButton onClick={micButtonOff}>
                     {localAudioState ? (
                       <FontAwesomeIcon icon={faMicrophone} />
                     ) : (
-                      <FontAwesomeIcon icon={faMicrophoneAltSlash} />
+                      <FontAwesomeIcon icon={faMicrophoneSlash} />
                     )}
                   </ToggleButton>
-                </div>
-                <div class="text-left">
-                  <VideoUserText>상대방의 비디오</VideoUserText>
-                  <UserVideo autoPlay playsInline ref={remoteVideoRef} />
                 </div>
               </div>
             </div>

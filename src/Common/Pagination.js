@@ -4,7 +4,7 @@ import tw from 'twin.macro';
 
 const PageUl = styled.ul`
   font-family: 'NanumGothic-Regular';
-  ${tw`text-gray-400 bg-white border rounded-lg text-center mx-10 mb-5 flex-col py-1`}
+  ${tw`text-gray-400 bg-white border rounded-lg text-center w-full mb-5 flex-col py-1`}
 `;
 
 const PageLi = styled.li`

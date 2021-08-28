@@ -18,7 +18,7 @@ function Expression({ expression }) {
           <p>Your browser does not support the audio element.!</p>
         </audio>
       </div>
-
+      {/* {console.log(expression.pronounce)} */}
     </div>
   );
 }
@@ -35,12 +35,13 @@ export default class ExpressionList extends Component {
       slidesToScroll: 1,
       arrows: false,
     };
+
     return (
       <div>
         <Slider {...settings}>
-          {expressionList.map((expression) => (
-            <div>
-              <Expression expression={expression} key={expression.id} />
+          {expressionList.map((expression, index) => (
+            <div key={index}>
+              <Expression expression={expression} />
             </div>
           ))}
         </Slider>

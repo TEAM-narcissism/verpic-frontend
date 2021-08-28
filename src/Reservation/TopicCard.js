@@ -6,7 +6,7 @@ import tw from "twin.macro";
 import { useTranslation } from "react-i18next";
 
 const CardWrapper = styled.div`
-  ${tw` mx-10 overflow-hidden rounded-lg border-2 shadow-sm bg-white cursor-pointer sm:flex mb-10 hover:shadow-lg duration-500`}
+  ${tw`w-full overflow-hidden rounded-lg border-2 shadow-sm bg-white cursor-pointer sm:flex mb-10 hover:shadow-lg duration-500`}
 `;
 
 const ImageWrapper = styled.div`

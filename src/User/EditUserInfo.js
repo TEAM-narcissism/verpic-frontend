@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 
 const EditUserInfoWrapper = styled.div`
   font-family: "NanumGothic-Regular";
-  ${tw`container w-50vh mx-auto bg-white`}
+  ${tw`container w-35vw mx-auto bg-white text-black`}
 `;
 
 const EditUserInfoText = styled.div`

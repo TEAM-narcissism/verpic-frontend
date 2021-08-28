@@ -4,15 +4,15 @@ import styled from "@emotion/styled";
 import tw from "twin.macro";
 
 const ChatWrapper = styled.div`
-  ${tw`mx-2 py-1 px-4 bg-gray-400 text-sm rounded-br-3xl font-semibold rounded-tr-3xl rounded-tl-xl`}
+  ${tw`mx-2 py-2 px-4 bg-gray-400 text-sm border rounded-br-3xl font-semibold rounded-tr-3xl rounded-tl-xl`}
 `;
 
 const MyChatWrapper = styled.div`
-  ${tw`mx-2 py-1 px-4 bg-indigo-300 text-sm rounded-bl-3xl font-semibold rounded-tl-3xl rounded-tr-xl `}
+  ${tw`mx-2 py-2 px-4 bg-indigo-300 border text-sm rounded-bl-3xl font-semibold rounded-tl-3xl rounded-tr-xl `}
 `;
 
-const NoticeWrapper = styled.p`
-  ${tw`mx-1 py-1 px-4 rounded-3xl bg-yellow-200 whitespace-pre-wrap`};
+const NoticeWrapper = styled.div`
+  ${tw`w-full px-4 py-2 border rounded-lg text-white bg-gray-600 whitespace-pre`};
 `;
 
 const Chat = React.memo(function Chat({ chat, myId, succesive }) {
@@ -33,7 +33,7 @@ const Chat = React.memo(function Chat({ chat, myId, succesive }) {
     <div>
       {succesive ? null : <span class="flex justify-center mr-2 text-gray-100 text-sm font-semibold">{chat.sender}</span>}
         <div class="flex justify-center mb-1">
-          <div class="text-left">
+          <div class="text-center">
             <NoticeWrapper>{chat.message}</NoticeWrapper>
           </div>
         </div>
