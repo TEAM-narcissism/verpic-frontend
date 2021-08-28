@@ -74,7 +74,8 @@ function ReservationCard({ topic, reservation, matchList }) {
             }
         })
 
-        window.open('/studychat/' + matchId, '_blank')
+       
+        window.open('/videochecking/' + matchId, '_blank')
 
     }
 

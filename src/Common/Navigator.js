@@ -88,7 +88,7 @@ function Navigator({ user, focus }) {
   }
 
   const changeLanguage = () => {
-    if (pageLanguage == "KOR") {
+    if (pageLanguage === "KOR") {
       setPageLanguage("ENG");
       localStorage.setItem("i18nextLng", "en");
       i18n.changeLanguage("en");
