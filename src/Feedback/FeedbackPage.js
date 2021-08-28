@@ -56,21 +56,13 @@ function MatchList({match}) {
     );
 }
 
-function TabBox({tabList, selectedTab, setSelectedTab}) {
 
-    return (
-        <div class="tabs flex-wrap">
-        {tabList.map((tab) => (
-            <button class={"tab tab-lifted" + (tab.id === selectedTab ? " tab-active" : "")} onClick={() => setSelectedTab(tab.id)}>{tab.name}</button> 
-        ))}
-        </div>
-    )
-}
 
 
 function Feedback() {
     
     const cookies = new Cookies();
+    const { t, i18n } = useTranslation('feedback');
     var s = useRef("");
     const token = cookies.get('vtoken');
     const [user, setUser] = useState();
@@ -86,18 +78,28 @@ function Feedback() {
     ]);
     const tabList = [
         {
-        id: 1,
-        name: "Script"
+            id: 1,
+            name: t("script")
         },
         {
             id: 2,
-            name: "어휘"
+            name: t("vocabulary")
         },
         {
             id: 3,
-            name: "분석"
+            name: t("analysis")
         },
     ]
+
+    function TabBox({tabList, selectedTab, setSelectedTab}) {
+        return (
+            <div class="tabs flex-wrap">
+            {tabList.map((tab) => (
+                <button class={"tab tab-lifted" + (tab.id === selectedTab ? " tab-active" : "")} onClick={() => setSelectedTab(tab.id)}>{tab.name}</button> 
+            ))}
+            </div>
+        )
+    }
 
     const addChat = (message, sender, userId) => {
         const chat = {
@@ -155,16 +157,19 @@ function Feedback() {
         }
         getFeedbackScript(token, matchId)
         .then((content) => {
+            console.log(content)
             setMyId(content.requestUserId);
-            content.messages.forEach((message) => {
+            // 피드백들이 없는 경우 처리 필요!
+            content.messages && content.messages.forEach((message) => {
                 addChat(message.message, message.sender, message.userId)
                 s.current += message.sender + ":" + message.message + "\n";
             })
-            console.log(content.analysisList[0].mostUsedWordList)
-            content.analysisList[0].mostUsedWordList.forEach((w) => {
+            //console.log(content.analysisList[0].mostUsedWordList)
+            // 여기두
+            content.analysisList && content.analysisList[0].mostUsedWordList.forEach((w) => {
                 addRepeatedWord(w.word, w.count);
             })
-            console.log("rerer", content.messages)
+            //console.log("rerer", content.messages)
         })
         getParticipatedMatches(token)
         .then((content) => {
@@ -178,7 +183,7 @@ function Feedback() {
 
     return (
     <div class="container max-w-full h-screen">
-        <Navigator user={user} focus="신청목록" />
+        <Navigator user={user} focus="피드백"/>
         
         
         <div class={"rounded-lg drawer absolute h-4/5 z-10" + (menu ? "" : " hidden ")}>
@@ -192,12 +197,12 @@ function Feedback() {
                     <MatchList match={match}></MatchList>
                 )) : null}
                
-                <li class="btn btn-ghost border-gray-700 w-full mt-2"><a href="#">Menu Item</a></li>
+                {/* <li class="btn btn-ghost border-gray-700 w-full mt-2"><a href="#">Menu Item</a></li> */}
             </ul>
         </div>
         </div>
         <div class="flex flex-col mx-auto w-3/5 h-4/5">
-            <span class="flex text-2xl">피드백</span>
+            <span class="flex text-2xl">{t('feedback')}</span>
             <div class="flex gap-4 my-2 text-center">
                 <div class="flex drawer-content " onClick={() => setMenu(!menu)}>   
                     <label for="my-drawer" class="btn btn-outline drawer-button">
@@ -205,7 +210,7 @@ function Feedback() {
                     </label>
                 </div>
                 
-                <button class="btn btn-outline" onClick={downloadScript}>다운로드</button>
+                <button class="btn btn-outline" onClick={downloadScript}>{t("download")}</button>
             </div>
             <TabBox tabList={tabList} selectedTab={selectedTab} setSelectedTab={setSelectedTab} ></TabBox>
             <FeedbackContentWrapper>
