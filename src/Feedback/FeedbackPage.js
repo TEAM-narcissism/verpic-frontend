@@ -78,15 +78,15 @@ function Feedback() {
     ]);
     const tabList = [
         {
-            id: 1,
+            key: 1,
             name: t("script")
         },
         {
-            id: 2,
+            key: 2,
             name: t("vocabulary")
         },
         {
-            id: 3,
+            key: 3,
             name: t("analysis")
         },
     ]
@@ -95,7 +95,7 @@ function Feedback() {
         return (
             <div class="tabs flex-wrap">
             {tabList.map((tab) => (
-                <button class={"tab tab-lifted text-black bg-white" + (tab.id === selectedTab ? " tab-active" : "")} onClick={() => setSelectedTab(tab.id)}>{tab.name}</button> 
+                <button class={"tab tab-lifted text-black bg-white" + (tab.key === selectedTab ? " tab-active" : "")} onClick={() => setSelectedTab(tab.key)}>{tab.name}</button> 
             ))}
             </div>
         )
@@ -149,6 +149,14 @@ function Feedback() {
                 .then((res) => {
                     console.log(res);
                     setUser(res);
+                    axios
+                    .get("/matching/participant-check/" + matchId + "/" + res.id)
+                    .then((res) => {
+                    if (!res.data.result) {
+                        alert("정해진 참가자가 아니에요.");
+                        window.location.href = "/";
+                    }
+                    });
                 })
                 .catch((err) => {
                     alert('로그인 세션이 만료되었어요.');
