@@ -152,7 +152,7 @@ function Signup() {
         let body = inputs;
 
         axios
-            .post("/join", body)
+            .post("/api/join", body)
             .then((res) => {
                 console.log(res);
                 setModalContent(t('alert.signupcomplete'));
@@ -163,7 +163,7 @@ function Signup() {
                     email: email,
                     password: password
                 }
-                axios.post("/login", loginbody)
+                axios.post("/api/login", loginbody)
                     .then((res) => {
                         console.log(res.data.data.Token);
                         const accessToken = res.data.data.Token;
