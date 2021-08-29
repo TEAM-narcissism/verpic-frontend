@@ -15,13 +15,13 @@ import getParticipatedMatches from "../Api/getParticipatedMatches"
 import ChatList from '../VideoChat/ChatList';
 import { useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 
 const FeedbackContentWrapper = styled.div`
     font-family: 'NanumGothic-Regular';
     background: #262624;
     border: 2px solid #262626;
-    ${tw `justify-self-center mx-auto border-2 border-gray-300 w-full h-3/5 flex`}
+    ${tw `flex justify-self-center mx-auto border-2 border-gray-300 w-full h-3/5`}
 `;
 
 
@@ -48,7 +48,7 @@ function Vocabulary({repeatedWords}) {
 function MatchList({match}) {
     return (
     <a href={"http://localhost:3000/feedback/" + match.id}>
-        <li class="btn btn-ghost border-gray-700 w-full mt-2 relative">
+        <li class="btn btn-ghost border-gray-400 w-full mt-2 relative text-gray-200">
             <p>{match.korTheme}</p>
             <p class="absolute bottom-0 right-1 text-xs">{match.date}</p>
         </li>
@@ -95,7 +95,7 @@ function Feedback() {
         return (
             <div class="tabs flex-wrap">
             {tabList.map((tab) => (
-                <button class={"tab tab-lifted" + (tab.id === selectedTab ? " tab-active" : "")} onClick={() => setSelectedTab(tab.id)}>{tab.name}</button> 
+                <button class={"tab tab-lifted text-black bg-white" + (tab.id === selectedTab ? " tab-active" : "")} onClick={() => setSelectedTab(tab.id)}>{tab.name}</button> 
             ))}
             </div>
         )
@@ -182,17 +182,22 @@ function Feedback() {
     
 
     return (
-    <div class="container max-w-full h-screen">
+    <div class="container max-w-full h-screen bg-white text-black">
         <Navigator user={user} focus="피드백"/>
         
         
-        <div class={"rounded-lg drawer absolute h-4/5 z-10" + (menu ? "" : " hidden ")}>
+        <div class={"rounded-lg drawer absolute w-1/3 h-4/5 z-10" + (menu ? "" : " hidden ")}>
             <input id="my-drawer" type="checkbox" class="drawer-toggle"></input>
             
-            <div class="drawer-side h-full">
+            <div class="drawer-side w-full h-full">
                 
                 <label for="my-drawer" class="drawer-overlay"></label> 
-                <ul class="p-4 overflow-y-auto w-80 h-full bg-black bg-opacity-30 text-base-content">
+                <ul class="p-4 overflow-y-auto h-full bg-black bg-opacity-30 text-base-content">
+                <div class="flex drawer-content justify-end " onClick={() => setMenu(!menu)}>   
+                    <label for="my-drawer" class="btn btn-outline border-0 text-white drawer-button">
+                    <FontAwesomeIcon icon={faChevronLeft}></FontAwesomeIcon>
+                    </label>
+                </div>
                 {matchList ? matchList.map((match) => (
                     <MatchList match={match}></MatchList>
                 )) : null}
@@ -205,12 +210,12 @@ function Feedback() {
             <span class="flex text-2xl">{t('feedback')}</span>
             <div class="flex gap-4 my-2 text-center">
                 <div class="flex drawer-content " onClick={() => setMenu(!menu)}>   
-                    <label for="my-drawer" class="btn btn-outline drawer-button">
+                    <label for="my-drawer" class="btn btn-outline drawer-button text-black">
                     <FontAwesomeIcon icon={faBars}></FontAwesomeIcon>
                     </label>
                 </div>
                 
-                <button class="btn btn-outline" onClick={downloadScript}>{t("download")}</button>
+                <button class="btn btn-outline text-black" onClick={downloadScript}>{t("download")}</button>
             </div>
             <TabBox tabList={tabList} selectedTab={selectedTab} setSelectedTab={setSelectedTab} ></TabBox>
             <FeedbackContentWrapper>
