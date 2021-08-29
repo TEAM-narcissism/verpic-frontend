@@ -157,15 +157,15 @@ function Navigator({ user, focus }) {
                 </div>
               </NavigatorLink>
 
-              {user ? (
+              
                 <AvatarLink ref={avatarRef} onClick={avatarOnClick}>
                   <ProfileAvatar>
-                    <span className="text-sm font-semibold">{user.firstName}</span>
+                    {user ? 
+                    <span className="text-sm font-semibold">{user.firstName}</span> :
+                    <></> }
                   </ProfileAvatar>
                 </AvatarLink>
-              ) : (
-                ""
-              )}
+             
               {dropDown ? (
                 <DropDown ref={dropDownref}>
                   <div className="text-center">

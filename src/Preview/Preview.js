@@ -85,11 +85,9 @@ function Preview() {
 
   return (
   <div className="max-w-full bg-gray-100 h-120vh">
-
-      {isLoading ? <div className="text-center bg-gray-100 text-black">Loading...</div> :
+      <Navigator focus="신청목록" user={user}/>
+      {isLoading ? <div class="flex btn btn-lg btn-ghost loading mx-auto">loading</div>:
         <>
-
-        <Navigator focus="신청목록" user={user}/>
         <PreviewWrapper>
           
 

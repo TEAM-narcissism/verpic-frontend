@@ -555,7 +555,7 @@ function StudyChat() {
     <ModalProvider>
     <VideoWrapper>
       {!isLoaded ? (
-        <div class="text-center">로딩중이에요...</div>
+         <div class="flex btn btn-lg btn-ghost text-white loading mx-auto">{t('isloading')}</div>
       ) : (
         <div>
           <ProgressBarWrapper>

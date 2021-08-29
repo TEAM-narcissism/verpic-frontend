@@ -29,7 +29,10 @@ function MainPage() {
           console.log(res);
           setUser(res);
         })
-        
+        .catch((err) => {
+          alert('로그인 세션이 만료되었어요.');
+          window.location.href = '/logout';
+        })
     }
   })
 
@@ -38,8 +41,8 @@ function MainPage() {
 
 
       <ModalProvider>
-        {user ?
-          <Navigator user={user} focus="신청하기" /> : <></>}
+      
+        <Navigator user={user} focus="신청하기" />
         <HomeComponentWrapper>
           <CardList />
         </HomeComponentWrapper>

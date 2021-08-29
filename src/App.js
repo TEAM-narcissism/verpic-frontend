@@ -19,15 +19,16 @@ import TestPage from "./Home/TestPage";
 import ReservationCardList from "./ReservationList/ReservationCardList";
 import FeedbackPage from "./Feedback/FeedbackPage"
 import VideoCheck from "./VideoChat/VideoCheck";
+import Navigator from './Common/Navigator';
 
 export const conn = new SockJS("http://localhost:8080/ws-stomp");
 export const stompconn = Stomp.over(conn);
 
 function App() {
   return (
-    <div>
+    <>
       {/* 로그인을 해야 접근 가능한 영역 */}
-
+    
       <PrivateRoute component={Logout} path="/logout" exact />
       <PrivateRoute component={StudyChat} path="/studychat/:localRoom" />
       <PrivateRoute component={ReservationCardList} path="/topic/reservation" exact />
@@ -46,7 +47,7 @@ function App() {
       {/* 로그인을 안해야 접근 가능한 영역 */}
       <PublicRoute component={Login} path="/login" exact />
       <PublicRoute component={Signup} path="/signup" exact />
-    </div>
+    </>
   );
 }
 

@@ -130,10 +130,9 @@ function ReservationCardList(props) {
 
     return (
         <div class="container max-w-full h-200vh bg-gray-100">
-   
-            {isLoading ? <div className="text-center">{t('isloading')}</div> :
+             <Navigator user={user} focus="신청목록" />
+            {isLoading ?  <div class="flex btn btn-lg btn-ghost loading mx-auto">{t('isloading')}</div>:
                 <div>
-                    <Navigator user={user} focus="신청목록" />
                     <CardListWrapper>
                         <CardListText>{t('reservListText')}</CardListText>
                         <div class="text-gray-600 mb-3 select-none">{t('cardlistlongtext')}</div>

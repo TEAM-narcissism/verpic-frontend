@@ -113,11 +113,10 @@ function Mypage() {
 
   return (
     <div class="container max-w-full h-120vh bg-gray-100">
-
-
-      {isLoading ? <div class="text-center">{t('loading')}</div> :
+      <Navigator user={user} focus="마이페이지" />
+      {isLoading ?  <div class="flex btn btn-lg btn-ghost loading mx-auto">{t('isloading')}</div> :
         <>
-          <Navigator user={user} focus="마이페이지" />
+   
 
           <ProfileWrapper>
             <div class=" text-xl font-semibold mb-2">{t('title')}</div>
