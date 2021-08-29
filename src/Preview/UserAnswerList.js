@@ -1,7 +1,7 @@
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-import React, { Component, useState, useRef } from "react";
+import React, { Component, useState, useRef, useEffect } from "react";
 
 import axios from "axios";
 import Slider from "react-slick";
@@ -12,6 +12,7 @@ function UserAnswer({ detailTopicId }) {
   const cookies = new Cookies();
   const token = cookies.get('vtoken');
   const inputRef = useRef(null);
+  const [condition, setCondition] = useState(false);
 
   const onBlur= (e) => {
     e.preventDefault();
@@ -19,16 +20,21 @@ function UserAnswer({ detailTopicId }) {
   }
 
   const onClick = (e) => {
-    console.log(text);
-    
-    let body = {
-      answer: text,
-    };
     if (!detailTopicId) {
       alert("Select detail topic and save user answer.");
       return;
     }
+    if(!text) {
+      alert("Answer is Empty");
+      return;
+    }
+    
+  
     else {
+      let body = {
+        answer: text,
+      };
+
       axios
         .post("/detail_topics/" + detailTopicId + "/user_answers", body, {
           headers: {
@@ -36,7 +42,7 @@ function UserAnswer({ detailTopicId }) {
           },
         })
         .then((response) => {
-          console.log(response.data);
+          alert('예시 답안을 저장했어요.');
         })
         .catch((error => {
           console.log(error);
@@ -44,10 +50,22 @@ function UserAnswer({ detailTopicId }) {
     }
   };
 
+  useEffect(() => {
+    if(!detailTopicId) {
+      setCondition(false);
+    }
+    else {
+      setCondition(true);
+    }
+  }, [detailTopicId])
+
   return (
     <div>
       <textarea onBlur={onBlur} className="p-2 w-full h-48 border-black" ref={inputRef} placeholder="왼쪽의 상세 토픽 중 하나를 클릭한 후 예시답안을 작성해주세요."></textarea>
-      <div className="mx-auto w-10vw text-center bg-blue-500 m-2 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={onClick}>저장</div>
+      <div className=
+      {condition ? "mx-auto w-10vw text-center bg-blue-500 m-2 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" :
+      "mx-auto w-10vw text-center bg-gray-400 m-2 text-white font-bold py-2 px-4 rounded-full"} 
+      onClick={condition ? onClick : null}>저장</div>
     </div>
   );
 }

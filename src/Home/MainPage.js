@@ -29,10 +29,7 @@ function MainPage() {
           console.log(res);
           setUser(res);
         })
-        .catch((err) => {
-          alert('로그인 세션이 만료되었어요.');
-          window.location.href = '/logout';
-        })
+        
     }
   })
 

@@ -106,7 +106,9 @@ function Preview() {
                 preview={previewset.preview}
                 detailTopicList={previewset.detailTopicList}
                 initialDetailTopic={(previewId - 1) * 2 + 1}
-                changeDetailTopic={setDetailTopicId} />
+                changeDetailTopic={setDetailTopicId} 
+                selectedDetailTopic = {detailTopicId}
+              />
               
             </ContextAndDetailTopicWrapper>
 
