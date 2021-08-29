@@ -1,9 +1,9 @@
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-import React, { Component, useState } from "react";
+import React, { Component, useState, useRef } from "react";
 
-import Axios from "axios";
+import axios from "axios";
 import Slider from "react-slick";
 import Cookies from "universal-cookie";
 
@@ -11,19 +11,25 @@ function UserAnswer({ detailTopicId }) {
   const [text, setText] = useState("");
   const cookies = new Cookies();
   const token = cookies.get('vtoken');
+  const inputRef = useRef(null);
+
+  const onBlur= (e) => {
+    e.preventDefault();
+    setText(e.target.value);
+  }
 
   const onClick = (e) => {
-    let practice = document.getElementById('practice').value;
-    console.log(practice);
+    console.log(text);
+    
     let body = {
-      answer: practice,
+      answer: text,
     };
-    if (detailTopicId === 0) {
+    if (!detailTopicId) {
       alert("Select detail topic and save user answer.");
       return;
     }
     else {
-      Axios
+      axios
         .post("/detail_topics/" + detailTopicId + "/user_answers", body, {
           headers: {
             Authorization: token,
@@ -40,8 +46,8 @@ function UserAnswer({ detailTopicId }) {
 
   return (
     <div>
-      <textarea id="practice" className="resize w-full h-48 border-black" placeholder="왼쪽의 상세 토픽 중 하나를 클릭한 후 예시답안을 작성해주세요."></textarea>
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={onClick}>저장</button>
+      <textarea onBlur={onBlur} className="p-2 w-full h-48 border-black" ref={inputRef} placeholder="왼쪽의 상세 토픽 중 하나를 클릭한 후 예시답안을 작성해주세요."></textarea>
+      <div className="mx-auto w-10vw text-center bg-blue-500 m-2 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={onClick}>저장</div>
     </div>
   );
 }
@@ -49,7 +55,6 @@ function UserAnswer({ detailTopicId }) {
 export default class UserAnswerList extends Component {
   render() {
     const { userAnswerList, whichDetailTopic } = this.props;
-
     const settings = {
       dots: true,
       infinite: true,
@@ -61,11 +66,6 @@ export default class UserAnswerList extends Component {
     return (
       <div>
         <Slider {...settings}>
-          {/* {userAnswerList.map((userAnswer) => (
-            <div>
-              <UserAnswer userAnswer={userAnswer} />
-            </div>
-          ))} */}
           <div>
             <UserAnswer detailTopicId={whichDetailTopic} />
           </div>

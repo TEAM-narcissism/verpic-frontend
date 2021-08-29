@@ -40,22 +40,22 @@ export default class PreviewandDetail extends Component {
       slidesToScroll: 1,
       // nextArrow: <SampleNextArrow />,
       // prevArrow: <SamplePrevArrow />,
-      // arrows: true,
+      arrows: true,
     };
     return (
-      <div className="border m-6 object-fill h-96 mt-20 rounded-lg">
+      <div className="object-fill h-96 rounded-lg ">
         <Slider {...settings}>
-          <div onClick={() => changeDetailTopic(0)} className="text-center pt-4 pb-4">
-            <div className="text-3xl mt-16 font-bold"> 본문 </div>
-            <div className="text-xl mt-10">{preview.context}</div>
+          <div onClick={() => changeDetailTopic(0)} className="text-center pb-4">
+            <div className="p-1 border-b-2 text-2xl font-semibold"> 본문 </div>
+            <div className="text-2xl mt-20 mb-20">{preview.context}</div>
           </div>
-          <div onClick={() => changeDetailTopic(initialId)} className="text-center pt-4 pb-4">
-            <div className="text-3xl mt-16 font-bold"> 한국어 상세 토픽 </div>
-            <div className="text-xl mt-10">{detailTopicList[0].context}</div>
+          <div onClick={() => changeDetailTopic(initialId)} className="text-center pb-4">
+            <div className="p-1 border-b-2 text-2xl font-semibold"> 한국어 상세 토픽 </div>
+            <div className="text-2xl mt-20 mb-20">{detailTopicList[0].context}</div>
           </div>
-          <div onClick={() => changeDetailTopic(initialId + 1)} className="text-center pt-4 pb-4">
-            <div className="text-3xl mt-16 font-bold"> 영어 상세 토픽</div>
-            <div className="text-xl mt-10">{detailTopicList[0].context}</div>
+          <div onClick={() => changeDetailTopic(initialId + 1)} className="text-center pb-4">
+            <div className="p-1 border-b-2 text-2xl font-semibold"> 영어 상세 토픽</div>
+            <div className="text-2xl mt-20 mb-20">{detailTopicList[0].context}</div>
           </div>
         </Slider>
       </div>
