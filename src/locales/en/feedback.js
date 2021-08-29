@@ -3,5 +3,6 @@ export default {
     vocabulary: "Vocabulary",
     analysis: "Analysis",
     feedback: "Feedback",
-    download: "Download Script"
+    download: "Download Script",
+    nofeedback: "No feedback",
 }

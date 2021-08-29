@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import i18next from "i18next";
 
 import styled from '@emotion/styled';
 import tw from 'twin.macro';
@@ -49,12 +50,17 @@ function MatchList({match}) {
     return (
     <a href={"http://localhost:3000/feedback/" + match.id}>
         <li class="btn btn-ghost border-gray-400 w-full mt-2 relative text-gray-200">
-            <p>{match.korTheme}</p>
+            <p>{i18next.language === "kr" ? match.korTheme : match.engTheme}</p>
             <p class="absolute bottom-0 right-1 text-xs">{match.date}</p>
         </li>
     </a>
     );
 }
+
+const FeedbackWrapper = styled.div`
+    font-family: "NanumGothic-Regular";
+    ${tw`w-full h-full`}
+`
 
 
 
@@ -193,29 +199,30 @@ function Feedback() {
     <div class="container max-w-full h-screen bg-white text-black">
         <Navigator user={user} focus="피드백"/>
         
-        
-        <div class={"rounded-lg drawer absolute w-1/3 h-4/5 z-10" + (menu ? "" : " hidden ")}>
+        <FeedbackWrapper>
+
+        <div class={"rounded-lg drawer absolute w-1/3 h-5/6 z-10" + (menu ? "" : " hidden ")}>
             <input id="my-drawer" type="checkbox" class="drawer-toggle"></input>
             
             <div class="drawer-side w-full h-full">
                 
                 <label for="my-drawer" class="drawer-overlay"></label> 
                 <ul class="p-4 overflow-y-auto h-full bg-black bg-opacity-30 text-base-content">
-                <div class="flex drawer-content justify-end " onClick={() => setMenu(!menu)}>   
+                <div class="flex drawer-content justify-end " onClick={() => setTimeout(() => setMenu(!menu), 150)}>   
                     <label for="my-drawer" class="btn btn-outline border-0 text-white drawer-button">
                     <FontAwesomeIcon icon={faChevronLeft}></FontAwesomeIcon>
                     </label>
                 </div>
                 {matchList ? matchList.map((match) => (
                     <MatchList match={match}></MatchList>
-                )) : null}
+                    )) : null}
                
                 {/* <li class="btn btn-ghost border-gray-700 w-full mt-2"><a href="#">Menu Item</a></li> */}
             </ul>
         </div>
         </div>
         <div class="flex flex-col mx-auto w-3/5 h-4/5">
-            <span class="flex text-2xl">{t('feedback')}</span>
+            <span class="text-3xl font-bold mb-1 mt-10 text-black">{t('feedback')}</span>
             <div class="flex gap-4 my-2 text-center">
                 <div class="flex drawer-content " onClick={() => setMenu(!menu)}>   
                     <label for="my-drawer" class="btn btn-outline drawer-button text-black">
@@ -234,8 +241,8 @@ function Feedback() {
                 {/* <FeedbackContent tab={selectedTab}></FeedbackContent> */}
             
         </div>
+        </FeedbackWrapper>
     </div>
-    
     );
 }
 

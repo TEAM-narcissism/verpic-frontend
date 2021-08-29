@@ -18,6 +18,7 @@ import StudyChat from "./VideoChat/StudyChat";
 import TestPage from "./Home/TestPage";
 import ReservationCardList from "./ReservationList/ReservationCardList";
 import FeedbackPage from "./Feedback/FeedbackPage"
+import FeedbackList from "./Feedback/FeedbackList"
 
 export const conn = new SockJS("http://localhost:8080/ws-stomp");
 export const stompconn = Stomp.over(conn);
@@ -36,6 +37,7 @@ function App() {
       <PrivateRoute component={TestPage} path="/test" exact />
       <PrivateRoute component={Preview} path="/preview/:previewId" exact />
       <PrivateRoute component={FeedbackPage} path="/feedback/:matchId" excat/>
+      <PrivateRoute component={FeedbackList} path="/feedback" exact/>
       <PrivateRoute component={EditUserInfo} path="/edit/:userId" exact />
 
       {/* 로그인 / 로그아웃에 관계 없이 접근 가능한 영역 */}
