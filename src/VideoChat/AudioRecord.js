@@ -1,18 +1,22 @@
-import React, { useState, useEffect, forwardRef, useImperativeHandle } from "react";
-import {MediaRecorder, register} from 'extendable-media-recorder';
-import { connect } from 'extendable-media-recorder-wav-encoder';
+import { MediaRecorder, register } from "extendable-media-recorder";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
+
+import Cookies from "universal-cookie";
 import axios from "axios";
-
-import tw from 'twin.macro';
-import styled from '@emotion/styled';
-import Cookies from 'universal-cookie';
-
+import { connect } from "extendable-media-recorder-wav-encoder";
+import styled from "@emotion/styled";
+import tw from "twin.macro";
 
 const ButtonStyle = styled.button`
-  
-  ${tw`bg-blue-500 text-white m-2 rounded-xl w-24 h-12`}`;
+  ${tw`bg-blue-500 text-white m-2 rounded-xl w-24 h-12`}
+`;
 
-const AudioRecord = forwardRef(({matchId}, ref) => {
+const AudioRecord = forwardRef(({ matchId }, ref) => {
   const [stream, setStream] = useState();
   const [media, setMedia] = useState();
   const [onRec, setOnRec] = useState(true);
@@ -26,27 +30,24 @@ const AudioRecord = forwardRef(({matchId}, ref) => {
   const cookies = new Cookies();
 
   useImperativeHandle(ref, () => ({
-      micButtonOff,
-      onRecAudio,
-      offRecAudio,
-      onSubmitAudioFile
-    }))
+    micButtonOff,
+    onRecAudio,
+    offRecAudio,
+    onSubmitAudioFile,
+  }));
   const test = () => {
-   
     if (media) {
-        console.log("녹음 상태: ", media.state);
-        if (media.state === "recording") {
-            media.pause();
-        }
-        else if (media.state === "paused"){
-            media.resume();
-        }
+      console.log("녹음 상태: ", media.state);
+      if (media.state === "recording") {
+        media.pause();
+      } else if (media.state === "paused") {
+        media.resume();
+      }
+    } else {
+      console.log("녹음중이지 않습니다.");
     }
-    else {
-        console.log("녹음중이지 않습니다.");
-    }
-  }
-  const onRecAudio = (audioState=true) => {
+  };
+  const onRecAudio = (audioState = true) => {
     // 음원정보를 담은 노드를 생성하거나 음원을 실행또는 디코딩 시키는 일을 한다
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     //audioCtx.resume();
@@ -62,42 +63,45 @@ const AudioRecord = forwardRef(({matchId}, ref) => {
       analyser.connect(audioCtx.destination);
     }
     // 마이크 사용 권한 획득
-    
-    navigator.mediaDevices.getUserMedia({ audio: true }).then(async (stream) =>  {
-        
+
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then(async (stream) => {
         stream.getAudioTracks().forEach(function (track) {
-            track.enabled = audioState;
+          track.enabled = audioState;
         });
-  
-        const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/wav' })
+
+        const mediaRecorder = new MediaRecorder(stream, {
+          mimeType: "audio/wav",
+        });
         mediaRecorder.start();
         setStream(stream);
         setMedia(mediaRecorder);
         makeSound(stream);
 
-      analyser.onaudioprocess = function (e) {
-        // 7분 10초(430초) 지나면 자동으로 음성 저장 및 녹음 중지
-        if (e.playbackTime > 430) {
-          stream.getAudioTracks().forEach(function (track) {
-            track.stop();
-          });
-          mediaRecorder.stop();
-          // 메서드가 호출 된 노드 연결 해제
-          analyser.disconnect();
-          audioCtx.createMediaStreamSource(stream).disconnect();
-
-          mediaRecorder.ondataavailable = function (e) {
-            setData({
-              //...data,
-              audioUrl: e.data,
+        analyser.onaudioprocess = function (e) {
+          // 7분 10초(430초) 지나면 자동으로 음성 저장 및 녹음 중지
+          if (e.playbackTime > 430) {
+            stream.getAudioTracks().forEach(function (track) {
+              track.stop();
             });
-            setOnRec(true);
-          };
-        } else {
-          setOnRec(false);
-        }
-      };
-    });
+            mediaRecorder.stop();
+            // 메서드가 호출 된 노드 연결 해제
+            analyser.disconnect();
+            audioCtx.createMediaStreamSource(stream).disconnect();
+
+            mediaRecorder.ondataavailable = function (e) {
+              setData({
+                //...data,
+                audioUrl: e.data,
+              });
+              setOnRec(true);
+            };
+          } else {
+            setOnRec(false);
+          }
+        };
+      });
   };
 
   // 음성 녹음 중지
@@ -109,7 +113,7 @@ const AudioRecord = forwardRef(({matchId}, ref) => {
         //...data,
         audioUrl: e.data,
         order: order,
-        lang: lang
+        lang: lang,
       });
       setOnRec(true);
     };
@@ -128,44 +132,49 @@ const AudioRecord = forwardRef(({matchId}, ref) => {
   };
 
   const micButtonOff = () => {
-    if(stream) {
+    if (stream) {
       stream.getAudioTracks().forEach(function (track) {
         track.enabled = !track.enabled;
-    });
+      });
     }
-    
-  }
+  };
 
   const onSubmitAudioFile = () => {
     console.log(new Date());
     if (data.audioUrl) {
-        console.log(data)
-        console.log(URL.createObjectURL(data.audioUrl)); // 출력된 링크에서 녹음된 오디오 확인 가능
-        const sound = new File([data.audioUrl], "soundBlob", { lastModified: new Date().getTime(), type: "audio/wav" });
-        const token = cookies.get("vtoken");
-        const formData = new FormData();
-        formData.append("file", sound);
-        formData.append("lang", data.lang);
-        formData.append("order", data.order);
-        formData.append("matchId", matchId);
-        console.log(formData);
-        axios.post("/analysis/save", formData, {headers: {
-          Authorization: token
-        }})
-        console.log(sound); // File 정보 출력
+      console.log(data);
+      console.log(URL.createObjectURL(data.audioUrl)); // 출력된 링크에서 녹음된 오디오 확인 가능
+      const sound = new File([data.audioUrl], "soundBlob", {
+        lastModified: new Date().getTime(),
+        type: "audio/wav",
+      });
+      const token = cookies.get("vtoken");
+      const formData = new FormData();
+      formData.append("file", sound);
+      formData.append("lang", data.lang);
+      formData.append("order", data.order);
+      formData.append("matchId", matchId);
+      console.log(formData);
+      axios.post("/api/analysis/save", formData, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      console.log(sound); // File 정보 출력
     }
     // File 생성자를 사용해 파일로 변환
-    
-  }
+  };
 
   useEffect(() => {
-    (async function() {await register(await connect())}());
-    console.log("매치아이디", matchId)
+    (async function () {
+      await register(await connect());
+    })();
+    console.log("매치아이디", matchId);
   }, []);
 
   useEffect(() => {
     onSubmitAudioFile();
-  }, [data])
+  }, [data]);
 
   return (
     <>

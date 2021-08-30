@@ -4,7 +4,7 @@ import {
   faMicrophone,
   faMicrophoneSlash,
   faVideo,
-  faVideoSlash
+  faVideoSlash,
 } from "@fortawesome/free-solid-svg-icons";
 
 import AudioRecord from "./AudioRecord";
@@ -12,7 +12,10 @@ import ChatList from "./ChatList";
 import Cookies from "universal-cookie";
 import CreateChat from "./CreateChat";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ModalButton } from "../Reservation/ReservationForm";
+import { ModalProvider } from "styled-react-modal";
 import ProgressBar from "./ProgressBar";
+import { StyledModal } from "../Reservation/ReservationForm";
 import Timer from "./Timer";
 import axios from "axios";
 import getDetailTopics from "../Api/getDetailTopics";
@@ -22,10 +25,7 @@ import peopledefault from "../assets/images/peopledefault.png";
 import styled from "@emotion/styled";
 import tw from "twin.macro";
 import { useParams } from "react-router";
-import { ModalProvider } from "styled-react-modal";
-import {StyledModal} from '../Reservation/ReservationForm';
-import {ModalButton} from '../Reservation/ReservationForm';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 const ProgressBarWrapper = styled.div`
   font-family: "NanumGothic-Bold";
@@ -54,9 +54,9 @@ const UserVideo = styled.video`
   background-size: 20%;
   background-repeat: no-repeat;
   background-position: center;
-  transform: rotateY(180deg);         
-  -webkit-transform:rotateY(180deg);    
-  -moz-transform:rotateY(180deg);
+  transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
 
   ${tw` w-75vw h-35vh mb-3 rounded-lg`}
 `;
@@ -98,19 +98,20 @@ function StudyChat() {
   const [myId, setMyId] = useState("");
   const { localRoom } = useParams();
   const adminName = "Verpic";
-  const { t, i18n } = useTranslation('reservationform');
-  const [isOpen, setIsOpen] = useState(false)
+  const { t, i18n } = useTranslation("reservationform");
+  const [isOpen, setIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState();
 
-
   function toggleModal(e) {
-      setIsOpen(!isOpen)
+    setIsOpen(!isOpen);
 
-      if(modalContent==="카메라와 마이크 모두 연결되어야 해요. 테스트 페이지에서 다시 확인 부탁드려요.") {
-        window.location.href='/videochecking';
-      }
+    if (
+      modalContent ===
+      "카메라와 마이크 모두 연결되어야 해요. 테스트 페이지에서 다시 확인 부탁드려요."
+    ) {
+      window.location.href = "/videochecking";
+    }
   }
-
 
   const audioRecordRef = useRef();
   const [step, setStep] = useState(0);
@@ -330,11 +331,12 @@ function StudyChat() {
     await navigator.mediaDevices
       .getUserMedia(constraints)
       .then(getLocalMediaStream)
-      .catch((err)=>{
-        setModalContent("카메라와 마이크 모두 연결되어야 해요. 테스트 페이지에서 다시 확인 부탁드려요.");
-        setIsOpen(true)
+      .catch((err) => {
+        setModalContent(
+          "카메라와 마이크 모두 연결되어야 해요. 테스트 페이지에서 다시 확인 부탁드려요."
+        );
+        setIsOpen(true);
         stop();
-        
       });
   };
 
@@ -357,7 +359,6 @@ function StudyChat() {
 
     myPeerConnection.onicecandidate = handleICECandidateEvent;
     myPeerConnection.ontrack = handleTrackEvent;
-
   }
 
   function getLocalMediaStream(mediaStream) {
@@ -390,7 +391,6 @@ function StudyChat() {
     remoteVideoRef.current.srcObject = event.streams[0];
   }
 
- 
   function handleNegotiationNeededEvent() {
     myPeerConnection
       .createOffer()
@@ -462,7 +462,7 @@ function StudyChat() {
           console.log(res);
           setUser(res);
           axios
-            .get("/matching/participant-check/" + localRoom + "/" + res.id)
+            .get("/api/matching/participant-check/" + localRoom + "/" + res.id)
             .then((res) => {
               if (!res.data.result) {
                 alert("정해진 참가자가 아니에요.");
@@ -500,9 +500,8 @@ function StudyChat() {
             addChat(message, adminName, 0);
             message = topics;
             addChat(message, adminName, 0);
-  
+
             audioRecordRef.current.onRecAudio(localVideoState);
-      
           }, remainTime + 5000);
         }
         // 시작시각 + 10분 후
@@ -514,7 +513,7 @@ function StudyChat() {
             addChat(message, adminName, 0);
             message = topics;
             addChat(message, adminName, 0);
-           
+
             console.log("10분 뒤 실행되는 부분");
             audioRecordRef.current.offRecAudio(1, "ko");
             audioRecordRef.current.onRecAudio(localVideoState);
@@ -556,93 +555,87 @@ function StudyChat() {
 
   return (
     <ModalProvider>
-    <VideoWrapper>
-      {!isLoaded ? (
-        <div class="text-center">로딩중이에요...</div>
-      ) : (
-        <div>
-          <ProgressBarWrapper>
-            <ProgressBar step={step}></ProgressBar>
-          </ProgressBarWrapper>
+      <VideoWrapper>
+        {!isLoaded ? (
+          <div class="text-center">로딩중이에요...</div>
+        ) : (
+          <div>
+            <ProgressBarWrapper>
+              <ProgressBar step={step}></ProgressBar>
+            </ProgressBarWrapper>
 
-          {/* <Timer></Timer> */}
+            {/* <Timer></Timer> */}
 
-          <div class="container flex mt-5 justify-between mx-auto">
-            <div class="flex-col">
-              <div class="">
-    
-                <div class="text-left">
-                  <VideoUserText>상대방의 비디오</VideoUserText>
-                  <UserVideo autoPlay playsInline ref={remoteVideoRef} />
-                </div>
+            <div class="container flex mt-5 justify-between mx-auto">
+              <div class="flex-col">
+                <div class="">
+                  <div class="text-left">
+                    <VideoUserText>상대방의 비디오</VideoUserText>
+                    <UserVideo autoPlay playsInline ref={remoteVideoRef} />
+                  </div>
 
-                <div class="text-left">
-                  <VideoUserText>
-                  {user.lastName}
-                    {user.firstName}
-                  의 비디오
-                  </VideoUserText>
-                </div>
-                <UserVideo autoPlay playsInline ref={myVideoRef} />
+                  <div class="text-left">
+                    <VideoUserText>
+                      {user.lastName}
+                      {user.firstName}의 비디오
+                    </VideoUserText>
+                  </div>
+                  <UserVideo autoPlay playsInline ref={myVideoRef} />
 
-                <div class="flex justify-between">
-                  <ToggleButton onClick={videoButtonOff}>
-                    {localVideoState ? (
-                      <FontAwesomeIcon icon={faVideo} />
-                    ) : (
-                      <FontAwesomeIcon icon={faVideoSlash} />
-                    )}
-                  </ToggleButton>
-                  <ToggleButton onClick={micButtonOff}>
-                    {localAudioState ? (
-                      <FontAwesomeIcon icon={faMicrophone} />
-                    ) : (
-                      <FontAwesomeIcon icon={faMicrophoneSlash} />
-                    )}
-                  </ToggleButton>
+                  <div class="flex justify-between">
+                    <ToggleButton onClick={videoButtonOff}>
+                      {localVideoState ? (
+                        <FontAwesomeIcon icon={faVideo} />
+                      ) : (
+                        <FontAwesomeIcon icon={faVideoSlash} />
+                      )}
+                    </ToggleButton>
+                    <ToggleButton onClick={micButtonOff}>
+                      {localAudioState ? (
+                        <FontAwesomeIcon icon={faMicrophone} />
+                      ) : (
+                        <FontAwesomeIcon icon={faMicrophoneSlash} />
+                      )}
+                    </ToggleButton>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="flex-col">
-              <div class="text-left">
-                <ChatLabelText>채팅</ChatLabelText>
+              <div class="flex-col">
+                <div class="text-left">
+                  <ChatLabelText>채팅</ChatLabelText>
+                </div>
+
+                <ChatView ref={chatRef}>
+                  <ChatList chats={chats} myId={myId} />
+                  <CreateChat
+                    message={message}
+                    onChange={chatOnChange}
+                    onCreate={chatOnCreate}
+                  ></CreateChat>
+                </ChatView>
               </div>
-
-              <ChatView ref={chatRef}>
-                <ChatList chats={chats} myId={myId} />
-                <CreateChat
-                  message={message}
-                  onChange={chatOnChange}
-                  onCreate={chatOnCreate}
-                ></CreateChat>
-              </ChatView>
+            </div>
+            {/* 여기 matchId 들어가야함! */}
+            <AudioRecord matchId={localRoom} ref={audioRecordRef}></AudioRecord>
+            <div class="flex justify-end">
+              <StudyExitButton onClick={() => window.close()}>
+                학습 종료
+              </StudyExitButton>
             </div>
           </div>
-          {/* 여기 matchId 들어가야함! */}
-          <AudioRecord matchId={localRoom} ref={audioRecordRef}></AudioRecord>
-          <div class="flex justify-end">
-            <StudyExitButton onClick={() => window.close()}>
-              학습 종료
-            </StudyExitButton>
-          </div>
-        </div>
-      )}
-    </VideoWrapper>
+        )}
+      </VideoWrapper>
 
-    <StyledModal
+      <StyledModal
         isOpen={isOpen}
         onBackgroundClick={toggleModal}
         onEscapeKeydown={toggleModal}
-    >
-
-      <div className="text-center mt-28 text-xl">{modalContent}</div>
-      <div className="text-align">
-        <ModalButton onClick={toggleModal}>{t('modalbutton')}</ModalButton>
-      </div>
-    </StyledModal>
-
-
-
+      >
+        <div className="text-center mt-28 text-xl">{modalContent}</div>
+        <div className="text-align">
+          <ModalButton onClick={toggleModal}>{t("modalbutton")}</ModalButton>
+        </div>
+      </StyledModal>
     </ModalProvider>
   );
 }
