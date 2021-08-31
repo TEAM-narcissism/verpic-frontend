@@ -8,4 +8,11 @@ module.exports = function (app) {
       changeOrigin: true,
     })
   );
+  app.use(
+    "/ws-stomp",
+    createProxyMiddleware({
+      target: "http://spring:8080/",
+      ws: true,
+    })
+  );
 };
