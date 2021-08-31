@@ -32,7 +32,7 @@ function Login() {
 
   async function postToLogin() {
     let body = inputs;
-    console.log(body);
+
     await axios
       .post("/api/login", body)
       .then(async (res) => {
@@ -46,8 +46,9 @@ function Login() {
         if (error.response) {
           const statusCode = error.response.data.httpStatus;
           if (statusCode === "BAD_REQUEST") {
-            console.log("잘못된 email 또는 password입니다.");
-          } else {
+            alert('잘못된 Email 또는 Password입니다.')
+          }
+          else {
             console.log("예상치 못한 오류입니다.");
           }
         }
@@ -55,12 +56,11 @@ function Login() {
   }
 
   const googleOauthSuccess = async (res) => {
-    console.log(res.tokenId);
     const body = {
       accessToken: res.tokenId,
     };
     await axios
-      .post("/oauth/google", body)
+      .post("/api/oauth/google", body)
       .then(async (res) => {
         const accessToken = res.data.data.Token;
         storeInfoLogin(accessToken);
@@ -72,7 +72,6 @@ function Login() {
   const onChange = (e) => {
     const { value, name } = e.target; // 우선 e.target 에서 name 과 value 를 추출
 
-    console.log(value);
     setInputs({
       ...inputs,
       [name]: value,
@@ -86,7 +85,7 @@ function Login() {
       return false;
     }
   };
-  const nothing = () => {};
+  const nothing = () => { };
 
   const debounceFunc = debounce(onChange, 300);
 
@@ -98,17 +97,28 @@ function Login() {
           label="Email"
           name="email"
           placeholder="이메일"
-          onChange={debounceFunc}
+          onBlur={onChange}
+
         />
         <InputWithLabel
           label="Password"
           name="password"
           type="password"
           placeholder="비밀번호"
-          onChange={debounceFunc}
+          onChange={onChange}
+          onKeyPress={
+            (e) => {
+              if (e.key === 'Enter') {
+                postToLogin();
+              }
+            }
+          }
+
         />
-        <AuthButton onClick={allAnswerFulfiled() ? postToLogin : nothing}>
-          {t("login")}
+        <AuthButton
+          onClick={allAnswerFulfiled() ? postToLogin : nothing}
+        >
+          {t('login')}
         </AuthButton>
 
         <GoogleLogin

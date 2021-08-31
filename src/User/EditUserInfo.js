@@ -204,7 +204,7 @@ function EditUserInfo() {
         setModalContent(t("alert.editcomplete"));
         setIsOpen(!isOpen);
         console.log(response);
-        window.location.href = "http://localhost:3000/";
+        window.location.href = "/";
       })
       .catch((error) => {
         console.log(error);

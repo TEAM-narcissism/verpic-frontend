@@ -149,7 +149,9 @@ function Navigator({ user, focus }) {
                   {t("reservationlist")}
                 </div>
               </NavigatorLink>
-              <NavigatorLink>
+              <NavigatorLink
+                onClick={() => (window.location.href = "/feedback")}
+              >
                 <div
                   className={focus === "피드백" ? "my-auto text-indigo-300" : ""}
                 >
@@ -157,15 +159,15 @@ function Navigator({ user, focus }) {
                 </div>
               </NavigatorLink>
 
-              {user ? (
+              
                 <AvatarLink ref={avatarRef} onClick={avatarOnClick}>
                   <ProfileAvatar>
-                    <span className="text-sm font-semibold">{user.firstName}</span>
+                    {user ? 
+                    <span className="text-sm font-semibold">{user.firstName}</span> :
+                    <></> }
                   </ProfileAvatar>
                 </AvatarLink>
-              ) : (
-                ""
-              )}
+             
               {dropDown ? (
                 <DropDown ref={dropDownref}>
                   <div className="text-center">

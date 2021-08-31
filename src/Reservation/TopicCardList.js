@@ -120,7 +120,7 @@ function CardList(props) {
   return (
     <>
       {isLoading ? (
-        <div className="text-center">{t("isloading")}</div>
+        <div class="flex btn btn-lg btn-ghost loading mx-auto">{t('isloading')}</div>
       ) : (
         <>
           <CardListWrapper>
