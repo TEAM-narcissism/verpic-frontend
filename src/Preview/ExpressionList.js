@@ -7,13 +7,13 @@ import Slider from "react-slick";
 
 function Expression({ expression }) {
   return (
-    <div className="pt-4 pb-4 pl-2 text-xl">
-      <div className="pt-2 pb-2 pl-2"><strong>단어: </strong>{expression.word}</div>
-      <div className="pt-2 pb-2 pl-2"><strong>뜻: </strong>{expression.meaning}</div>
-      <div className="pt-2 pb-2 pl-2"><strong>예문: </strong>{expression.example}</div>
-      <div className="pt-2 pb-2 pl-2">
+    <div className="pt-4 pb-4 pl-7 text-lg">
+      <div className="p-2 "><strong>단어: </strong>{expression.word}</div>
+      <div className="p-2"><strong>뜻: </strong>{expression.meaning}</div>
+      <div className="p-2"><strong>예문: </strong>{expression.example}</div>
+      <div className="p-2">
         <strong>발음:</strong>
-        <audio controls className="pt-2 pb-2">
+        <audio controls className="p-4">
           <source src={"data:audio/mpeg;base64," + expression.pronounce} type="audio/mpeg" />
           <p>Your browser does not support the audio element.!</p>
         </audio>
@@ -33,7 +33,7 @@ export default class ExpressionList extends Component {
       speed: 500,
       slidesToShow: 1,
       slidesToScroll: 1,
-      arrows: false,
+      arrows: true,
     };
 
     return (

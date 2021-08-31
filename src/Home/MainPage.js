@@ -41,8 +41,8 @@ function MainPage() {
 
 
       <ModalProvider>
-        {user ?
-          <Navigator user={user} focus="신청하기" /> : <Navigator focus="신청하기" />}
+      
+        <Navigator user={user} focus="신청하기" />
         <HomeComponentWrapper>
           <CardList />
         </HomeComponentWrapper>

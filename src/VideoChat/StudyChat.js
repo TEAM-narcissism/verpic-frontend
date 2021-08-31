@@ -198,7 +198,7 @@ function StudyChat() {
         case "join":
           console.log(
             "Client is starting to " +
-              (message.data === "true" ? "negotiate" : "wait for a peer")
+            (message.data === "true" ? "negotiate" : "wait for a peer")
           );
           handlePeerConnection(message);
           break;
@@ -470,10 +470,7 @@ function StudyChat() {
               }
             });
         })
-        .catch((err) => {
-          alert("로그인 세션이 만료되었어요.");
-          window.location.href = "/logout";
-        });
+
     }
 
     getRemainTime(cookies.get("vtoken"), localRoom)
@@ -557,7 +554,7 @@ function StudyChat() {
     <ModalProvider>
       <VideoWrapper>
         {!isLoaded ? (
-          <div class="text-center">로딩중이에요...</div>
+          <div class="flex btn btn-lg btn-ghost text-white loading mx-auto">{t('isloading')}</div>
         ) : (
           <div>
             <ProgressBarWrapper>
@@ -576,8 +573,8 @@ function StudyChat() {
 
                   <div class="text-left">
                     <VideoUserText>
-                      {user.lastName}
-                      {user.firstName}의 비디오
+                      {user.firstName}
+                      {user.lastName}의 비디오
                     </VideoUserText>
                   </div>
                   <UserVideo autoPlay playsInline ref={myVideoRef} />
