@@ -20,7 +20,7 @@ import StudyChat from "./VideoChat/StudyChat";
 import TestPage from "./Home/TestPage";
 import VideoCheck from "./VideoChat/VideoCheck";
 
-export const conn = new SockJS("https://spring:8080/ws-stomp");
+export const conn = new SockJS("http://spring:8080/ws-stomp");
 export const stompconn = Stomp.over(conn);
 
 function App() {
