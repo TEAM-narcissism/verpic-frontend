@@ -1,19 +1,15 @@
 import React, { useRef, useState } from "react";
-import { useTranslation } from 'react-i18next';
 
 import AuthButton from "./AuthButton";
 import AuthWrapper from "./AuthWrapper";
 import Cookies from "universal-cookie";
+import GoogleLogin from "react-google-login";
 import InputWithLabel from "./InputWithLabel";
+import Navigator from "../Common/Navigator";
 import axios from "axios";
 import { debounce } from "lodash";
-import Navigator from "../Common/Navigator";
-import GoogleLogin from "react-google-login";
 import generateUuid from "./generateUuid";
-
-
-
-
+import { useTranslation } from "react-i18next";
 
 function Login() {
   const [inputs, setInputs] = useState({
@@ -23,8 +19,7 @@ function Login() {
 
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { t, i18n } = useTranslation('login');
-
+  const { t, i18n } = useTranslation("login");
 
   function storeInfoLogin(accessToken) {
     const cookies = new Cookies();
@@ -39,7 +34,7 @@ function Login() {
     let body = inputs;
 
     await axios
-      .post("/login", body)
+      .post("/api/login", body)
       .then(async (res) => {
         const accessToken = res.data.data.Token;
         storeInfoLogin(accessToken);
@@ -60,23 +55,19 @@ function Login() {
       });
   }
 
-
   const googleOauthSuccess = async (res) => {
-
     const body = {
-      "accessToken": res.tokenId
+      accessToken: res.tokenId,
     };
-    await axios.post("/oauth/google", body).
-      then(async (res) => {
+    await axios
+      .post("/api/oauth/google", body)
+      .then(async (res) => {
         const accessToken = res.data.data.Token;
         storeInfoLogin(accessToken);
         window.location = "/";
       })
       .catch((err) => console.log(err));
-  }
-
-
-
+  };
 
   const onChange = (e) => {
     const { value, name } = e.target; // 우선 e.target 에서 name 과 value 를 추출
@@ -90,14 +81,11 @@ function Login() {
   const allAnswerFulfiled = () => {
     if (inputs.email && inputs.password) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
-  }
-  const nothing = () => {
-
-  }
+  };
+  const nothing = () => { };
 
   const debounceFunc = debounce(onChange, 300);
 
@@ -133,12 +121,11 @@ function Login() {
           {t('login')}
         </AuthButton>
 
-        <GoogleLogin className="w-full mt-2 font-semibold border-2 border-black rounded-lg"
+        <GoogleLogin
+          className="w-full mt-2 font-semibold border-2 border-black rounded-lg"
           clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
           onSuccess={googleOauthSuccess}
         ></GoogleLogin>
-
-
       </AuthWrapper>
     </div>
   );

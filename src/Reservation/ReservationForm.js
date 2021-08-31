@@ -1,12 +1,13 @@
-import React, { useState, useRef } from 'react';
-import Cookies from 'universal-cookie';
-import Modal from 'styled-react-modal';
+import React, { useRef, useState } from "react";
+
+import Cookies from "universal-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Modal from "styled-react-modal";
 import axios from "axios";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import styled from "@emotion/styled";
 import tw from "twin.macro";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 const ReservationWrapper = styled.div`
   font-family: "NanumGothic-Regular";
@@ -49,229 +50,260 @@ export const ModalButton = styled.div`
 `;
 
 function ReservationForm({ topicId }) {
-    const { t, i18n } = useTranslation('reservationform');
+  const { t, i18n } = useTranslation("reservationform");
 
-    const [Mothertongue, SetMothertongue] = useState("");
-    const [Studylanguage, SetStudylanguage] = useState("");
-    const [Proficiency, SetProficiency] = useState("");
-    const [Studytime, SetStudytime] = useState("");
-    const cookies = new Cookies();
-    const token = cookies.get('vtoken');
-    const modalRef = useRef();
+  const [Mothertongue, SetMothertongue] = useState("");
+  const [Studylanguage, SetStudylanguage] = useState("");
+  const [Proficiency, SetProficiency] = useState("");
+  const [Studytime, SetStudytime] = useState("");
+  const cookies = new Cookies();
+  const token = cookies.get("vtoken");
+  const modalRef = useRef();
 
-    const [isOpen, setIsOpen] = useState(false)
-    const [modalContent, setModalContent] = useState();
+  const [isOpen, setIsOpen] = useState(false);
+  const [modalContent, setModalContent] = useState();
 
-    function toggleModal(e) {
-        setIsOpen(!isOpen)
+  function toggleModal(e) {
+    setIsOpen(!isOpen);
+  }
+
+  const mothertongueHandler = (e) => {
+    e.preventDefault();
+    SetMothertongue(e.target.value);
+  };
+
+  const studylanguageHandler = (e) => {
+    e.preventDefault();
+    SetStudylanguage(e.target.value);
+  };
+
+  const proficiencyHandler = (e) => {
+    e.preventDefault();
+    SetProficiency(e.target.value);
+  };
+
+  const studytimeHandler = (e) => {
+    e.preventDefault();
+    SetStudytime(e.target.value);
+  };
+
+  const allAnswerFulfiled = () => {
+    if (Mothertongue && Studylanguage && Proficiency && Studytime && topicId)
+      return false;
+    else return true;
+  };
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+
+    // state에 저장한 값을 가져옵니다.
+    console.log(Mothertongue);
+    console.log(Studylanguage);
+    console.log(Proficiency);
+    console.log(Studytime);
+
+    if (Mothertongue === Studylanguage) {
+      setModalContent(t("alert.notproperlanguage"));
+      setIsOpen(!isOpen);
+      return;
     }
 
-    const mothertongueHandler = (e) => {
-        e.preventDefault();
-        SetMothertongue(e.target.value);
+    let body = {
+      familiarLanguage: Mothertongue,
+      unfamiliarLanguage: Studylanguage,
+      userLevel: Proficiency,
+      topicId: topicId,
+      startTime: Studytime,
+      isSoldOut: false,
     };
 
-    const studylanguageHandler = (e) => {
-        e.preventDefault();
-        SetStudylanguage(e.target.value);
-    };
-
-    const proficiencyHandler = (e) => {
-        e.preventDefault();
-        SetProficiency(e.target.value);
-    };
-
-    const studytimeHandler = (e) => {
-        e.preventDefault();
-        SetStudytime(e.target.value);
-    };
-
-
-    const allAnswerFulfiled = () => {
-        if (Mothertongue && Studylanguage && Proficiency && Studytime && topicId)
-            return false;
-        else
-            return true;
-    }
-
-    const submitHandler = (e) => {
-        e.preventDefault();
-
-        // state에 저장한 값을 가져옵니다.
-        console.log(Mothertongue);
-        console.log(Studylanguage);
-        console.log(Proficiency);
-        console.log(Studytime);
-
-        if (Mothertongue === Studylanguage) {
-            setModalContent(t('alert.notproperlanguage'))
+    axios
+      .post("/api/reservation/", body, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        setModalContent(t("alert.reservationcomplete"));
+        setIsOpen(!isOpen);
+      })
+      .catch((err) => {
+        if (err.response) {
+          const statusCode = err.response.data.httpStatus;
+          if (statusCode === "UNAUTHORIZED") {
+            setModalContent(t("alert.redundantreservation"));
             setIsOpen(!isOpen);
-            return;
+          } else {
+            setModalContent(t("alert.sessionexpired"));
+            setIsOpen(!isOpen);
+            window.location.href = "/logout";
+          }
         }
+        console.log(err.response);
+        //
+      });
+  };
 
-        let body = {
-            familiarLanguage: Mothertongue,
-            unfamiliarLanguage: Studylanguage,
-            userLevel: Proficiency,
-            topicId: topicId,
-            startTime: Studytime,
-            isSoldOut: false
-        };
+  return (
+    <ReservationWrapper>
+      <ResevationText>{t("reservationtext")}</ResevationText>
 
-        axios
-            .post("/reservation/", body, {
-                headers: {
-                    'Authorization': token
-                }
-            })
-            .then((res) => {
-                console.log(res);
-                setModalContent(t('alert.reservationcomplete'))
-                setIsOpen(!isOpen);
+      <div className="text-gray-600 mb-3 select-none">{t("explanation")}</div>
 
+      <ReservationQuestionWrapper>
+        <ReservationOptionWrapper>
+          <ReservationOptionText className="mb-10">
+            <div className="flex">
+              <span className="mr-3">Step1. {t("step1")}</span>
+              <span>
+                {topicId ? (
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-500 w-5 mt-1"
+                  />
+                ) : (
+                  ""
+                )}
+              </span>
+            </div>
+          </ReservationOptionText>
+          <ReservationOptionText>
+            <div className="flex">
+              <span className="mr-3">Step2. {t("step2")}</span>
+              <span>
+                {Mothertongue ? (
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-500 w-5 mt-1"
+                  />
+                ) : (
+                  ""
+                )}
+              </span>
+            </div>
+          </ReservationOptionText>
+          <ReservationOptionSelect
+            name="mothertongue"
+            value={Mothertongue}
+            onChange={mothertongueHandler}
+          >
+            <option value="">{t("languageselection.selection")}</option>
+            <option value="KOR">{t("languageselection.kor")}</option>
+            <option value="ENG">{t("languageselection.eng")}</option>
+          </ReservationOptionSelect>
+        </ReservationOptionWrapper>
 
-            })
-            .catch((err) => {
-                if (err.response) {
-                    const statusCode = err.response.data.httpStatus;
-                    if (statusCode === "UNAUTHORIZED") {
-                        setModalContent(t('alert.redundantreservation'))
-                        setIsOpen(!isOpen);
-                    }
-                    else {
-                        setModalContent(t('alert.sessionexpired'))
-                        setIsOpen(!isOpen);
-                        window.location.href = "/logout"
-                    }
+        <ReservationOptionWrapper>
+          <ReservationOptionText>
+            <div className="flex">
+              <span className="mr-3">Step3. {t("step3")}</span>
+              <span>
+                {Studylanguage ? (
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    class="text-green-500 w-5 mt-1"
+                  />
+                ) : (
+                  ""
+                )}
+              </span>
+            </div>
+          </ReservationOptionText>
+          <ReservationOptionSelect
+            name="studylanguage"
+            value={Studylanguage}
+            onChange={studylanguageHandler}
+          >
+            <option value="">{t("languageselection.selection")}</option>
+            <option value="KOR">{t("languageselection.kor")}</option>
+            <option value="ENG">{t("languageselection.eng")}</option>
+          </ReservationOptionSelect>
+        </ReservationOptionWrapper>
 
-                }
-                console.log(err.response);
-                //
-            });
+        <ReservationOptionWrapper>
+          <ReservationOptionText>
+            <div className="flex">
+              <span className="mr-3">Step4. {t("step4")}</span>
+              <span>
+                {Proficiency ? (
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-500 w-5 mt-1"
+                  />
+                ) : (
+                  ""
+                )}
+              </span>
+            </div>
+          </ReservationOptionText>
+          <ReservationOptionSelect
+            name="proficiency"
+            value={Proficiency}
+            onChange={proficiencyHandler}
+          >
+            <option value="">{t("levelselection.selection")}</option>
+            <option value="BEGINNER">{t("levelselection.beg")}</option>
+            <option value="INTERMEDIATE">{t("levelselection.int")}</option>
+            <option value="ADVANCED">{t("levelselection.adv")}</option>
+          </ReservationOptionSelect>
+        </ReservationOptionWrapper>
 
+        <ReservationOptionWrapper>
+          <ReservationOptionText>
+            <div className="flex">
+              <span className="mr-3">Step5. {t("step5")}</span>
+              <span>
+                {Studytime ? (
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-green-500 w-5 mt-1"
+                  />
+                ) : (
+                  ""
+                )}
+              </span>
+            </div>
+          </ReservationOptionText>
+          <ReservationOptionSelect
+            name="studytime"
+            value={Studytime}
+            onChange={studytimeHandler}
+          >
+            <option value="">{t("timeselection.selection")}</option>
+            <option value="17">{t("timeselection.sev")}</option>
+            <option value="18">{t("timeselection.eig")}</option>
+            <option value="19">{t("timeselection.nin")}</option>
+          </ReservationOptionSelect>
+        </ReservationOptionWrapper>
 
+        <StyledModal
+          isOpen={isOpen}
+          onBackgroundClick={toggleModal}
+          onEscapeKeydown={toggleModal}
+        >
+          <div className="text-center mt-28 text-xl" ref={modalRef}>
+            {modalContent}
+          </div>
+          <div className="text-align">
+            <ModalButton onClick={toggleModal}>{t("modalbutton")}</ModalButton>
+          </div>
+        </StyledModal>
 
-    };
-
-    return (
-
-        <ReservationWrapper>
-            <ResevationText>{t('reservationtext')}</ResevationText>
-
-
-            <div className="text-gray-600 mb-3 select-none">{t('explanation')}</div>
-
-            <ReservationQuestionWrapper>
-                <ReservationOptionWrapper>
-
-                    <ReservationOptionText className="mb-10">
-                        <div className="flex">
-                            <span className="mr-3">
-                                Step1. {t('step1')}
-                            </span>
-                            <span>
-                                {topicId ?
-                                    <FontAwesomeIcon icon={faCheckCircle} className="text-green-500 w-5 mt-1" /> : ""
-                                }
-                            </span>
-                        </div>
-                    </ReservationOptionText>
-                    <ReservationOptionText>
-                        <div className="flex">
-                            <span className="mr-3">Step2. {t('step2')}</span>
-                            <span>
-                                {Mothertongue ?
-                                    <FontAwesomeIcon icon={faCheckCircle} className="text-green-500 w-5 mt-1" /> : ""
-                                }
-                            </span>
-                        </div>
-
-                    </ReservationOptionText>
-                    <ReservationOptionSelect name="mothertongue" value={Mothertongue} onChange={mothertongueHandler}>
-                        <option value="">{t('languageselection.selection')}</option>
-                        <option value="KOR">{t('languageselection.kor')}</option>
-                        <option value="ENG">{t('languageselection.eng')}</option>
-                    </ReservationOptionSelect>
-                </ReservationOptionWrapper>
-
-                <ReservationOptionWrapper>
-                    <ReservationOptionText>
-                        <div className="flex">
-                            <span className="mr-3">Step3. {t('step3')}</span>
-                            <span>
-                                {Studylanguage ?
-                                    <FontAwesomeIcon icon={faCheckCircle} class="text-green-500 w-5 mt-1" /> : ""
-                                }
-                            </span>
-                        </div>
-                    </ReservationOptionText>
-                    <ReservationOptionSelect name="studylanguage" value={Studylanguage} onChange={studylanguageHandler}>
-                        <option value="">{t('languageselection.selection')}</option>
-                        <option value="KOR">{t('languageselection.kor')}</option>
-                        <option value="ENG">{t('languageselection.eng')}</option>
-                    </ReservationOptionSelect>
-                </ReservationOptionWrapper>
-
-                <ReservationOptionWrapper>
-                    <ReservationOptionText>
-                        <div className="flex">
-                            <span className="mr-3">Step4. {t('step4')}</span>
-                            <span>
-                                {Proficiency ?
-                                    <FontAwesomeIcon icon={faCheckCircle} className="text-green-500 w-5 mt-1" /> : ""
-                                }
-                            </span>
-
-                        </div>
-                    </ReservationOptionText>
-                    <ReservationOptionSelect name="proficiency" value={Proficiency} onChange={proficiencyHandler}>
-                        <option value="">{t('levelselection.selection')}</option>
-                        <option value="BEGINNER">{t('levelselection.beg')}</option>
-                        <option value="INTERMEDIATE">{t('levelselection.int')}</option>
-                        <option value="ADVANCED">{t('levelselection.adv')}</option>
-                    </ReservationOptionSelect>
-                </ReservationOptionWrapper>
-
-                <ReservationOptionWrapper>
-                    <ReservationOptionText>
-                        <div className="flex">
-                            <span className="mr-3">Step5. {t('step5')}</span>
-                            <span>
-                                {Studytime ?
-                                    <FontAwesomeIcon icon={faCheckCircle} className="text-green-500 w-5 mt-1" /> : ""
-                                }
-                            </span>
-                        </div>
-                    </ReservationOptionText>
-                    <ReservationOptionSelect name="studytime" value={Studytime} onChange={studytimeHandler}>
-                        <option value="">{t('timeselection.selection')}</option>
-                        <option value="17">{t('timeselection.sev')}</option>
-                        <option value="18">{t('timeselection.eig')}</option>
-                        <option value="19">{t('timeselection.nin')}</option>
-                    </ReservationOptionSelect>
-                </ReservationOptionWrapper>
-
-                <StyledModal
-                    isOpen={isOpen}
-                    onBackgroundClick={toggleModal}
-                    onEscapeKeydown={toggleModal}
-                >
-
-                    <div className="text-center mt-28 text-xl" ref={modalRef}>{modalContent}</div>
-                    <div className="text-align">
-                        <ModalButton onClick={toggleModal}>{t('modalbutton')}</ModalButton>
-                    </div>
-                </StyledModal>
-
-
-                <ReservationSendButton disabled={allAnswerFulfiled()} className={allAnswerFulfiled() ? "bg-gray-400 cursor-default" : "bg-yellow-400"} onClick={submitHandler}>
-                    {allAnswerFulfiled() ? t('allanswerfulfilled.no') : t('allanswerfulfilled.yes')}
-                </ReservationSendButton>
-
-            </ReservationQuestionWrapper>
-        </ReservationWrapper>
-
-    );
+        <ReservationSendButton
+          disabled={allAnswerFulfiled()}
+          className={
+            allAnswerFulfiled() ? "bg-gray-400 cursor-default" : "bg-yellow-400"
+          }
+          onClick={submitHandler}
+        >
+          {allAnswerFulfiled()
+            ? t("allanswerfulfilled.no")
+            : t("allanswerfulfilled.yes")}
+        </ReservationSendButton>
+      </ReservationQuestionWrapper>
+    </ReservationWrapper>
+  );
 }
 
 export default React.memo(ReservationForm);

@@ -1,10 +1,10 @@
 import axios from "axios";
 
 function getDetailTopics(token, matchId) {
-    console.log(matchId)
+  console.log(matchId);
   return new Promise((resolve, reject) => {
     axios
-      .get("http://localhost:3000/detail_topics_match_id/" + matchId, {
+      .get("/api/detail_topics_match_id/" + matchId, {
         headers: {
           Authorization: token,
         },

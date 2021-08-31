@@ -18,13 +18,11 @@ const ProfileWrapper = styled.div`
 
 const ProfileText = styled.div`
   font-family: 'NanumGothic-Regular';
-
   ${tw`mb-5`}
 `;
 
 const ReserveListWrapper = styled.div`
   font-family: 'NanumGothic-Regular';
-
   ${tw`container w-full border bg-white`}
 `;
 
@@ -80,7 +78,7 @@ function Mypage() {
         }
       });
 
-    await axios.get("/reservation/user/", {
+    await axios.get("/api/reservation/user/", {
       headers: {
         Authorization: token,
       }
@@ -99,7 +97,7 @@ function Mypage() {
         }
       ))
 
-    await axios.get('/matching/user/' + id)
+    await axios.get('/api/matching/user/' + id)
       .then((res) => {
         if (res.data) {
           setMatchList(res.data);
@@ -114,9 +112,9 @@ function Mypage() {
   return (
     <div class="container max-w-full h-120vh bg-gray-100">
       <Navigator user={user} focus="마이페이지" />
-      {isLoading ?  <div class="flex btn btn-lg btn-ghost loading mx-auto">{t('isloading')}</div> :
+      {isLoading ? <div class="flex btn btn-lg btn-ghost loading mx-auto">{t('isloading')}</div> :
         <>
-   
+
 
           <ProfileWrapper>
             <div class=" text-xl font-semibold mb-2">{t('title')}</div>
@@ -155,7 +153,7 @@ function Mypage() {
                 <div class="text-center mb-5 mt-5" key={reservation.id}>
                   <div class="font-semibold text-xl">
                     {i18next.language === "kr" ? reservation.topic.korTheme : reservation.topic.engTheme}
-            
+
                   </div>
 
                   <div>
