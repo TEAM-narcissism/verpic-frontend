@@ -88,7 +88,7 @@ function Navigator({ user, focus }) {
   }
 
   const changeLanguage = () => {
-    if (pageLanguage == "KOR") {
+    if (pageLanguage === "KOR") {
       setPageLanguage("ENG");
       localStorage.setItem("i18nextLng", "en");
       i18n.changeLanguage("en");
@@ -159,15 +159,15 @@ function Navigator({ user, focus }) {
                 </div>
               </NavigatorLink>
 
-              {user ? (
+              
                 <AvatarLink ref={avatarRef} onClick={avatarOnClick}>
                   <ProfileAvatar>
-                    <span className="text-sm font-semibold">{user.firstName}</span>
+                    {user ? 
+                    <span className="text-sm font-semibold">{user.firstName}</span> :
+                    <></> }
                   </ProfileAvatar>
                 </AvatarLink>
-              ) : (
-                ""
-              )}
+             
               {dropDown ? (
                 <DropDown ref={dropDownref}>
                   <div className="text-center">

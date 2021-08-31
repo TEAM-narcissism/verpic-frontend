@@ -36,14 +36,14 @@ const ReservationSendButton = styled.button`
   ${tw`border w-full rounded-lg p-3  text-white font-semibold`}
 `;
 
-const StyledModal = Modal.styled`
+export const StyledModal = Modal.styled`
     font-family: "NanumGothic-Regular";
     width: 500px;
     height: 300px;
-    ${tw`bg-gray-100 rounded-lg `}
+    ${tw`bg-gray-100 rounded-lg  text-black`}
 `;
 
-const ModalButton = styled.div`
+export const ModalButton = styled.div`
   font-family: "NanumGothic-Regular";
   ${tw`p-2 border w-1/2 mx-auto mt-20 bg-yellow-400 text-white rounded-lg text-center cursor-pointer`}
 `;

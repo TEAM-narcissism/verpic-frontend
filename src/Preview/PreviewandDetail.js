@@ -29,7 +29,13 @@ function SamplePrevArrow(props) {
 
 export default class PreviewandDetail extends Component {
   render() {
-    const { preview, detailTopicList, initialDetailTopic, changeDetailTopic } = this.props;
+    const { 
+      preview, 
+      detailTopicList, 
+      initialDetailTopic, 
+      changeDetailTopic,
+      selectedDetailTopic
+    } = this.props;
     const initialId = initialDetailTopic;
 
     const settings = {
@@ -40,22 +46,32 @@ export default class PreviewandDetail extends Component {
       slidesToScroll: 1,
       // nextArrow: <SampleNextArrow />,
       // prevArrow: <SamplePrevArrow />,
-      // arrows: true,
+      arrows: false,
     };
     return (
-      <div className="border m-6 object-fill h-96 mt-20 rounded-lg">
+      <div className="object-fill h-96 rounded-lg ">
         <Slider {...settings}>
-          <div onClick={() => changeDetailTopic(0)} className="text-center pt-4 pb-4">
-            <div className="text-3xl mt-16 font-bold"> 본문 </div>
-            <div className="text-xl mt-10">{preview.context}</div>
+          <div onClick={() => changeDetailTopic(0)} className="text-center pb-4">
+            <div className="p-1 border-b-2 text-2xl font-semibold"> 본문 </div>
+            <div className="text-gray-700 my-10 mx-3 text-2xl pt-20 pb-20" >
+                {preview.context}
+            </div>
           </div>
-          <div onClick={() => changeDetailTopic(initialId)} className="text-center pt-4 pb-4">
-            <div className="text-3xl mt-16 font-bold"> 한국어 상세 토픽 </div>
-            <div className="text-xl mt-10">{detailTopicList[0].context}</div>
+          <div onClick={() => changeDetailTopic(detailTopicList[0].id)} className="text-center pb-4">
+            <div className="p-1 border-b-2 text-2xl font-semibold"> 한국어 상세 토픽 </div>
+            <div className={selectedDetailTopic === detailTopicList[0].id ? 
+              "cursor-pointer ring-4 shadow-lg ring-gray-300 rounded-xl text-gray-700 text-2xl my-10 mx-3 py-20": 
+              "cursor-pointer text-gray-700 my-10 mx-3 text-2xl pt-20 pb-20"}>
+              {detailTopicList[0].context}
+            </div>
           </div>
-          <div onClick={() => changeDetailTopic(initialId + 1)} className="text-center pt-4 pb-4">
-            <div className="text-3xl mt-16 font-bold"> 영어 상세 토픽</div>
-            <div className="text-xl mt-10">{detailTopicList[0].context}</div>
+          <div onClick={() => changeDetailTopic(detailTopicList[1].id)} className="text-center pb-4">
+            <div className="p-1 border-b-2 text-2xl font-semibold"> 영어 상세 토픽</div>
+            <div className={selectedDetailTopic === detailTopicList[1].id ? 
+              "cursor-pointer ring-4 shadow-lg ring-gray-300 rounded-xl text-gray-700 text-2xl my-10 mx-3 py-20": 
+              "cursor-pointer text-gray-700 my-10 mx-3 text-2xl pt-20 pb-20"}>
+              {detailTopicList[1].context}
+            </div>
           </div>
         </Slider>
       </div>

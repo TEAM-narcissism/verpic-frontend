@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { conn, stompconn } from "../App";
 import {
-  faCamera,
   faMicrophone,
   faMicrophoneSlash,
   faVideo,
@@ -23,6 +22,10 @@ import peopledefault from "../assets/images/peopledefault.png";
 import styled from "@emotion/styled";
 import tw from "twin.macro";
 import { useParams } from "react-router";
+import { ModalProvider } from "styled-react-modal";
+import {StyledModal} from '../Reservation/ReservationForm';
+import {ModalButton} from '../Reservation/ReservationForm';
+import { useTranslation } from 'react-i18next';
 
 const ProgressBarWrapper = styled.div`
   font-family: "NanumGothic-Bold";
@@ -55,8 +58,6 @@ const UserVideo = styled.video`
   -webkit-transform:rotateY(180deg);    
   -moz-transform:rotateY(180deg);
 
-
-
   ${tw` w-75vw h-35vh mb-3 rounded-lg`}
 `;
 
@@ -84,6 +85,7 @@ const StudyExitButton = styled.div`
 function StudyChat() {
   let localStream;
   let myPeerConnection;
+
   const cookies = new Cookies();
   const token = cookies.get("vtoken");
   const localUserName = localStorage.getItem("uuid");
@@ -96,6 +98,19 @@ function StudyChat() {
   const [myId, setMyId] = useState("");
   const { localRoom } = useParams();
   const adminName = "Verpic";
+  const { t, i18n } = useTranslation('reservationform');
+  const [isOpen, setIsOpen] = useState(false)
+  const [modalContent, setModalContent] = useState();
+
+
+  function toggleModal(e) {
+      setIsOpen(!isOpen)
+
+      if(modalContent==="카메라와 마이크 모두 연결되어야 해요. 테스트 페이지에서 다시 확인 부탁드려요.") {
+        window.location.href='/videochecking';
+      }
+  }
+
 
   const audioRecordRef = useRef();
   const [step, setStep] = useState(0);
@@ -315,12 +330,17 @@ function StudyChat() {
     await navigator.mediaDevices
       .getUserMedia(constraints)
       .then(getLocalMediaStream)
-      .catch(handleGetUserMediaError);
+      .catch((err)=>{
+        setModalContent("카메라와 마이크 모두 연결되어야 해요. 테스트 페이지에서 다시 확인 부탁드려요.");
+        setIsOpen(true)
+        stop();
+        
+      });
   };
 
   // create peer connection, get media, start negotiating when second participant appears
   function handlePeerConnection(message) {
-    if (remoteVideoRef) {
+    if (remoteVideoRef.current) {
       remoteVideoRef.current.srcObject = null;
     }
     createPeerConnection();
@@ -335,17 +355,11 @@ function StudyChat() {
   function createPeerConnection() {
     myPeerConnection = new RTCPeerConnection(peerConnectionConfig);
 
-    // event handlers for the ICE negotiation process
     myPeerConnection.onicecandidate = handleICECandidateEvent;
     myPeerConnection.ontrack = handleTrackEvent;
 
-    // the following events are optional and could be realized later if needed
-    // myPeerConnection.onremovetrack = handleRemoveTrackEvent;
-    // myPeerConnection.oniceconnectionstatechange = handleICEConnectionStateChangeEvent;
-    // myPeerConnection.onicegatheringstatechange = handleICEGatheringStateChangeEvent;
-    // myPeerConnection.onsignalingstatechange = handleSignalingStateChangeEvent;
   }
-  // add MediaStream to local video element and to the Peer
+
   function getLocalMediaStream(mediaStream) {
     localStream = mediaStream;
     if (myVideoRef.current) {
@@ -359,28 +373,6 @@ function StudyChat() {
     });
   }
 
-  // handle get media error
-  function handleGetUserMediaError(error) {
-    log("navigator.getUserMedia error: ", error);
-    switch (error.name) {
-      case "NotFoundError":
-        alert(
-          "Unable to open your call because no camera and/or microphone were found."
-        );
-        break;
-      case "SecurityError":
-      case "PermissionDeniedError":
-        // Do nothing; this is the same as the user canceling the call.
-        break;
-      default:
-        alert("Error opening your camera and/or microphone: " + error.message);
-        break;
-    }
-
-    stop();
-  }
-
-  // send ICE candidate to the peer through the server
   function handleICECandidateEvent(event) {
     if (event.candidate) {
       sendToServer({
@@ -398,10 +390,7 @@ function StudyChat() {
     remoteVideoRef.current.srcObject = event.streams[0];
   }
 
-  // WebRTC called handler to begin ICE negotiation
-  // 1. create a WebRTC offer
-  // 2. set local media description
-  // 3. send the description as an offer on media format, resolution, etc
+ 
   function handleNegotiationNeededEvent() {
     myPeerConnection
       .createOffer()
@@ -481,10 +470,7 @@ function StudyChat() {
               }
             });
         })
-        .catch((err) => {
-          alert("로그인 세션이 만료되었어요.");
-          window.location.href = "/logout";
-        });
+     
     }
 
     getRemainTime(cookies.get("vtoken"), localRoom)
@@ -566,9 +552,10 @@ function StudyChat() {
   };
 
   return (
+    <ModalProvider>
     <VideoWrapper>
       {!isLoaded ? (
-        <div class="text-center">로딩중이에요...</div>
+         <div class="flex btn btn-lg btn-ghost text-white loading mx-auto">{t('isloading')}</div>
       ) : (
         <div>
           <ProgressBarWrapper>
@@ -638,6 +625,22 @@ function StudyChat() {
         </div>
       )}
     </VideoWrapper>
+
+    <StyledModal
+        isOpen={isOpen}
+        onBackgroundClick={toggleModal}
+        onEscapeKeydown={toggleModal}
+    >
+
+      <div className="text-center mt-28 text-xl">{modalContent}</div>
+      <div className="text-align">
+        <ModalButton onClick={toggleModal}>{t('modalbutton')}</ModalButton>
+      </div>
+    </StyledModal>
+
+
+
+    </ModalProvider>
   );
 }
 

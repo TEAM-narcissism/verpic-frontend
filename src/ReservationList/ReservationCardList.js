@@ -44,10 +44,7 @@ function ReservationCardList(props) {
                     console.log(res);
                     setUser(res);
                 })
-                .catch((err) => {
-                    alert('로그인 세션이 만료되었어요.');
-                    window.location.href = '/logout';
-                })
+              
         }
     })
 
@@ -133,8 +130,8 @@ function ReservationCardList(props) {
 
     return (
         <div class="container max-w-full h-200vh bg-gray-100">
-            <Navigator user={user} focus="신청목록" />
-            {isLoading ? <div className="text-center">{t('isloading')}</div> :
+             <Navigator user={user} focus="신청목록" />
+            {isLoading ?  <div class="flex btn btn-lg btn-ghost loading mx-auto">{t('isloading')}</div>:
                 <div>
                     <CardListWrapper>
                         <CardListText>{t('reservListText')}</CardListText>
