@@ -4,5 +4,5 @@ export default {
     analysis: "Analysis",
     feedback: "Feedback",
     download: "Download Script",
-    nofeedback: "No feedback",
+    nofeedback: "No feedback found. Please try after a while.",
 }

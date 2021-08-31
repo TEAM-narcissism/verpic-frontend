@@ -16,7 +16,8 @@ import getParticipatedMatches from "../Api/getParticipatedMatches"
 import ChatList from '../VideoChat/ChatList';
 import { useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faChevronLeft, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import WPMChart from './WPMChart';
 
 const FeedbackContentWrapper = styled.div`
     font-family: 'NanumGothic-Regular';
@@ -28,8 +29,8 @@ const FeedbackContentWrapper = styled.div`
 
 function RepeatedWord({word}) {
     return (
-    <div class="rounded-2xl bg-indigo-300 h-16 w-1/2 flex justify-between">
-        <span class="flex m-2 my-auto text-lg">{word.key}. {word.word}</span>
+    <div class="rounded-2xl bg-gray-400 h-16 w-full flex justify-between">
+        <span class="flex m-2 my-auto text-lg">{word.key > 5 ? word.key - 5 : word.key}. {word.word}</span>
         <span class="flex m-2 my-auto text-lg">{word.count}번</span>
     </div>
     );
@@ -38,11 +39,18 @@ function RepeatedWord({word}) {
 function Vocabulary({repeatedWords}) {
     
     return (
+        <>
         <div class="flex flex-col justify-between m-4 w-full">
-            {repeatedWords.map((repeatedWord) => (
+            {repeatedWords[0].map((repeatedWord) => (
                 <RepeatedWord word={repeatedWord}></RepeatedWord>
             ))}
         </div>
+        <div class="flex flex-col justify-between m-4 w-full">
+            {repeatedWords[1].map((repeatedWord) => (
+                <RepeatedWord word={repeatedWord}></RepeatedWord>
+            ))}
+        </div>
+        </>
     );
 }
 
@@ -62,15 +70,14 @@ const FeedbackWrapper = styled.div`
     ${tw`w-full h-full`}
 `
 
-
-
-
 function Feedback() {
     
     const cookies = new Cookies();
     const { t, i18n } = useTranslation('feedback');
     var s = useRef("");
     const token = cookies.get('vtoken');
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [hasError, setHasError] = useState(false);
     const [user, setUser] = useState();
     const [selectedTab, setSelectedTab] = useState(1);
     const { matchId } = useParams();
@@ -80,8 +87,60 @@ function Feedback() {
     const nextChatId = useRef(1);
     const nextWordId = useRef(1);
     const [menu, setMenu] = useState(false)
-    const [repeatedWords, setRepeatedWords] = useState([
+    const [repeatedWordsKor, setRepeatedWordsKor] = useState(
+    [ 
+        // 테스트용 데이터
+        // {
+        //     word: "word1",
+        //     count: 11,
+        //     key: 1
+        // },
+        // {
+        //     word: "word2",
+        //     count: 22,
+        //     key: 2
+        // },{
+        //     word: "word3",
+        //     count: 33,
+        //     key: 3
+        // },{
+        //     word: "word4",
+        //     count: 44,
+        //     key: 4
+        // },{
+        //     word: "word6",
+        //     count: 55,
+        //     key: 5
+        // }
     ]);
+
+    const [repeatedWordsEng, setRepeatedWordsEng] = useState(
+        [ 
+            // 테스트용 데이터
+            // {
+            //     word: "word11",
+            //     count: 11,
+            //     key: 1
+            // },
+            // {
+            //     word: "word21",
+            //     count: 22,
+            //     key: 2
+            // },{
+            //     word: "word31",
+            //     count: 33,
+            //     key: 3
+            // },{
+            //     word: "word41",
+            //     count: 44,
+            //     key: 4
+            // },{
+            //     word: "word61",
+            //     count: 55,
+            //     key: 5
+            // }
+        ]);
+
     const tabList = [
         {
             key: 1,
@@ -96,6 +155,8 @@ function Feedback() {
             name: t("analysis")
         },
     ]
+
+    const [wpmList, setWpmList] = useState([]);
 
     function TabBox({tabList, selectedTab, setSelectedTab}) {
         return (
@@ -118,13 +179,23 @@ function Feedback() {
         nextChatId.current += 1;
     }
 
-    const addRepeatedWord = (word, count) => {
+    const addRepeatedWordKor = (word, count) => {
         const w = {
             key: nextWordId.current,
             word: word,
             count: count
         }
-        setRepeatedWords(repeatedWords => repeatedWords.concat(w));
+        setRepeatedWordsKor(repeatedWordsKor => repeatedWordsKor.concat(w));
+        nextWordId.current += 1;
+    }
+
+    const addRepeatedWordEng = (word, count) => {
+        const w = {
+            key: nextWordId.current,
+            word: word,
+            count: count
+        }
+        setRepeatedWordsEng(repeatedWordsEng => repeatedWordsEng.concat(w));
         nextWordId.current += 1;
     }
 
@@ -173,7 +244,7 @@ function Feedback() {
         .then((content) => {
             console.log(content)
             setMyId(content.requestUserId);
-            // 피드백들이 없는 경우 처리 필요!
+            
             content.messages && content.messages.forEach((message) => {
                 addChat(message.message, message.sender, message.userId)
                 s.current += message.sender + ":" + message.message + "\n";
@@ -181,9 +252,26 @@ function Feedback() {
             //console.log(content.analysisList[0].mostUsedWordList)
             // 여기두
             content.analysisList && content.analysisList[0].mostUsedWordList.forEach((w) => {
-                addRepeatedWord(w.word, w.count);
+                addRepeatedWordKor(w.word, w.count);
             })
-            //console.log("rerer", content.messages)
+            content.analysisList && content.analysisList[1].mostUsedWordList.forEach((w) => {
+                addRepeatedWordEng(w.word, w.count);
+            })
+            content.analysisList && setWpmList(wpmList => wpmList.concat ({
+                key: 1,
+                name: "Me(KOR)",
+                wpm: content.analysisList[0].wpm,
+            }));
+            content.analysisList && setWpmList(wpmList => wpmList.concat ({
+                key: 2,
+                name: "Me(ENG)",
+                wpm: content.analysisList[1].wpm,
+            }))
+        })
+        .catch((err) => {
+            //alert("피드백이 존재하지 않아요")
+            setHasError(true);
+            //window.location.href = '/feedback'
         })
         getParticipatedMatches(token)
         .then((content) => {
@@ -191,6 +279,7 @@ function Feedback() {
                 addFeedback(match);
             })
         })
+        //setIsLoaded(true);
     }, [])
 
     
@@ -216,9 +305,7 @@ function Feedback() {
                 {matchList ? matchList.map((match) => (
                     <MatchList match={match}></MatchList>
                     )) : null}
-               
-                {/* <li class="btn btn-ghost border-gray-700 w-full mt-2"><a href="#">Menu Item</a></li> */}
-            </ul>
+                </ul>
         </div>
         </div>
         <div class="flex flex-col mx-auto w-3/5 h-4/5">
@@ -233,12 +320,18 @@ function Feedback() {
                 <button class="btn btn-outline text-black" onClick={downloadScript}>{t("download")}</button>
             </div>
             <TabBox tabList={tabList} selectedTab={selectedTab} setSelectedTab={setSelectedTab} ></TabBox>
+            {!isLoaded ? hasError 
+            ? <div class="flex">
+                <span class="flex mx-auto text-3xl font-bold mb-1 mt-10 text-black">
+                <FontAwesomeIcon icon={faExclamationTriangle}></FontAwesomeIcon>{t('nofeedback')}
+                </span>
+            </div>
+            : <div class="flex btn btn-lg btn-ghost loading mx-auto">loading</div> :
             <FeedbackContentWrapper>
                 {selectedTab === 1 ? <ChatList chats={script} myId={myId}/> 
-                : selectedTab === 2 ? <Vocabulary repeatedWords={repeatedWords}></Vocabulary> 
-                : <div>분석</div>}
-            </FeedbackContentWrapper>
-                {/* <FeedbackContent tab={selectedTab}></FeedbackContent> */}
+                : selectedTab === 2 ? <Vocabulary repeatedWords={[repeatedWordsKor, repeatedWordsEng]}></Vocabulary>
+                : <WPMChart data={wpmList}></WPMChart>}
+            </FeedbackContentWrapper>}
             
         </div>
         </FeedbackWrapper>

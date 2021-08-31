@@ -4,5 +4,5 @@ export default {
     analysis: "분석",
     feedback: "피드백",
     download: "스크립트 다운로드",
-    nofeedback: "피드백이 존재하지 않습니다",
+    nofeedback: "피드백을 찾을 수 없습니다. 잠시 뒤 시도해주세요.",
 }
