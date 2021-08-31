@@ -43,7 +43,7 @@ function CardList(props) {
 
   useEffect(() => {
     axios
-      .get("/topic", {
+      .get("/api/topic", {
         headers: {
           Authorization: token,
         },

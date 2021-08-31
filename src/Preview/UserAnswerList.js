@@ -36,17 +36,18 @@ function UserAnswer({ detailTopicId }) {
       };
 
       axios
-        .post("/detail_topics/" + detailTopicId + "/user_answers", body, {
+        .post("/api/detail_topics/" + detailTopicId + "/user_answers", body, {
           headers: {
             Authorization: token,
           },
-        })
+        }
+        )
         .then((response) => {
           alert('예시 답안을 저장했어요.');
         })
-        .catch((error => {
+        .catch((error) => {
           console.log(error);
-        }));
+        });
     }
   };
 

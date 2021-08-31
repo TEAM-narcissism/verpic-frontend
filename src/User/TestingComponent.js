@@ -1,24 +1,12 @@
-
-
-import { useContext } from 'react';
-
-import { UserContext } from '../Home/MainPage';
+import { UserContext } from "../Home/MainPage";
+import { useContext } from "react";
 
 function TestingComponent() {
-    const [user, setUser] = useContext(UserContext)
+  const [user, setUser] = useContext(UserContext);
 
+  console.log(user);
 
-    console.log(user);
-
-    return (
-        <>
-            {/* <div>{user.id}</div> */}
-        </>
-    );
-
+  return <>{/* <div>{user.id}</div> */}</>;
 }
 
 export default TestingComponent;
-
-
-

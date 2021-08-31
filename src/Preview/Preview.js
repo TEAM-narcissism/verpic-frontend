@@ -71,7 +71,7 @@ function Preview() {
           setUser(res);
         });
 
-    axios.get("/previewsets/" + previewId).
+    axios.get("/api/previewsets/" + previewId).
       then((res) => {
         if (res.data) {
           console.log(res.data);
