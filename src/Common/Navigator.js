@@ -149,7 +149,9 @@ function Navigator({ user, focus }) {
                   {t("reservationlist")}
                 </div>
               </NavigatorLink>
-              <NavigatorLink>
+              <NavigatorLink
+                onClick={() => (window.location.href = "/feedback")}
+              >
                 <div
                   className={focus === "피드백" ? "my-auto text-indigo-300" : ""}
                 >

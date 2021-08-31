@@ -18,6 +18,7 @@ import StudyChat from "./VideoChat/StudyChat";
 import TestPage from "./Home/TestPage";
 import ReservationCardList from "./ReservationList/ReservationCardList";
 import FeedbackPage from "./Feedback/FeedbackPage"
+import FeedbackList from "./Feedback/FeedbackList"
 import VideoCheck from "./VideoChat/VideoCheck";
 import Navigator from './Common/Navigator';
 
@@ -36,9 +37,10 @@ function App() {
       <PrivateRoute component={Mypage} path="/profile/:id" />
       <PrivateRoute component={MainPage} path="/" exact />
       <PrivateRoute component={TestPage} path="/test" exact />
-      <PrivateRoute component={Preview} path="/preview/:previewId"/>
-      <PrivateRoute component={FeedbackPage} path="/feedback/:matchId"/>
-      <PrivateRoute component={EditUserInfo} path="/edit/:userId" />
+      <PrivateRoute component={Preview} path="/preview/:previewId" exact />
+      <PrivateRoute component={FeedbackPage} path="/feedback/:matchId" excat/>
+      <PrivateRoute component={FeedbackList} path="/feedback" exact/>
+      <PrivateRoute component={EditUserInfo} path="/edit/:userId" exact />
       <PrivateRoute component={VideoCheck} path="/videochecking/:matchId"/>
 
       {/* 로그인 / 로그아웃에 관계 없이 접근 가능한 영역 */}
