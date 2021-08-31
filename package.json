@@ -113,7 +113,7 @@
       "react-app/jest"
     ]
   },
-  "proxy": "http://spring:8080/",
+  "proxy": "http://localhost:8080/",
   "optionalDependencies": {
     "fsevents": "*"
   },
