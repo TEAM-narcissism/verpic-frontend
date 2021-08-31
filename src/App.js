@@ -17,8 +17,8 @@ import { Stomp } from "@stomp/stompjs";
 import StudyChat from "./VideoChat/StudyChat";
 import TestPage from "./Home/TestPage";
 import ReservationCardList from "./ReservationList/ReservationCardList";
-import FeedbackPage from "./Feedback/FeedbackPage"
-import FeedbackList from "./Feedback/FeedbackList"
+import FeedbackPage from "./FeedBack/FeedBackPage"
+import FeedbackList from "./FeedBack/FeedbackList"
 import VideoCheck from "./VideoChat/VideoCheck";
 import Navigator from './Common/Navigator';
 
@@ -29,7 +29,7 @@ function App() {
   return (
     <>
       {/* 로그인을 해야 접근 가능한 영역 */}
-    
+
       <PrivateRoute component={Logout} path="/logout" exact />
       <PrivateRoute component={StudyChat} path="/studychat/:localRoom" />
       <PrivateRoute component={ReservationCardList} path="/topic/reservation" exact />
@@ -37,11 +37,11 @@ function App() {
       <PrivateRoute component={Mypage} path="/profile/:id" />
       <PrivateRoute component={MainPage} path="/" exact />
       <PrivateRoute component={TestPage} path="/test" exact />
-      <PrivateRoute component={Preview} path="/preview/:previewId" exact />
-      <PrivateRoute component={FeedbackPage} path="/feedback/:matchId" excat/>
-      <PrivateRoute component={FeedbackList} path="/feedback" exact/>
-      <PrivateRoute component={EditUserInfo} path="/edit/:userId" exact />
-      <PrivateRoute component={VideoCheck} path="/videochecking/:matchId"/>
+      <PrivateRoute component={Preview} path="/preview/:previewId" />
+      <PrivateRoute component={FeedbackPage} path="/feedback/:matchId" />
+      <PrivateRoute component={FeedbackList} path="/feedback" exact />
+      <PrivateRoute component={EditUserInfo} path="/edit/:userId" />
+      <PrivateRoute component={VideoCheck} path="/videochecking/:matchId" />
 
       {/* 로그인 / 로그아웃에 관계 없이 접근 가능한 영역 */}
       {/* <Route component={MainPage} path="/" exact /> */}

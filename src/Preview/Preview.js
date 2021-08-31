@@ -21,17 +21,17 @@ ${tw`text-3xl font-semibold mb-1 text-black mt-10`}
 
 const PreviewContextWrapper = styled.div`
   font-family: 'NanumGothic-Regular';
-  ${tw`grid grid-cols-2 space-x-3`}
+  ${tw`grid grid-cols-2 space-x-6 mx-auto`}
 `;
 
 const ContextAndDetailTopicWrapper = styled.div`
   font-family: 'NanumGothic-Regular';
-  ${tw`border-2 border-white bg-white rounded-xl shadow-lg w-40vw px-2`}
+  ${tw`border-2 border-white bg-white rounded-xl shadow-lg w-full m-1 px-2`}
 `;
 
 const ExpressionAndQuestionWrapper = styled.div`
   font-family: 'NanumGothic-Regular';
-  ${tw`space-y-6 w-45vw px-2`}
+  ${tw`space-y-6 w-full m-1 px-2`}
 `;
 
 const ComponentTheme = styled.div`
@@ -66,66 +66,66 @@ function Preview() {
 
   useEffect(() => {
     getuser()
-    .then(
-      res => {
-        setUser(res);
-  });
-      
+      .then(
+        res => {
+          setUser(res);
+        });
+
     axios.get("/previewsets/" + previewId).
-    then((res) => {
-      if (res.data) {
-        console.log(res.data);
-        setPreviewset(res.data);
-        setIsLoading(false);
-      } else {
-        alert("fail");
-      }
-    });
+      then((res) => {
+        if (res.data) {
+          console.log(res.data);
+          setPreviewset(res.data);
+          setIsLoading(false);
+        } else {
+          alert("fail");
+        }
+      });
   }, []);
 
   return (
-  <div className="max-w-full bg-gray-100 h-120vh">
-      <Navigator focus="신청목록" user={user}/>
-      {isLoading ? <div class="flex btn btn-lg btn-ghost loading mx-auto">loading</div>:
+    <div className="max-w-full bg-gray-100 h-120vh">
+      <Navigator focus="신청목록" user={user} />
+      {isLoading ? <div class="flex btn btn-lg btn-ghost loading mx-auto">loading</div> :
         <>
-        <PreviewWrapper>
-          
+          <PreviewWrapper>
 
-           <PreviewText>예습하기</PreviewText>
+
+            <PreviewText>예습하기</PreviewText>
             <div className="text-gray-600 text-lg mb-1">
               {previewset.topicDto.korTheme}
             </div>
- 
 
-          <PreviewContextWrapper>
-            <ContextAndDetailTopicWrapper>
-          
-              <PreviewandDetail
-                preview={previewset.preview}
-                detailTopicList={previewset.detailTopicList}
-                initialDetailTopic={(previewId - 1) * 2 + 1}
-                changeDetailTopic={setDetailTopicId} 
-                selectedDetailTopic = {detailTopicId}
-              />
-              
-            </ContextAndDetailTopicWrapper>
 
-            <ExpressionAndQuestionWrapper>
-              <div className="border-2 border-white bg-white rounded-xl shadow-lg">
-                <ComponentTheme>
-                 표현 예습하기
-                </ComponentTheme>
-                <ExpressionList expressionList={previewset.expressionList} />
-              </div>
+            <PreviewContextWrapper>
+              <ContextAndDetailTopicWrapper>
 
-              <div className="border-2 border-white bg-white rounded-xl shadow-lg">
-                <ComponentTheme>미리 생각해보기</ComponentTheme>
-           
-                <UserAnswerList whichDetailTopic={detailTopicId} />
-              </div>
+                <PreviewandDetail
+                  preview={previewset.preview}
+                  detailTopicList={previewset.detailTopicList}
+                  initialDetailTopic={(previewId - 1) * 2 + 1}
+                  changeDetailTopic={setDetailTopicId}
+                  selectedDetailTopic={detailTopicId}
+                />
+
+              </ContextAndDetailTopicWrapper>
+
+              <ExpressionAndQuestionWrapper>
+                <div className="border-2 border-white bg-white rounded-xl shadow-lg">
+                  <ComponentTheme>
+                    표현 예습하기
+                  </ComponentTheme>
+                  <ExpressionList expressionList={previewset.expressionList} />
+                </div>
+
+                <div className="border-2 border-white bg-white rounded-xl shadow-lg">
+                  <ComponentTheme>미리 생각해보기</ComponentTheme>
+
+                  <UserAnswerList whichDetailTopic={detailTopicId} />
+                </div>
               </ExpressionAndQuestionWrapper>
             </PreviewContextWrapper>
-        </PreviewWrapper>
+          </PreviewWrapper>
         </>
       }
     </div>
