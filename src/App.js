@@ -18,8 +18,8 @@ import { Stomp } from "@stomp/stompjs";
 import StudyChat from "./VideoChat/StudyChat";
 import TestPage from "./Home/TestPage";
 
-import FeedbackPage from "./FeedBack/FeedbackPage"
-import FeedbackList from "./FeedBack/FeedbackList"
+import FeedbackPage from "./Feedback/FeedbackPage"
+import FeedbackList from "./Feedback/FeedbackList"
 import VideoCheck from "./VideoChat/VideoCheck";
 
 export const conn = new SockJS("https://spring:8080/ws-stomp");
