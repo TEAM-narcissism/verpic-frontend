@@ -242,6 +242,7 @@ function Feedback() {
         }
         getFeedbackScript(token, matchId)
             .then((content) => {
+                content = content.data
                 console.log(content)
                 setMyId(content.requestUserId);
 
@@ -267,6 +268,7 @@ function Feedback() {
                     name: "Me(ENG)",
                     wpm: content.analysisList[1].wpm,
                 }))
+                setIsLoaded(true);
             })
             .catch((err) => {
                 //alert("피드백이 존재하지 않아요")
