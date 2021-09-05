@@ -198,7 +198,7 @@ function StudyChat() {
         case "join":
           console.log(
             "Client is starting to " +
-            (message.data === "true" ? "negotiate" : "wait for a peer")
+              (message.data === "true" ? "negotiate" : "wait for a peer")
           );
           handlePeerConnection(message);
           break;
@@ -457,20 +457,18 @@ function StudyChat() {
 
   useEffect(() => {
     if (!user) {
-      getuser()
-        .then((res) => {
-          console.log(res);
-          setUser(res);
-          axios
-            .get("/api/matching/participant-check/" + localRoom + "/" + res.id)
-            .then((res) => {
-              if (!res.data.result) {
-                alert("정해진 참가자가 아니에요.");
-                window.location.href = "/";
-              }
-            });
-        })
-
+      getuser().then((res) => {
+        console.log(res);
+        setUser(res);
+        axios
+          .get("/api/matching/participant-check/" + localRoom + "/" + res.id)
+          .then((res) => {
+            if (!res.data.result) {
+              alert("정해진 참가자가 아니에요.");
+              window.location.href = "/";
+            }
+          });
+      });
     }
 
     getRemainTime(cookies.get("vtoken"), localRoom)
@@ -488,7 +486,7 @@ function StudyChat() {
           }, remainTime);
         }
         // 시작시각 + 3분 후
-        if (remainTime + 180000 >= 0) {
+        if (remainTime + 2000 >= 0) {
           setTimeout(() => {
             setStep(2);
             console.log("3분 뒤 실행되는 부분");
@@ -499,10 +497,10 @@ function StudyChat() {
             addChat(message, adminName, 0);
 
             audioRecordRef.current.onRecAudio(localVideoState);
-          }, remainTime + 180000);
+          }, remainTime + 5000);
         }
         // 시작시각 + 10분 후
-        if (remainTime + 600000 >= 0) {
+        if (remainTime + 2000 >= 0) {
           setTimeout(() => {
             setStep(3);
             var message =
@@ -514,10 +512,10 @@ function StudyChat() {
             console.log("10분 뒤 실행되는 부분");
             audioRecordRef.current.offRecAudio(1, "ko");
             audioRecordRef.current.onRecAudio(localVideoState);
-          }, remainTime + 600000);
+          }, remainTime + 10000);
         }
         // 시작시각 + 17분 후
-        if (remainTime + 1020000 >= 0) {
+        if (remainTime + 2000 >= 0) {
           setTimeout(() => {
             setStep(4);
             console.log("17분 뒤 실행되는 부분");
@@ -525,7 +523,7 @@ function StudyChat() {
             var message =
               "곧 세션이 마감됩니다. 마무리 인사를 해주세요.\nThe session will be closed soon.\nPlease say goodbye to your partner.";
             addChat(message, adminName, 0);
-          }, remainTime + 1020000);
+          }, remainTime + 18000);
         }
         setIsLoaded(true);
       })
@@ -554,7 +552,9 @@ function StudyChat() {
     <ModalProvider>
       <VideoWrapper>
         {!isLoaded ? (
-          <div class="flex btn btn-lg btn-ghost text-white loading mx-auto">{t('isloading')}</div>
+          <div class="flex btn btn-lg btn-ghost text-white loading mx-auto">
+            {t("isloading")}
+          </div>
         ) : (
           <div>
             <ProgressBarWrapper>
