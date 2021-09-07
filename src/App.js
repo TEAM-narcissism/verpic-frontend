@@ -18,13 +18,13 @@ import { Stomp } from "@stomp/stompjs";
 import StudyChat from "./VideoChat/StudyChat";
 import TestPage from "./Home/TestPage";
 
-import FeedbackPage from "./Feedback/FeedbackPage"
-import FeedbackList from "./Feedback/FeedbackList"
+import FeedbackPage from "./FeedBack/FeedbackPage"
+import FeedbackList from "./FeedBack/FeedbackList"
 import VideoCheck from "./VideoChat/VideoCheck";
 
-export const conn = new SockJS("http://localhost:8080/ws-stomp");
-export const stompconn = Stomp.over(conn);
+export const conn = new SockJS("/ws-stomp");
 
+export const stompconn = Stomp.over(conn);
 function App() {
   return (
     <>
@@ -42,8 +42,8 @@ function App() {
       <PrivateRoute component={MainPage} path="/" exact />
       <PrivateRoute component={TestPage} path="/test" exact />
       <PrivateRoute component={Preview} path="/preview/:previewId" />
-      {/* <PrivateRoute component={FeedbackPage} path="/feedback/:matchId" /> */}
-      {/* <PrivateRoute component={FeedbackList} path="/feedback" exact /> */}
+      <PrivateRoute component={FeedbackPage} path="/feedback/:matchId" />
+      <PrivateRoute component={FeedbackList} path="/feedback" exact />
       <PrivateRoute component={EditUserInfo} path="/edit/:userId" />
       <PrivateRoute component={VideoCheck} path="/videochecking/:matchId" />
 

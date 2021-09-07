@@ -59,8 +59,7 @@ function Mypage() {
         matchId = match.id;
       }
     })
-
-    window.open('/studychat/' + matchId, '_blank')
+    window.open('/videochecking/' + matchId, '_blank')
 
   }
 
@@ -97,7 +96,11 @@ function Mypage() {
         }
       ))
 
-    await axios.get('/api/matching/user/' + id)
+    await axios.get('/api/matching/login-user/', {
+      headers: {
+        Authorization: token,
+      }
+    })
       .then((res) => {
         if (res.data) {
           setMatchList(res.data);

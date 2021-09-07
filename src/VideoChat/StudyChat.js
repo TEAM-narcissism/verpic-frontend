@@ -198,7 +198,7 @@ function StudyChat() {
         case "join":
           console.log(
             "Client is starting to " +
-            (message.data === "true" ? "negotiate" : "wait for a peer")
+              (message.data === "true" ? "negotiate" : "wait for a peer")
           );
           handlePeerConnection(message);
           break;
@@ -457,20 +457,18 @@ function StudyChat() {
 
   useEffect(() => {
     if (!user) {
-      getuser()
-        .then((res) => {
-          console.log(res);
-          setUser(res);
-          axios
-            .get("/api/matching/participant-check/" + localRoom + "/" + res.id)
-            .then((res) => {
-              if (!res.data.result) {
-                alert("정해진 참가자가 아니에요.");
-                window.location.href = "/";
-              }
-            });
-        })
-
+      getuser().then((res) => {
+        console.log(res);
+        setUser(res);
+        axios
+          .get("/api/matching/participant-check/" + localRoom + "/" + res.id)
+          .then((res) => {
+            if (!res.data.result) {
+              alert("정해진 참가자가 아니에요.");
+              window.location.href = "/";
+            }
+          });
+      });
     }
 
     getRemainTime(cookies.get("vtoken"), localRoom)
@@ -554,7 +552,9 @@ function StudyChat() {
     <ModalProvider>
       <VideoWrapper>
         {!isLoaded ? (
-          <div class="flex btn btn-lg btn-ghost text-white loading mx-auto">{t('isloading')}</div>
+          <div class="flex btn btn-lg btn-ghost text-white loading mx-auto">
+            {t("isloading")}
+          </div>
         ) : (
           <div>
             <ProgressBarWrapper>

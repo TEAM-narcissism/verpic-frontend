@@ -89,7 +89,7 @@ function Feedback() {
     const [menu, setMenu] = useState(false)
     const [repeatedWordsKor, setRepeatedWordsKor] = useState(
         [
-            // 테스트용 데이터
+            // //테스트용 데이터
             // {
             //     word: "word1",
             //     count: 11,
@@ -99,15 +99,15 @@ function Feedback() {
             //     word: "word2",
             //     count: 22,
             //     key: 2
-            // },{
+            // }, {
             //     word: "word3",
             //     count: 33,
             //     key: 3
-            // },{
+            // }, {
             //     word: "word4",
             //     count: 44,
             //     key: 4
-            // },{
+            // }, {
             //     word: "word6",
             //     count: 55,
             //     key: 5
@@ -126,15 +126,15 @@ function Feedback() {
             //     word: "word21",
             //     count: 22,
             //     key: 2
-            // },{
+            // }, {
             //     word: "word31",
             //     count: 33,
             //     key: 3
-            // },{
+            // }, {
             //     word: "word41",
             //     count: 44,
             //     key: 4
-            // },{
+            // }, {
             //     word: "word61",
             //     count: 55,
             //     key: 5
