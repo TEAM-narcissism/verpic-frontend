@@ -30,16 +30,16 @@ const Chat = React.memo(function Chat({ chat, myId, succesive }) {
   }
   else if (0 === chat.userId) {
     return (
-    <div>
-      {succesive ? null : <span class="flex justify-center mr-2 text-gray-100 text-sm font-semibold">{chat.sender}</span>}
+      <div>
+        {succesive ? null : <span class="flex justify-center mr-2 text-gray-100 text-sm font-semibold">{chat.sender}</span>}
         <div class="flex justify-center mb-1">
           <div class="text-center">
             <NoticeWrapper>{chat.message}</NoticeWrapper>
           </div>
         </div>
-    </div>
+      </div>
     );
-  } 
+  }
   else {
   }
   return (
@@ -74,12 +74,12 @@ function ChatList({ chats, myId }) {
   const before = useRef(-1);
   const [succesive, setSeccesive] = useState([
     false
-  ],)
+  ])
   useEffect(() => {
 
     const scroll = scrollRef.current.scrollHeight - scrollRef.current.clientHeight;
     scrollRef.current.scrollTo(0, scroll);
-    console.log("ggggg", before.current, chats.length)
+
     while (before.current < chats.length) {
       if (before.current > 0) {
         if (chats[before.current] && chats[before.current].userId === chats[before.current - 1].userId) {
@@ -94,14 +94,14 @@ function ChatList({ chats, myId }) {
         before.current += 1;
       }
     }
-    
-    
+
+
   }, [chats]);
-  
+
   return (
     <ChatListWrapper ref={scrollRef}>
       {chats ? chats.map((chat) => (
-        <Chat chat={chat} myId={myId} key={chat.id} succesive={succesive[chat.id - 1] ? succesive[chat.id - 1] : false}/>
+        <Chat chat={chat} myId={myId} key={chat.id} succesive={succesive[chat.id - 1] ? succesive[chat.id - 1] : false} />
       )) : null}
       <div ></div>
     </ChatListWrapper>

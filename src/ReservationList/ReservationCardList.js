@@ -109,13 +109,6 @@ function ReservationCardList(props) {
   const indexOfLast = currentPage * topicsPerPage;
   const indexOfFirst = indexOfLast - topicsPerPage;
 
-  function currentTopics(tmp) {
-    let currentTopics = 0;
-    currentTopics = tmp.slice(indexOfFirst, indexOfLast);
-
-    return currentTopics;
-  }
-
 
   function setCurrentPageAndDay(day) {
     setToday(day);
@@ -148,6 +141,7 @@ function ReservationCardList(props) {
                     filteredReservList.map(
                       reserv => (
                         <>
+                          { }
                           <ReservationCard
                             topic={reserv.topic}
                             reservation={reserv}

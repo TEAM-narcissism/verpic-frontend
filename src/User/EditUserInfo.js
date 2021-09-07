@@ -10,6 +10,7 @@ import styled from "@emotion/styled";
 import tw from "twin.macro";
 import { useParams } from "react-router";
 import { useTranslation } from "react-i18next";
+import getTodayDate from "../Common/getTodayDate";
 
 const EditUserInfoWrapper = styled.div`
   font-family: "NanumGothic-Regular";
@@ -90,22 +91,10 @@ function EditUserInfo() {
       if (response.data.birthDate) {
         const birth = response.data.birthDate.split("T");
         let splitBirth = birth[0].split("-");
-        let filteredBirthDate;
-        if (splitBirth[1] === "12" && splitBirth[2] === "31") {
-          splitBirth[0] = parseInt(splitBirth[0]) + 1;
-          splitBirth[1] = "01";
-          splitBirth[2] = "01";
-          filteredBirthDate =
-            splitBirth[0] + "-" + splitBirth[1] + "-" + splitBirth[2];
-        } else {
-          filteredBirthDate =
-            splitBirth[0] +
-            "-" +
-            splitBirth[1] +
-            "-" +
-            (parseInt(splitBirth[2]) + 1);
-        }
-        setBirthDate(filteredBirthDate);
+        let yesterday = new Date(parseInt(splitBirth[0]), parseInt(splitBirth[1]) - 1, parseInt(splitBirth[2]));
+        let now = new Date(yesterday.setDate(yesterday.getDate() + 2));
+        let filteredBirthDate = now.toISOString().split('T');
+        setBirthDate(filteredBirthDate[0]);
       }
       console.log(response.data);
       console.log(response.data.birthDate);
@@ -182,12 +171,22 @@ function EditUserInfo() {
         "-" +
         parsedBirthDate[2];
     } else {
-      birthdate =
-        parsedBirthDate[0] +
-        "-" +
-        parsedBirthDate[1] +
-        "-" +
-        (parseInt(parsedBirthDate[2]) - 1);
+      if (parseInt(parsedBirthDate[2]) <= 10) {
+        birthdate =
+          parsedBirthDate[0] +
+          "-" +
+          parsedBirthDate[1] +
+          "-0" +
+          (parseInt(parsedBirthDate[2]) - 1);
+      }
+      else {
+        birthdate =
+          parsedBirthDate[0] +
+          "-" +
+          parsedBirthDate[1] +
+          "-" +
+          (parseInt(parsedBirthDate[2]) - 1);
+      }
     }
 
     let body = {
@@ -197,6 +196,9 @@ function EditUserInfo() {
       firstLanguage: Mothertongue,
       learnLanguage: Studylanguage,
     };
+
+    console.log("birthdate: " + birthdate);
+    console.log("birthDate: " + birthDate);
 
     axios
       .put("/api/users/" + userId, body)
@@ -289,6 +291,7 @@ function EditUserInfo() {
               </EditUserInfoInputText>
               <EditUserInfoInput
                 type="date"
+                max={getTodayDate()}
                 name="birthDate"
                 value={birthDate}
                 onChange={birthDateHandler}
