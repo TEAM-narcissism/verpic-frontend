@@ -9,6 +9,7 @@ import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import Navigator from "../Common/Navigator";
 import { useTranslation } from 'react-i18next';
 import generateUuid from './generateUuid';
+import getTodayDate from '../Common/getTodayDate';
 
 const SignupFormWrapper = styled.div`
   font-family: "NanumGothic-Regular";
@@ -80,6 +81,7 @@ function Signup() {
     const modalRef = useRef();
     const [isOpen, setIsOpen] = useState(false);
     const [modalContent, setModalContent] = useState("");
+    const [todayDate, setTodayDate] = useState(getTodayDate());
     const { t, i18n } = useTranslation('signup');
 
     function toggleModal() {
@@ -288,7 +290,7 @@ function Signup() {
                                     </span>
                                 </div>
                             </SignupInputText>
-                            <SignupInput type="date" name="birthDate" onChange={onChange} required />
+                            <SignupInput type="date" max={todayDate} name="birthDate" onChange={onChange} required />
                         </SignupInputWrapper>
 
                         <SignupOptionWrapper>

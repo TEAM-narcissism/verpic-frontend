@@ -22,9 +22,9 @@ import FeedbackPage from "./FeedBack/FeedbackPage"
 import FeedbackList from "./FeedBack/FeedbackList"
 import VideoCheck from "./VideoChat/VideoCheck";
 
-export const conn = new SockJS("http://localhost:8080/ws-stomp");
-export const stompconn = Stomp.over(conn);
+export const conn = new SockJS("/ws-stomp");
 
+export const stompconn = Stomp.over(conn);
 function App() {
   return (
     <>

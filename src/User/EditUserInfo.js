@@ -10,6 +10,7 @@ import styled from "@emotion/styled";
 import tw from "twin.macro";
 import { useParams } from "react-router";
 import { useTranslation } from "react-i18next";
+import getTodayDate from "../Common/getTodayDate";
 
 const EditUserInfoWrapper = styled.div`
   font-family: "NanumGothic-Regular";
@@ -289,6 +290,7 @@ function EditUserInfo() {
               </EditUserInfoInputText>
               <EditUserInfoInput
                 type="date"
+                max={getTodayDate()}
                 name="birthDate"
                 value={birthDate}
                 onChange={birthDateHandler}
