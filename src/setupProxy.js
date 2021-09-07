@@ -14,7 +14,6 @@ module.exports = function (app) {
     createProxyMiddleware({
       target: "http://spring:8080/",
       ws: true,
-      changeOrigin: true,
     })
   );
 };
