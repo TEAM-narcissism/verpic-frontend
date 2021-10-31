@@ -14,7 +14,7 @@ import getParticipatedMatches from "../Api/getParticipatedMatches"
 
 function MatchList({ match }) {
     return (
-        <a href={"http://localhost:3000/feedback/" + match.id}>
+        <a href={window.location.href + "/feedback/" + match.id}>
             <li class="flex btn btn-outline btn-neutral border-gray-400 w-11/12 mt-2 mx-auto relative text-black hover:bg-neutral hover:text-white">
                 <p>{i18next.language === "kr" ? match.korTheme : match.engTheme}</p>
                 <p class="absolute bottom-0 right-1 text-xs">{match.date}</p>
