@@ -56,7 +56,7 @@ function Vocabulary({ repeatedWords }) {
 
 function MatchList({ match }) {
     return (
-        <a href={window.location.href + "/feedback/" + match.id}>
+        <a href={window.location.href + match.id}>
             <li class="btn btn-ghost border-gray-400 w-full mt-2 relative text-gray-200">
                 <p>{i18next.language === "kr" ? match.korTheme : match.engTheme}</p>
                 <p class="absolute bottom-0 right-1 text-xs">{match.date}</p>
