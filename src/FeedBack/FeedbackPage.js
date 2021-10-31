@@ -227,7 +227,7 @@ function Feedback() {
                     console.log(res);
                     setUser(res);
                     axios
-                        .get("/matching/participant-check/" + matchId + "/" + res.id)
+                        .get("/api/matching/participant-check/" + matchId + "/" + res.id)
                         .then((res) => {
                             if (!res.data.result) {
                                 alert("정해진 참가자가 아니에요.");
