@@ -486,7 +486,7 @@ function StudyChat() {
           }, remainTime);
         }
         // 시작시각 + 3분 후
-        if (remainTime + 60000 >= 0) {
+        if (remainTime + 180000 >= 0) {
           setTimeout(() => {
             setStep(2);
             console.log("3분 뒤 실행되는 부분");
@@ -497,10 +497,10 @@ function StudyChat() {
             addChat(message, adminName, 0);
 
             audioRecordRef.current.onRecAudio(localVideoState);
-          }, remainTime + 60000);
+          }, remainTime + 180000);
         }
         // 시작시각 + 10분 후
-        if (remainTime + 120000 >= 0) {
+        if (remainTime + 600000 >= 0) {
           setTimeout(() => {
             setStep(3);
             var message =
@@ -512,10 +512,10 @@ function StudyChat() {
             console.log("10분 뒤 실행되는 부분");
             audioRecordRef.current.offRecAudio(1, "ko");
             audioRecordRef.current.onRecAudio(localVideoState);
-          }, remainTime + 120000);
+          }, remainTime + 600000);
         }
         // 시작시각 + 17분 후
-        if (remainTime + 180000 >= 0) {
+        if (remainTime + 1020000 >= 0) {
           setTimeout(() => {
             setStep(4);
             console.log("17분 뒤 실행되는 부분");
@@ -523,7 +523,7 @@ function StudyChat() {
             var message =
               "곧 세션이 마감됩니다. 마무리 인사를 해주세요.\nThe session will be closed soon.\nPlease say goodbye to your partner.";
             addChat(message, adminName, 0);
-          }, remainTime + 180000);
+          }, remainTime + 1020000);
         }
         setIsLoaded(true);
       })
