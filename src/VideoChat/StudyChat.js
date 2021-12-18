@@ -479,6 +479,7 @@ function StudyChat() {
             topics += detailTopics[0].context + "\n" + detailTopics[1].context;
           }
         );
+        remainTime = 0; // 테스트 용돈
         // if (remainTime >= 0) {
         if (true) {
           setTimeout(() => {
