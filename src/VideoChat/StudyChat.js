@@ -479,14 +479,17 @@ function StudyChat() {
             topics += detailTopics[0].context + "\n" + detailTopics[1].context;
           }
         );
-        if (remainTime >= 0) {
+        // if (remainTime >= 0) {
+        if (true) {
           setTimeout(() => {
             setStep(1);
             console.log("시작 직후 뒤 실행되는 부분");
-          }, remainTime);
+          // }, remainTime);
+          }, 0);
         }
         // 시작시각 + 3분 후
-        if (remainTime + 180000 >= 0) {
+        //if (remainTime + 180000 >= 0) {
+        if (remainTime + 120000 >= 0) {
           setTimeout(() => {
             setStep(2);
             console.log("3분 뒤 실행되는 부분");
@@ -497,10 +500,12 @@ function StudyChat() {
             addChat(message, adminName, 0);
 
             audioRecordRef.current.onRecAudio(localVideoState);
-          }, remainTime + 180000);
+          // }, remainTime + 180000);
+          }, remainTime + 120000);
         }
         // 시작시각 + 10분 후
-        if (remainTime + 600000 >= 0) {
+        // if (remainTime + 600000 >= 0) {
+        if (remainTime + 300000 >= 0) {
           setTimeout(() => {
             setStep(3);
             var message =
@@ -512,10 +517,12 @@ function StudyChat() {
             console.log("10분 뒤 실행되는 부분");
             audioRecordRef.current.offRecAudio(1, "ko");
             audioRecordRef.current.onRecAudio(localVideoState);
-          }, remainTime + 600000);
+          // }, remainTime + 600000);
+          }, remainTime + 300000);
         }
         // 시작시각 + 17분 후
-        if (remainTime + 1020000 >= 0) {
+        // if (remainTime + 1020000 >= 0) {
+        if (remainTime + 480000 >= 0) {
           setTimeout(() => {
             setStep(4);
             console.log("17분 뒤 실행되는 부분");
@@ -523,7 +530,8 @@ function StudyChat() {
             var message =
               "곧 세션이 마감됩니다. 마무리 인사를 해주세요.\nThe session will be closed soon.\nPlease say goodbye to your partner.";
             addChat(message, adminName, 0);
-          }, remainTime + 1020000);
+          // }, remainTime + 1020000);
+          }, remainTime + 480000);
         }
         setIsLoaded(true);
       })
