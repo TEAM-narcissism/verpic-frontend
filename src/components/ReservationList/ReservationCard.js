@@ -32,7 +32,6 @@ const TopicStartTimeText = styled.div`
 `;
 
 
-
 const PreviewButton = styled.div`
     background: #25292e;
     font-family: 'NanumGothic-Regular';

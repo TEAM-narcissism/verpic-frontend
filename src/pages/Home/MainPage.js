@@ -20,10 +20,8 @@ function MainPage({reducerUser, handleUser}) {
 
   return (
     <div class="container max-w-full bg-gray-100 h-200vh">
-
+      <Navigator focus="신청하기" />
       <ModalProvider>
-      
-        <Navigator focus="신청하기" />
           <HomeComponentWrapper>
             <CardList />
           </HomeComponentWrapper>

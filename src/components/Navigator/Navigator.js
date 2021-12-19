@@ -33,20 +33,22 @@ const NavigatorText = styled.text`
 
 const NavigatorLink = styled.div`
   font-family: "NanumGothic-Regular";
-  color: #d9dee5;
+  color: white;
   height: 70px;
+  font-weight: 800;
+  font-size: 14px;
   @media screen and (max-width: 500px) {
     display: none;
   }
   &:hover {
-    color: #cddef5;
-    border-bottom: 4px solid #cddef5;
+    color: #9E9E9E;
+    border-bottom: 4px solid #B8B8B8;
   }
   &:focus {
-    color: #cddef5;
-    border-bottom: 4px solid #cddef5;
+    color: #9E9E9E;
+    border-bottom: 4px solid #B8B8B8;
   }
-  ${tw`text-sm font-semibold  overflow-hidden tracking-wider flex items-center align-middle mx-10 duration-300 cursor-pointer`}
+  ${tw`overflow-hidden tracking-wider flex items-center align-middle mx-10 duration-300 cursor-pointer`}
 `;
 
 const AvatarLink = styled.div`
@@ -136,19 +138,20 @@ function Navigator({ user, focus }) {
         <div>
           {isAuthorized() ? (
             <div className="flex">
+
               <NavigatorLink onClick={() => (window.location.href = "/")}>
-                <span
-                  className={focus === "신청하기" ? "my-auto text-indigo-300" : ""}
+                <div
+                  className={focus === "신청하기" ? "my-auto text-gray-500" : ""}
                 >
                   {t("reservation")}
-                </span>
+                </div>
               </NavigatorLink>
 
               <NavigatorLink
                 onClick={() => (window.location.href = "/topic/reservation")}
               >
                 <div
-                  className={focus === "신청목록" ? "my-auto text-indigo-300" : ""}
+                  className={focus === "신청목록" ? "my-auto text-gray-500"  : ""}
                 >
                   {t("reservationlist")}
                 </div>
@@ -157,7 +160,7 @@ function Navigator({ user, focus }) {
                 onClick={() => (window.location.href = "/feedback")}
               >
                 <div
-                  className={focus === "피드백" ? "my-auto text-indigo-300" : ""}
+                  className={focus === "피드백" ? "my-auto text-gray-500"  : ""}
                 >
                   {t("feedback")}
                 </div>
@@ -213,7 +216,7 @@ function Navigator({ user, focus }) {
               </NavigatorLink>
               <NavigatorLink onClick={() => (window.location.href = "/login")}>
                 <div
-                  className={focus === "로그인" ? "my-auto text-indigo-300" : ""}
+                  className={focus === "로그인" ? "my-auto text-gray-500"  : ""}
                 >
                   {t("login")}
                 </div>
@@ -221,7 +224,7 @@ function Navigator({ user, focus }) {
 
               <NavigatorLink onClick={() => (window.location.href = "/signup")}>
                 <div
-                  className={focus === "회원가입" ? "my-auto text-indigo-300" : ""}
+                  className={focus === "회원가입" ? "my-auto text-gray-500"  : ""}
                 >
                   {t("signup")}
                 </div>
