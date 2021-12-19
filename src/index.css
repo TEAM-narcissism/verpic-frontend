@@ -19,20 +19,20 @@ code {
 
 @font-face {
   font-family: 'NotoSans-Regular';
-  src: url("styles/fonts/NotoSans-Regular.ttf");
+  src: url("assets/fonts/NotoSans-Regular.ttf");
 }
 
 @font-face {
   font-family: 'NotoSans-Bold';
-  src: url("styles/fonts/NotoSans-Bold.ttf");
+  src: url("assets/fonts/NotoSans-Bold.ttf");
 }
 
 @font-face {
   font-family: 'NanumGothic-Bold';
-  src: url("styles/fonts/NanumGothic-Bold.ttf");
+  src: url("assets/fonts/NanumGothic-Bold.ttf");
 }
 
 @font-face {
   font-family: 'NanumGothic-Regular';
-  src: url("styles/fonts/NanumGothic-Regular.ttf");
+  src: url("assets/fonts/NanumGothic-Regular.ttf");
 }

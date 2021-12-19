@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import styled from '@emotion/styled';
 import tw from 'twin.macro';
 
-import DaySorting from 'Common/DaySorting';
+import DaySorting from 'common/DaySorting';
 
 import Navigator from 'components/Navigator/Navigator';
 import Cookies from 'universal-cookie';
