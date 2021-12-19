@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 
 import axios from "axios";
 import ExpressionList from "./ExpressionList";
-import Navigator from "../components/Navigator/Navigator";
+import Navigator from "components/Navigator/Navigator";
 import PreviewandDetail from "./PreviewandDetail";
 import UserAnswerList from "./UserAnswerList";
 import { useParams } from "react-router";
-import getuser from "../api/getuser";
+import getuser from "api/getuser";
 import styled from '@emotion/styled';
 import tw from 'twin.macro';
 

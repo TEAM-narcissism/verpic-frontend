@@ -3,14 +3,14 @@ import React, { useEffect, useRef, useState } from "react";
 
 import Cookies from "universal-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Navigator from "../components/Navigator/Navigator";
+import Navigator from "components/Navigator/Navigator";
 import axios from "axios";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import styled from "@emotion/styled";
 import tw from "twin.macro";
 import { useParams } from "react-router";
 import { useTranslation } from "react-i18next";
-import getTodayDate from "../Common/getTodayDate";
+import getTodayDate from "Common/getTodayDate";
 
 const EditUserInfoWrapper = styled.div`
   font-family: "NanumGothic-Regular";

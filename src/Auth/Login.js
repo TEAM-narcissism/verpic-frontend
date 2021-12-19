@@ -5,14 +5,14 @@ import AuthWrapper from "./AuthWrapper";
 import Cookies from "universal-cookie";
 import GoogleLogin from "react-google-login";
 import InputWithLabel from "./InputWithLabel";
-import Navigator from "../components/Navigator/Navigator";
+import Navigator from "components/Navigator/Navigator";
 import axios from "axios";
 import { debounce } from "lodash";
 import generateUuid from "./generateUuid";
 import { useTranslation } from "react-i18next";
-import getuser from "../api/getuser";
+import getuser from "api/getuser";
 import {connect} from 'react-redux';
-import {getUser} from '../store/actions';
+import {getUser} from 'store/actions';
 
 
 function Login({user, handleUser}) {

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
-import Navigator from "../components/Navigator/Navigator";
+import Navigator from "components/Navigator/Navigator";
 import tw from 'twin.macro';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import Cookies from "universal-cookie";
-import getuser from "../api/getuser";
 import { useTranslation } from 'react-i18next';
 import i18next from "i18next";
 import { connect } from 'react-redux';

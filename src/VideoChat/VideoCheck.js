@@ -1,10 +1,10 @@
 import styled from "@emotion/styled";
 import tw from 'twin.macro';
-import peopledefault from "../assets/images/peopledefault.png";
+import peopledefault from "assets/images/peopledefault.png";
 import {useRef, useEffect, useState} from 'react';
 import { ModalProvider } from "styled-react-modal";
-import {StyledModal} from '../Reservation/ReservationForm';
-import {ModalButton} from '../Reservation/ReservationForm';
+import {StyledModal} from 'Reservation/ReservationForm';
+import {ModalButton} from 'Reservation/ReservationForm';
 import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle, faSlash, faTimesCircle } from "@fortawesome/free-solid-svg-icons";

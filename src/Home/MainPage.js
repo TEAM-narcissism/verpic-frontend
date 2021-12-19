@@ -16,8 +16,6 @@ ${tw`container mx-auto flex my-10`}
 `;
 
 
-
-
 function MainPage({reducerUser, handleUser}) {
 
   return (

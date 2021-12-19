@@ -6,8 +6,8 @@ import styled from '@emotion/styled';
 import tw from 'twin.macro';
 import Cookies from 'universal-cookie';
 
-import Navigator from "../components/Navigator/Navigator";
-import getParticipatedMatches from "../api/getParticipatedMatches"
+import Navigator from "components/Navigator/Navigator";
+import getParticipatedMatches from "api/getParticipatedMatches"
 
 
 function MatchList({ match }) {

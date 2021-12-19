@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import Logo from "../../assets/images/logoVerpic.png"
-import isAuthorized from "../../Auth/isAuthorized";
+import Logo from "assets/images/logoVerpic.png"
+import isAuthorized from "Auth/isAuthorized";
 import styled from "@emotion/styled";
 import tw from "twin.macro";
 import { useTranslation } from "react-i18next";
