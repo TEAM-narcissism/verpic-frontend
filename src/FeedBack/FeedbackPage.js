@@ -7,11 +7,11 @@ import tw from 'twin.macro';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 
-import Navigator from "../Common/Navigator";
-import getuser from "../Api/getuser";
+import Navigator from "../components/Navigator/Navigator";
+import getuser from "../api/getuser";
 import isAuthorized from "../Auth/isAuthorized";
-import getFeedbackScript from "../Api/getFeedbackScript"
-import getParticipatedMatches from "../Api/getParticipatedMatches"
+import getFeedbackScript from "../api/getFeedbackScript"
+import getParticipatedMatches from "../api/getParticipatedMatches"
 
 import ChatList from '../VideoChat/ChatList';
 import { useParams } from 'react-router-dom';

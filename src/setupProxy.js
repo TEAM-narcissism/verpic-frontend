@@ -5,14 +5,14 @@ module.exports = function (app) {
 
     createProxyMiddleware(
       "/api", {
-      target: "http://localhost:8080/",
+      target: "http://211.58.89.49:8080/",
       changeOrigin: true,
     })
   );
   app.use(
     "/ws-stomp",
     createProxyMiddleware({
-      target: "http://localhost:8080/",
+      target: "http://211.58.89.49:8080/",
       ws: true,
       changeOrigin: true,
     })

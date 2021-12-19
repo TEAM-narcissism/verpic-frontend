@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 import Cookies from "universal-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Navigator from "../Common/Navigator";
+import Navigator from "../components/Navigator/Navigator";
 import axios from "axios";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import styled from "@emotion/styled";

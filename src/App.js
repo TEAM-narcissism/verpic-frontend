@@ -6,7 +6,7 @@ import EditUserInfo from "./User/EditUserInfo";
 import Login from "./Auth/Login";
 import Logout from "./Auth/Logout";
 import MainPage from "./Home/MainPage";
-import MatchingPost from "./Api/MatchingPost";
+import MatchingPost from "./api/MatchingPost";
 import Mypage from "./User/Mypage";
 import Preview from "./Preview/Preview";
 import PrivateRoute from "./Route/PrivateRoute";
@@ -22,12 +22,19 @@ import FeedbackPage from "./FeedBack/FeedbackPage"
 import FeedbackList from "./FeedBack/FeedbackList"
 import VideoCheck from "./VideoChat/VideoCheck";
 
+
+
+
 export const conn = new SockJS("/ws-stomp");
 
 export const stompconn = Stomp.over(conn);
+
+
+
+
 function App() {
   return (
-    <>
+      <>
       {/* 로그인을 해야 접근 가능한 영역 */}
 
       <PrivateRoute component={Logout} path="/logout" exact />

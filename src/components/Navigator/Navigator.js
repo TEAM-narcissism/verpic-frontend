@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import Logo from "../assets/images/logoVerpic.png";
-import isAuthorized from "../Auth/isAuthorized";
+import Logo from "../../assets/images/logoVerpic.png"
+import isAuthorized from "../../Auth/isAuthorized";
 import styled from "@emotion/styled";
 import tw from "twin.macro";
 import { useTranslation } from "react-i18next";
+import {connect} from 'react-redux';
+
 
 const NavigatorWrapper = styled.div`
   font-family: "NanumGothic-Bold";
@@ -12,12 +14,13 @@ const NavigatorWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   background: #25292e;
-  ${tw` max-w-full h-7vh shadow-lg relative border-b-2 border-white`}
+  height: 70px;
+  ${tw` max-w-full shadow-lg relative border-b-2 border-white`}
 `;
 
 const NavigatorLogo = styled.img`
-  
-  ${tw`m-3 w-5vh cursor-pointer ml-20`}
+  width: 60px;
+  ${tw`m-3 cursor-pointer ml-20`}
 `;
 
 const NavigatorText = styled.text`
@@ -31,6 +34,7 @@ const NavigatorText = styled.text`
 const NavigatorLink = styled.div`
   font-family: "NanumGothic-Regular";
   color: #d9dee5;
+  height: 70px;
   @media screen and (max-width: 500px) {
     display: none;
   }
@@ -42,7 +46,7 @@ const NavigatorLink = styled.div`
     color: #cddef5;
     border-bottom: 4px solid #cddef5;
   }
-  ${tw`text-sm font-semibold h-7vh overflow-hidden tracking-wider flex items-center align-middle mx-10 duration-300 cursor-pointer`}
+  ${tw`text-sm font-semibold  overflow-hidden tracking-wider flex items-center align-middle mx-10 duration-300 cursor-pointer`}
 `;
 
 const AvatarLink = styled.div`
@@ -229,7 +233,11 @@ function Navigator({ user, focus }) {
     </>
   );
 }
-export default React.memo(Navigator);
+
+const mapStateToProps = (state) => ({
+  user: state.getUsers.user
+});
+export default connect(mapStateToProps)(Navigator);
 
 Navigator.defaultProps = {
   user: null,

@@ -5,13 +5,17 @@ import AuthWrapper from "./AuthWrapper";
 import Cookies from "universal-cookie";
 import GoogleLogin from "react-google-login";
 import InputWithLabel from "./InputWithLabel";
-import Navigator from "../Common/Navigator";
+import Navigator from "../components/Navigator/Navigator";
 import axios from "axios";
 import { debounce } from "lodash";
 import generateUuid from "./generateUuid";
 import { useTranslation } from "react-i18next";
+import getuser from "../api/getuser";
+import {connect} from 'react-redux';
+import {getUser} from '../store/actions';
 
-function Login() {
+
+function Login({user, handleUser}) {
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
@@ -62,8 +66,17 @@ function Login() {
     await axios
       .post("/api/oauth/google", body)
       .then(async (res) => {
+
         const accessToken = res.data.data.Token;
         storeInfoLogin(accessToken);
+
+        await getuser()
+          .then(res => {
+              console.log(res);
+              handleUser('USER', res);
+          })
+          
+        
         window.location = "/";
       })
       .catch((err) => console.log(err));
@@ -131,4 +144,14 @@ function Login() {
   );
 }
 
-export default Login;
+const mapStateToProps = (state) => ({
+  user: state.getUsers.user
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  handleUser: (key,value) => dispatch(getUser(key, value))
+});
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

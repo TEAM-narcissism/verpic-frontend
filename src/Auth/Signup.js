@@ -6,7 +6,7 @@ import tw from "twin.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-import Navigator from "../Common/Navigator";
+import Navigator from "../components/Navigator/Navigator";
 import { useTranslation } from 'react-i18next';
 import generateUuid from './generateUuid';
 import getTodayDate from '../Common/getTodayDate';

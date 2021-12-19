@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
-import Navigator from "../Common/Navigator";
+import Navigator from "../components/Navigator/Navigator";
 import tw from 'twin.macro';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import Cookies from "universal-cookie";
-import getuser from "../Api/getuser";
+import getuser from "../api/getuser";
 import { useTranslation } from 'react-i18next';
 import i18next from "i18next";
+import { connect } from 'react-redux';
 
 const ProfileWrapper = styled.div`
   font-family: 'NanumGothic-Regular';
-  ${tw`container w-1/2  mx-auto mt-10vh text-black`}
+  margin-top: 100px;
+  ${tw`container w-1/2  mx-auto text-black`}
 `;
 
 const ProfileText = styled.div`
@@ -28,14 +30,16 @@ const ReserveListWrapper = styled.div`
 
 
 const ProfileAvatar = styled.div`
-  ${tw`h-10vh w-10vh border mx-auto my-4 bg-gray-400 rounded-full text-white flex justify-center items-center overflow-hidden
+    width: 70px;
+    height: 70px;
+  ${tw` border mx-auto my-4 bg-gray-400 rounded-full text-white flex justify-center items-center overflow-hidden
 `}
 `;
 
 
 
-function Mypage() {
-  const [user, setUser] = useState(null);
+function Mypage({user}) {
+
   const [isLoading, setIsLoding] = useState(true);
   const [reservationList, setReservationList] = useState([{
     id: "", isSoldOut: "", korTheme: "", engTheme: "", studyDate: ""
@@ -64,18 +68,6 @@ function Mypage() {
   }
 
   useEffect(async () => {
-    await getuser()
-      .then((res) => {
-        if (res) {
-          console.log(res);
-          setUser(res)
-
-          if (res.id != id) {
-            window.location.href = '/';
-          }
-
-        }
-      });
 
     await axios.get("/api/reservation/user/", {
       headers: {
@@ -83,11 +75,8 @@ function Mypage() {
       }
     })
       .then((res) => {
-        // console.log(res);
         if (res.data) {
           setReservationList(res.data);
-          console.log(res.data);
-          setIsLoding(false);
         }
       })
       .catch((
@@ -104,7 +93,6 @@ function Mypage() {
       .then((res) => {
         if (res.data) {
           setMatchList(res.data);
-          console.log(res.data);
           setIsLoding(false);
         }
       })
@@ -114,11 +102,9 @@ function Mypage() {
 
   return (
     <div class="container max-w-full h-120vh bg-gray-100">
-      <Navigator user={user} focus="마이페이지" />
+      <Navigator focus="마이페이지" />
       {isLoading ? <div class="flex btn btn-lg btn-ghost loading mx-auto">{t('isloading')}</div> :
         <>
-
-
           <ProfileWrapper>
             <div class=" text-xl font-semibold mb-2">{t('title')}</div>
             <div class="text-center border rounded-lg mb-10 bg-white">
@@ -195,4 +181,7 @@ function Mypage() {
   );
 }
 
-export default Mypage;
+const mapStateToProps = (state) => ({
+  user: state.getUsers.user
+});
+export default connect(mapStateToProps)(Mypage);

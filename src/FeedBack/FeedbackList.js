@@ -5,12 +5,10 @@ import i18next from "i18next";
 import styled from '@emotion/styled';
 import tw from 'twin.macro';
 import Cookies from 'universal-cookie';
-import axios from 'axios';
 
-import Navigator from "../Common/Navigator";
-import getuser from "../Api/getuser";
-import isAuthorized from "../Auth/isAuthorized";
-import getParticipatedMatches from "../Api/getParticipatedMatches"
+import Navigator from "../components/Navigator/Navigator";
+import getParticipatedMatches from "../api/getParticipatedMatches"
+
 
 function MatchList({ match }) {
     return (
@@ -32,8 +30,7 @@ function FeedbackList() {
 
     const cookies = new Cookies();
     const token = cookies.get('vtoken')
-    const [user, setUser] = useState();
-    const [userLoad, setUserLoad] = useState(false);
+
     const [isLoaded, setIsLoaded] = useState(false);
     const [feedbacks, setFeedbacks] = useState([]);
     const [t, i18n] = useTranslation("feedbacklist");
@@ -50,19 +47,6 @@ function FeedbackList() {
     }
 
     useEffect(() => {
-        if (isAuthorized() && user === undefined) {
-            getuser()
-                .then((res) => {
-                    console.log(res);
-                    setUser(res);
-                    setUserLoad(true);
-                })
-                .catch((err) => {
-                    alert('로그인 세션이 만료되었어요.');
-                    window.location.href = '/logout';
-                });
-        }
-
         getParticipatedMatches(token)
             .then((content) => {
                 content.data.forEach(match => {
@@ -74,7 +58,7 @@ function FeedbackList() {
 
     return (
         <div class="container max-w-full h-screen bg-white text-black">
-            {userLoad ? <Navigator user={user} focus="피드백" /> : null}
+            <Navigator focus="피드백" /> 
             <FeedbackListWrapper>
                 <div class="text-3xl font-bold mb-1 mt-10 text-black ">{t('feedbacklist')}</div>
                 <div class="text-gray-600 mb-3 select-none">{t('feedbacklistlong')}</div>
@@ -96,5 +80,7 @@ function FeedbackList() {
         </div>
     );
 }
+
+
 
 export default FeedbackList;

@@ -6,13 +6,12 @@ import tw from 'twin.macro';
 
 import DaySorting from '../Common/DaySorting';
 
-import Navigator from '../Common/Navigator';
+import Navigator from '../components/Navigator/Navigator';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 
-import getuser from "../Api/getuser";
-import isAuthorized from "../Auth/isAuthorized";
 import ReservationCard from './ReservationCard';
+import {connect} from 'react-redux';
 
 const CardListText = styled.div`
     ${tw`text-3xl font-bold mb-1 mt-10 text-black select-none`};
@@ -30,22 +29,12 @@ function ReservationCardList(props) {
   const [currentPage, setCurrentPage] = useState(1);
   const [topicsPerPage, setTopicsPerPage] = useState(5);
   const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState();
   const [matchList, setMatchList] = useState();
   const cookies = new Cookies();
   const token = cookies.get("vtoken");
   const { t, i18n } = useTranslation('cardlist');
 
-  useEffect(async () => {
-    if (isAuthorized() && user === undefined) {
-      await getuser()
-        .then((res) => {
-          console.log(res);
-          setUser(res);
-        })
 
-    }
-  })
 
   useEffect(async () => {
     await axios.get("/api/reservation/user/", {
@@ -122,7 +111,7 @@ function ReservationCardList(props) {
 
   return (
     <div class="container max-w-full h-200vh bg-gray-100">
-      <Navigator user={user} focus="신청목록" />
+      <Navigator focus="신청목록" />
       {isLoading ? <div class="flex btn btn-lg btn-ghost loading mx-auto">{t('isloading')}</div> :
         <div>
           <CardListWrapper>
@@ -164,4 +153,7 @@ function ReservationCardList(props) {
   );
 }
 
-export default React.memo(ReservationCardList);
+const mapStateToProps = (state) => ({
+  user: state.getUsers.user
+});
+export default connect(mapStateToProps)(React.memo(ReservationCardList));

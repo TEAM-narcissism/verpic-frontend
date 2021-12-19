@@ -1,6 +1,7 @@
 import Cookies from "universal-cookie";
 import axios from "axios";
 
+
 function getuser() {
   return new Promise((resolve, reject) => {
     const cookies = new Cookies();
@@ -21,5 +22,7 @@ function getuser() {
       });
   });
 }
+
+
 
 export default getuser;
