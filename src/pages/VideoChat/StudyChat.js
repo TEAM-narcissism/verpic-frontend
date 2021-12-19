@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { conn, stompconn } from "../App";
+import { conn, stompconn } from "../../App";
 import {
   faMicrophone,
   faMicrophoneSlash,
@@ -12,10 +12,10 @@ import ChatList from "./ChatList";
 import Cookies from "universal-cookie";
 import CreateChat from "./CreateChat";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ModalButton } from "Reservation/ReservationForm";
+import { ModalButton } from "pages/Reservation/ReservationForm";
 import { ModalProvider } from "styled-react-modal";
 import ProgressBar from "./ProgressBar";
-import { StyledModal } from "Reservation/ReservationForm";
+import { StyledModal } from "pages/Reservation/ReservationForm";
 import axios from "axios";
 import getDetailTopics from "api/getDetailTopics";
 import getRemainTime from "api/getRemainTime";

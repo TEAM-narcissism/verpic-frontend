@@ -2,25 +2,25 @@ import "./App.css";
 
 import * as SockJS from "sockjs-client";
 
-import EditUserInfo from "./User/EditUserInfo";
+import EditUserInfo from "./pages/User/EditUserInfo";
 import Login from "./Auth/Login";
 import Logout from "./Auth/Logout";
-import MainPage from "./Home/MainPage";
+import MainPage from "./pages/Home/MainPage";
 import MatchingPost from "./api/MatchingPost";
-import Mypage from "./User/Mypage";
-import Preview from "./Preview/Preview";
+import Mypage from "./pages/User/Mypage";
+import Preview from "./pages/Preview/Preview";
 import PrivateRoute from "./Route/PrivateRoute";
 import PublicRoute from "./Route/PublicRoute";
 import React from "react";
-import ReservationCardList from "./ReservationList/ReservationCardList";
+import ReservationCardList from "./components/ReservationList/ReservationCardList";
 import Signup from "./Auth/Signup";
 import { Stomp } from "@stomp/stompjs";
-import StudyChat from "./VideoChat/StudyChat";
-import TestPage from "./Home/TestPage";
+import StudyChat from "./pages/VideoChat/StudyChat";
+import TestPage from "./pages/Home/TestPage";
 
-import FeedbackPage from "./FeedBack/FeedbackPage"
-import FeedbackList from "./FeedBack/FeedbackList"
-import VideoCheck from "./VideoChat/VideoCheck";
+import FeedbackPage from "./pages/FeedBack/FeedbackPage"
+import FeedbackList from "./pages/FeedBack/FeedbackList"
+import VideoCheck from "./pages/VideoChat/VideoCheck";
 
 
 

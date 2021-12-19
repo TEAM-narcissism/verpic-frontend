@@ -7,17 +7,17 @@ import tw from 'twin.macro';
 import Cookies from 'universal-cookie';
 import axios from 'axios';
 
-import Navigator from "../components/Navigator/Navigator";
-import getuser from "../api/getuser";
-import isAuthorized from "../Auth/isAuthorized";
-import getFeedbackScript from "../api/getFeedbackScript"
-import getParticipatedMatches from "../api/getParticipatedMatches"
+import Navigator from "components/Navigator/Navigator";
+import getuser from "api/getuser";
+import isAuthorized from "Auth/isAuthorized";
+import getFeedbackScript from "api/getFeedbackScript"
+import getParticipatedMatches from "api/getParticipatedMatches"
 
-import ChatList from '../VideoChat/ChatList';
+import ChatList from 'pages/VideoChat/ChatList';
 import { useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faChevronLeft, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import WPMChart from './WPMChart';
+import WPMChart from 'components/FeedBack/WPMChart';
 
 const FeedbackContentWrapper = styled.div`
     font-family: 'NanumGothic-Regular';
