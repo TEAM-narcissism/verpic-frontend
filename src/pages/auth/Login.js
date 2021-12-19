@@ -1,14 +1,14 @@
 import React, { useRef, useState } from "react";
 
-import AuthButton from "./AuthButton";
-import AuthWrapper from "./AuthWrapper";
+import AuthButton from "components/Auth/AuthButton";
+import AuthWrapper from "components/Auth/AuthWrapper";
 import Cookies from "universal-cookie";
 import GoogleLogin from "react-google-login";
-import InputWithLabel from "./InputWithLabel";
+import InputWithLabel from "utils/InputWithLabel";
 import Navigator from "components/Navigator/Navigator";
 import axios from "axios";
 import { debounce } from "lodash";
-import generateUuid from "./generateUuid";
+import generateUuid from "utils/generateUuid";
 import { useTranslation } from "react-i18next";
 import getuser from "api/getuser";
 import {connect} from 'react-redux';

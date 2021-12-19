@@ -10,7 +10,7 @@ import styled from "@emotion/styled";
 import tw from "twin.macro";
 import { useParams } from "react-router";
 import { useTranslation } from "react-i18next";
-import getTodayDate from "Common/getTodayDate";
+import getTodayDate from "common/getTodayDate";
 
 const EditUserInfoWrapper = styled.div`
   font-family: "NanumGothic-Regular";

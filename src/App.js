@@ -3,17 +3,17 @@ import "./App.css";
 import * as SockJS from "sockjs-client";
 
 import EditUserInfo from "./pages/User/EditUserInfo";
-import Login from "./Auth/Login";
-import Logout from "./Auth/Logout";
+import Login from "./pages/auth/Login";
+import Logout from "./pages/auth/Logout";
 import MainPage from "./pages/Home/MainPage";
 import MatchingPost from "./api/MatchingPost";
 import Mypage from "./pages/User/Mypage";
 import Preview from "./pages/Preview/Preview";
-import PrivateRoute from "./Route/PrivateRoute";
-import PublicRoute from "./Route/PublicRoute";
+import PrivateRoute from "./route/PrivateRoute";
+import PublicRoute from "./route/PublicRoute";
 import React from "react";
 import ReservationCardList from "./components/ReservationList/ReservationCardList";
-import Signup from "./Auth/Signup";
+import Signup from "./pages/auth/Signup";
 import { Stomp } from "@stomp/stompjs";
 import StudyChat from "./pages/VideoChat/StudyChat";
 import TestPage from "./pages/Home/TestPage";
@@ -23,12 +23,8 @@ import FeedbackList from "./pages/FeedBack/FeedbackList"
 import VideoCheck from "./pages/VideoChat/VideoCheck";
 
 
-
-
 export const conn = new SockJS("/ws-stomp");
-
 export const stompconn = Stomp.over(conn);
-
 
 
 

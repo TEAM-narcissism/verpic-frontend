@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef } from 'react';
 import Modal, { ModalProvider } from 'styled-react-modal';
 import Cookies from 'universal-cookie';
 import styled from "@emotion/styled";
@@ -6,10 +6,10 @@ import tw from "twin.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-import Navigator from "../components/Navigator/Navigator";
+import Navigator from "components/Navigator/Navigator";
 import { useTranslation } from 'react-i18next';
-import generateUuid from './generateUuid';
-import getTodayDate from '../Common/getTodayDate';
+import generateUuid from 'utils/generateUuid';
+import getTodayDate from 'common/getTodayDate';
 
 const SignupFormWrapper = styled.div`
   font-family: "NanumGothic-Regular";

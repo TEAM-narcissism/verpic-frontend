@@ -9,7 +9,7 @@ import axios from 'axios';
 
 import Navigator from "components/Navigator/Navigator";
 import getuser from "api/getuser";
-import isAuthorized from "Auth/isAuthorized";
+import isAuthorized from "utils/isAuthorized";
 import getFeedbackScript from "api/getFeedbackScript"
 import getParticipatedMatches from "api/getParticipatedMatches"
 

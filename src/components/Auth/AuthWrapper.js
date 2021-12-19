@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../assets/images/logoVerpic.png";
+import logo from "assets/images/logoVerpic.png";
 import styled from "styled-components";
 import tw from "twin.macro";
 
